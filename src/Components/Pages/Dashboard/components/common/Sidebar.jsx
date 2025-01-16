@@ -1,6 +1,7 @@
 import {
   BarChart2,
   DollarSign,
+  Home,
   Menu,
   Settings,
   ShoppingBag,
@@ -13,6 +14,12 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Link, NavLink } from "react-router";
 
 const SIDEBAR_ITEMS = [
+  {
+    name : "Home",
+    icon : Home,
+    color : "#ffff",
+    href : "/"
+  },
   {
     name: "Overview",
     icon: BarChart2,

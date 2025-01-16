@@ -75,7 +75,7 @@ export default function NavbarMenu2() {
   ];
 
   return (
-    <Navbar isBordered isBlurred={false}  className="mt-5">
+    <Navbar isBlurred={false}  className="mt-5 bg-[#19191c] h-20 rounded-2xl">
       <NavbarContent className="sm:hidden" justify="start">
         <NavbarMenuToggle />
       </NavbarContent>
@@ -110,13 +110,12 @@ export default function NavbarMenu2() {
       </NavbarContent>
 
       <NavbarContent justify="end">
+        <NavbarContent as="div" className="items-center" justify="end">
         <NavbarItem className="hidden lg:block">
-          <Button as={Link} color="primary" href="#" variant="flat">
+          <Button as={Link} color="primary" href="#" variant="flat" size="md">
             Login
           </Button>
         </NavbarItem>
-
-        <NavbarContent as="div" className="items-center" justify="end">
          <div className="hidden md:block">
          <Input
             classNames={{
@@ -132,7 +131,7 @@ export default function NavbarMenu2() {
             type="search"
           />
          </div>
-          <ThemeSwitcher></ThemeSwitcher>
+          {/* <ThemeSwitcher></ThemeSwitcher> */}
           <Dropdown placement="bottom-end">
             <DropdownTrigger>
               <Avatar
@@ -181,12 +180,12 @@ export default function NavbarMenu2() {
           type="search"
         />
           <NavbarMenuItem className="flex flex-col gap-3 mt-5 mb-5">
-            <NavLink isBlock to="/">Home</NavLink>
-            <NavLink isBlock to="/membership">Membership</NavLink>
-            <NavLink isBlock to="/about">About</NavLink>
+            <Link isBlock color="foreground" href="/">Home</Link>
+            <Link isBlock color="foreground" href="/membership">Membership</Link>
+            <Link isBlock color="foreground" href="/about">About</Link>
           </NavbarMenuItem>
         <NavbarItem>
-          <Button as={Link} color="primary" href="#" variant="flat">
+          <Button as={Link} color="primary" size="lg" href="#" variant="flat">
             Login
           </Button>
         </NavbarItem>

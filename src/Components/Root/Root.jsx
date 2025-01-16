@@ -1,5 +1,5 @@
 import { Outlet } from "react-router";
-import NavbarMenu2 from "../Parts/Navbar/NavbarMenu";
+import NavbarMenu2 from "../Pages/Navbar/NavbarMenu";
 import DataContext from "../Context/DataContext";
 
 const Root = () => {
