@@ -8,7 +8,14 @@ export default {
     "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        poppins: ["Poppins", "serif"],
+        lato: ["Lato", "serif"],
+        nunito: ["Nunito", "serif"]
+
+      },
+    },
   },
   plugins: [
     nextui({
@@ -21,7 +28,7 @@ export default {
         light: {
           layout: {}, // light theme layout tokens
           colors: {
-             background: "#e9e9e9",
+             background: "#F2F2F2",
           }, // light theme colors
         },
         dark: {

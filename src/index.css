@@ -1,3 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+h1, h2, h3, h4, h5{
+    font-family: "poppins";
+}
+
+h4, h5{
+    font-family: "lato";
+}
+
+p, a, Link{
+    font-family: "nunito";
+}
+

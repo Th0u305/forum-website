@@ -2,15 +2,17 @@ import useAxiosCategory from "../../Hooks/useAxiosCategory";
 import useAxiosTags from "../../Hooks/useAxiosTags";
 import React, { useContext, useState } from "react";
 import Select from "react-select";
-import { Card, CardBody, Tab, Tabs } from "@nextui-org/react";
-import { Outlet } from "react-router";
+import { Card, CardBody, Image, Tab, Tabs, Textarea } from "@nextui-org/react";
+import { Outlet, useLocation } from "react-router";
 import { DataContextProvider } from "../../Context/DataContext";
 
 export default function Middle() {
   const [tags] = useAxiosTags();
   const [category] = useAxiosCategory();
-  const { selected, setSelected } = useContext(DataContextProvider);
+  // const { selected, setSelected } = useContext(DataContextProvider);
   // const [selected, setSelected] = React.useState();
+  const {pathname} = useLocation()
+  
 
   const options = tags.map((item) => ({
     value: item._id,
@@ -46,9 +48,9 @@ export default function Middle() {
   ];
 
   return (
-    <div  className="space-y-5 lg:space-y-0">
-      <Card  className="grid grid-cols-2 justify-items-center md:grid-cols-3 py-5 px-2 lg:flex lg:flex-row lg:justify-between lg:p-12 overflow-visible">
-        <div  className="w-fit z-30">
+    <div className="space-y-5 lg:space-y-0">
+      <Card className="grid grid-cols-2 justify-items-center md:grid-cols-3 py-5 px-2 lg:flex lg:flex-row lg:justify-between lg:p-12 overflow-visible">
+        <div className="w-fit z-30">
           <Select
             options={options2} // Pass custom options
             value={selectedOption2} // Bind selected value
@@ -148,11 +150,11 @@ export default function Middle() {
           />
         </div>
 
-        <div  className="col-span-full md:col-span-1 ">
+        <div className="col-span-full md:col-span-1 ">
           <Tabs
             items={tabs}
-            selectedKey={selected}
-            onSelectionChange={setSelected}
+            selectedKey={pathname}
+            // onSelectionChange={setSelected}
             aria-label="Tabs variants"
             variant="underlined"
           >
@@ -165,8 +167,27 @@ export default function Middle() {
             )}
           </Tabs>
         </div>
-        
       </Card>
+{/* 
+      <Card>
+        <CardBody>
+          <CardBody className="flex flex-row gap-5">
+            <Image
+              alt="Card background"
+              className="rounded-full w-12 h-12 object-cover"
+              src="https://res.cloudinary.com/dmegxaayi/image/upload/v1736827009/pexels-olly-3785079_irm1bg.jpg"
+            />
+            <Textarea
+              isClearable
+              className="max-w-xs border-none"
+              placeholder="Share your thoughts..."
+            />
+          </CardBody>
+          <CardBody>
+            
+          </CardBody>
+        </CardBody>
+      </Card> */}
 
       <Card className="lg:hidden w-full mx-auto">
         <CardBody>

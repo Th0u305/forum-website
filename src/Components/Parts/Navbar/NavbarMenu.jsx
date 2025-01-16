@@ -16,6 +16,7 @@ import {
   DropdownTrigger,
 } from "@nextui-org/react";
 import ThemeSwitcher from "./Theme";
+import { NavLink } from "react-router";
 
 export const AcmeLogo = () => {
   return (
@@ -74,7 +75,7 @@ export default function NavbarMenu2() {
   ];
 
   return (
-    <Navbar disableAnimation isBordered isBlurred={false}  className="mt-12 border rounded-xl ">
+    <Navbar isBordered isBlurred={false}  className="mt-5">
       <NavbarContent className="sm:hidden" justify="start">
         <NavbarMenuToggle />
       </NavbarContent>
@@ -92,17 +93,17 @@ export default function NavbarMenu2() {
           <p className="font-bold text-inherit">TopicTree</p>
         </NavbarBrand>
         <NavbarItem>
-          <Link color="foreground" href="/">
+          <Link isBlock color="foreground" href="/">
             Home
           </Link>
         </NavbarItem>
-        <NavbarItem isActive>
-          <Link color="foreground" href="/membership">
+        <NavbarItem>
+          <Link isBlock color="foreground" href="/membership">
             Membership
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link color="foreground" href="#">
+          <Link isBlock color="foreground" href="#">
             About
           </Link>
         </NavbarItem>
@@ -110,8 +111,8 @@ export default function NavbarMenu2() {
 
       <NavbarContent justify="end">
         <NavbarItem className="hidden lg:block">
-          <Button as={Link} color="warning" href="#" variant="flat">
-            Sign Up
+          <Button as={Link} color="primary" href="#" variant="flat">
+            Login
           </Button>
         </NavbarItem>
 
@@ -119,11 +120,11 @@ export default function NavbarMenu2() {
          <div className="hidden md:block">
          <Input
             classNames={{
-              base: "max-w-full sm:max-w-[10rem] h-10",
+              base: "max-w-full sm:max-w-[12rem] h-10",
               mainWrapper: "h-full",
               input: "text-small",
               inputWrapper:
-                "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20",
+                "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20 dark:focus-within:!bg-default/60",
             }}
             placeholder="Type to search..."
             size="sm"
@@ -138,7 +139,7 @@ export default function NavbarMenu2() {
                 isBordered
                 as="button"
                 className="transition-transform"
-                color="secondary"
+                color="primary"
                 name="Jason Hughes"
                 size="sm"
                 src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
@@ -165,7 +166,7 @@ export default function NavbarMenu2() {
         </NavbarContent>
       </NavbarContent>
 
-      <NavbarMenu className="z-50 pt-12">
+      <NavbarMenu className="pt-28">
         <Input
           classNames={{
             base: "max-w-full sm:max-w-[10rem] h-10",
@@ -179,28 +180,14 @@ export default function NavbarMenu2() {
           startContent={<SearchIcon size={18} />}
           type="search"
         />
-        {menuItems.map((item, index) => (
-          <NavbarMenuItem key={`${item}-${index}`}>
-            <Link
-              className="w-full"
-            color="foreground"
-              // href="#"
-              href={
-                index === 2
-                  ? "#"
-                  : index === menuItems.length - 1
-                  ? "/"
-                  : "/membership"
-              }
-              size="lg"
-            >
-              {item}
-            </Link>
+          <NavbarMenuItem className="flex flex-col gap-3 mt-5 mb-5">
+            <NavLink isBlock to="/">Home</NavLink>
+            <NavLink isBlock to="/membership">Membership</NavLink>
+            <NavLink isBlock to="/about">About</NavLink>
           </NavbarMenuItem>
-        ))}
         <NavbarItem>
-          <Button as={Link} color="warning" href="#" variant="flat">
-            Sign Up
+          <Button as={Link} color="primary" href="#" variant="flat">
+            Login
           </Button>
         </NavbarItem>
       </NavbarMenu>

@@ -59,7 +59,7 @@ const ThemeSwitch = (props) => {
 
   if (!mounted) return null;
   return (
-    <div className="flex flex-col gap-2">
+    <div  className="flex flex-col gap-2 border-2 border-[#0c67e8] rounded-full ">
       <Component {...getBaseProps()}>
         <VisuallyHidden>
           <input {...getInputProps()} />

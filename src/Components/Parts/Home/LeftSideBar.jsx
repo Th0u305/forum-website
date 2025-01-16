@@ -117,7 +117,7 @@ export default function LeftSideBar() {
 
   return (
     <Accordion
-    defaultExpandedKeys={["1"]}
+    // defaultExpandedKeys={["1"]}
       className="p-2 flex flex-col gap-1 w-full "
       itemClasses={itemClasses}
       showDivider={false}
@@ -125,7 +125,7 @@ export default function LeftSideBar() {
     >
       <AccordionItem
         key="1"
-        aria-label="Connected devices"
+        aria-label="Categories"
         startContent={<MonitorMobileIcon className="text-primary" />}
         title="Categories"
       >
@@ -139,7 +139,7 @@ export default function LeftSideBar() {
       </AccordionItem>
       <AccordionItem
         key="2"
-        aria-label="Apps Permissions"
+        aria-label="Tags"
         startContent={<ShieldSecurityIcon />}
         title="Tags"
       >
