@@ -47,7 +47,7 @@ export default function Middle() {
 
   return (
     <div  className="space-y-5 lg:space-y-0">
-      <Card  className="grid grid-cols-2 justify-items-center md:grid-cols-3 py-5 px-2 lg:flex lg:flex-row lg:justify-between lg:p-12">
+      <Card  className="grid grid-cols-2 justify-items-center md:grid-cols-3 py-5 px-2 lg:flex lg:flex-row lg:justify-between lg:p-12 overflow-visible">
         <div  className="w-fit z-30">
           <Select
             options={options2} // Pass custom options

@@ -74,7 +74,7 @@ export default function NavbarMenu2() {
   ];
 
   return (
-    <Navbar disableAnimation isBordered className="mt-12 border rounded-xl">
+    <Navbar disableAnimation isBordered isBlurred={false}  className="mt-12 border rounded-xl ">
       <NavbarContent className="sm:hidden" justify="start">
         <NavbarMenuToggle />
       </NavbarContent>

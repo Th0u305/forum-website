@@ -68,7 +68,7 @@ const SinglePost = () => {
               className="object-cover rounded-full w-10 h-10"
               src={users[item2.authorId]?.profileImage}
             />
-            <p className="bg-gray-600 p-3 rounded-2xl">{item2?.text}</p>
+            <p className="bg-slate-600 text-white p-3 rounded-2xl">{item2?.text}</p>
           </CardBody>
         ))}
       </Card>)  : <div className="w-fit mx-auto mt-20">
