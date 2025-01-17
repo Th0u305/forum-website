@@ -9,7 +9,7 @@ import {
   updateProfile,
 } from "firebase/auth";
 import React, { createContext, useEffect, useState } from "react";
-import { firebaseAuth } from "../firebase/firebase.config";
+import { firebaseAuth } from "../Pages/Private/firebase/firebase.config";
 export const AuthContext = createContext();
 const googleProvider = new GoogleAuthProvider();
 import { useRef } from 'react';
@@ -19,9 +19,6 @@ const ContextProvider = ({ children }) => {
 
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [viewWallet, setViewWallet] = useState(false);
-  const [viewProfile, setVieProfile] = useState(true);
-  const [viewSetting, setViewSetting] = useState(false);
   const myRef = useRef(null)
 
 
@@ -40,13 +37,13 @@ const ContextProvider = ({ children }) => {
 
   // check for current logged user
   useEffect(() => {
-    const unSubscribe = onAuthStateChanged(firebaseAuth, async (currentUser) => {      
+    const unSubscribe = onAuthStateChanged(firebaseAuth, async (currentUser) => {            
       if (currentUser?.email) {
         setUser(currentUser);
-        const {data} = await axios.post ('https://service-web-server.vercel.app/jwt', {email:currentUser?.email}, {withCredentials : true})  
+        const {data} = await axios.post (`${import.meta.env.VITE_API_URL}/jwt`, {email:currentUser?.email}, {withCredentials : true})  
       }else{
         setUser(currentUser)
-        const {data} = await axios.get ('https://service-web-server.vercel.app/logout', {withCredentials : true})
+        const {data} = await axios.get (`${import.meta.env.VITE_API_URL}/logout`, {withCredentials : true})
       }
       setLoading(false)
     });
@@ -90,13 +87,7 @@ const ContextProvider = ({ children }) => {
     createUser,
     updateUserProfile,
     resetUserPassword,
-    myRef,
-    viewProfile,
-    setVieProfile,
-    viewWallet,
-    setViewWallet,
-    viewSetting,
-    setViewSetting
+    myRef
   };
 
   return (

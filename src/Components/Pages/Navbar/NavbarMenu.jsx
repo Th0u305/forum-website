@@ -17,6 +17,9 @@ import {
 } from "@nextui-org/react";
 import ThemeSwitcher from "./Theme";
 import { NavLink } from "react-router";
+import { useContext } from "react";
+import { AuthContext } from "../../Context/ContextProvider";
+import toast from "react-hot-toast";
 
 export const AcmeLogo = () => {
   return (
@@ -74,20 +77,27 @@ export default function NavbarMenu2() {
     "About"
   ];
 
+  const {user, signOutUser} = useContext(AuthContext);
+
+  const handleSignOut =()=>{
+    signOutUser();
+    toast.success("Signed out successfully")
+  }
+
   return (
     <Navbar isBlurred={false}  className="mt-5 bg-[#19191c] h-20 rounded-2xl">
-      <NavbarContent className="sm:hidden" justify="start">
+      <NavbarContent className="lg:hidden" justify="start">
         <NavbarMenuToggle />
       </NavbarContent>
 
-      <NavbarContent className="sm:hidden pr-3" justify="center">
+      <NavbarContent className="lg:hidden pr-3" justify="center">
         <NavbarBrand>
           <AcmeLogo />
           <p className="font-bold text-inherit">TopicTree</p>
         </NavbarBrand>
       </NavbarContent>
 
-      <NavbarContent className="hidden sm:flex gap-4" justify="center">
+      <NavbarContent className="hidden lg:flex gap-4" justify="center">
         <NavbarBrand>
           <AcmeLogo />
           <p className="font-bold text-inherit">TopicTree</p>
@@ -112,11 +122,11 @@ export default function NavbarMenu2() {
       <NavbarContent justify="end">
         <NavbarContent as="div" className="items-center" justify="end">
         <NavbarItem className="hidden lg:block">
-          <Button as={Link} color="primary" href="#" variant="flat" size="md">
+          <Button as={Link} color="primary" href="/login" variant="flat" size="md">
             Login
           </Button>
         </NavbarItem>
-         <div className="hidden md:block">
+         <div className="hidden lg:block">
          <Input
             classNames={{
               base: "max-w-full sm:max-w-[12rem] h-10",
@@ -141,13 +151,13 @@ export default function NavbarMenu2() {
                 color="primary"
                 name="Jason Hughes"
                 size="sm"
-                src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
+                src={user?.photoURL}
               />
             </DropdownTrigger>
             <DropdownMenu aria-label="Profile Actions" variant="flat">
               <DropdownItem key="profile" className="h-14 gap-2">
                 <p className="font-semibold">Signed in as</p>
-                <p className="font-semibold">zoey@example.com</p>
+                <p className="font-semibold">{user?.email}</p>
               </DropdownItem>
               <DropdownItem key="settings">My Settings</DropdownItem>
               <DropdownItem key="team_settings">Team Settings</DropdownItem>
@@ -157,7 +167,7 @@ export default function NavbarMenu2() {
               <DropdownItem key="help_and_feedback">
                 Help & Feedback
               </DropdownItem>
-              <DropdownItem key="logout" color="danger">
+              <DropdownItem key="logout" color="danger" onPress={()=> handleSignOut()}>
                 Log Out
               </DropdownItem>
             </DropdownMenu>
@@ -185,7 +195,7 @@ export default function NavbarMenu2() {
             <Link isBlock color="foreground" href="/about">About</Link>
           </NavbarMenuItem>
         <NavbarItem>
-          <Button as={Link} color="primary" size="lg" href="#" variant="flat">
+          <Button as={Link} color="primary" size="lg" href="/login" variant="flat">
             Login
           </Button>
         </NavbarItem>

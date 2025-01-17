@@ -5,7 +5,7 @@ import Middle from "./Middle";
 const Home = () => {
   return (
     <section className=" lg:grid lg:grid-cols-8 lg:gap-8 mt-12 space-y-5 lg:space-y-0">
-      <div className="lg:col-span-2 flex justify-center lg:block">
+      <div className="lg:col-span-2">
         <LeftSideBar></LeftSideBar>
       </div>
       <div className="lg:col-span-4">

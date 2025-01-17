@@ -13,7 +13,7 @@ export default function ErrorPage() {
               you are looking for.
             </p>
             <a
-              href="#"
+              href="/"
               className="inline-flex items-center justify-center rounded-full bg-gray-900 py-4 px-8 font-bold text-white"
             >
               Go Home

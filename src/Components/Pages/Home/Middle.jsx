@@ -66,6 +66,7 @@ export default function Middle() {
                 borderRadius: "0.5rem", // rounded-2xl equivalent
                 boxShadow: "none",
                 transition: "all 0.3s ease", // Smooth transition for focus and hover
+                width : '11.5rem'
               }),
               option: (base, { isFocused, isSelected }) => ({
                 ...base,
@@ -116,6 +117,7 @@ export default function Middle() {
                 borderRadius: "0.5rem", // rounded-2xl equivalent
                 boxShadow: "none",
                 transition: "all 0.3s ease", // Smooth transition for focus and hover
+                width : '11.5rem'
               }),
               option: (base, { isFocused, isSelected }) => ({
                 ...base,

@@ -1,87 +1,98 @@
-import React, { useContext, useState } from "react";
+import  { useContext, useState } from "react";
 import { HiOutlineMailOpen } from "react-icons/hi";
 import toast, { Toaster } from "react-hot-toast";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Helmet } from "react-helmet-async";
-import { Link } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
+import { useForm } from "react-hook-form";
+import { AuthContext } from "../../Context/ContextProvider";
 
 const Login = () => {
-//   const {
-//     resetUserPassword,
-//     user,
-//     setUser,
-//     signInWithGoogle,
-//     signInUser,
-//     myRef,
-//   } = useContext(AuthContext);
+  const {
+    resetUserPassword,
+    user,
+    setUser,
+    signInWithGoogle,
+    signInUser,
+    myRef,
+  } = useContext(AuthContext);
 
   const [showPassword, setShowPassword] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("")
-//   const navigate = useNavigate();
-//   const { state } = useLocation();
+  const [errorMsg, setErrorMsg] = useState("");
+  const navigate = useNavigate();
 
-//   const googlePopUp = () => {
+  const { state } = useLocation();
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm();
+
+
+
+  const googlePopUp = () => {
+    if (user && user?.email) {
+      return toast.error("You're Already Logged In");
+    }
+    signInWithGoogle()
+      .then((result) => {
+        setUser(result.user);
+        toast.success("Successfully Logged in");
+        navigate(state);
+      })
+      .catch(() => {
+        toast.error("Try Again");
+      });
+  };
+
+  const onSubmit = (e) => {
     
-//     if (user && user?.email) {
-//     return toast.error("You're Already Logged In")
-//     }
-//     signInWithGoogle()
-//       .then((result) => {
-//         setUser(result.user);
-//         toast.success("Successfully Logged in")
-//         navigate(state);
-//       })
-//       .catch(() => {
-//         toast.error("Try Again");
-//       });
-//   };
+    if (user) {
+      toast.error("You're already logged in");
+      return;
+    }
+    const email = e.email;
+    const password = e.password;
 
-//   const handleLogin = (e) => {
-//     e.preventDefault();
+    signInUser(email, password)
+      .then(() => {
+        e.target.reset();
+        toast.success("Successfully logged in!");
+        navigate(state);
+      })
+      .catch(() => {
+        toast.error("Invalid credentials. Password or Email");
+      });
+  };
 
-//     if (user) {
-//       toast.error("You're already logged in");
-//       return;
-//     }
-//     const email = e.target.email.value;
-//     const password = e.target.password.value;
+  const handleReset = () => {
+    const email = document.getElementById("emailId").value;
 
-//     signInUser(email, password)
-//       .then(() => {
-//         e.target.reset();
-//         toast.success("Successfully logged in!");
-//         navigate(state);
-//       })
-//       .catch(() => {
-//         toast.error("Invalid credentials. Password or Email");
-//       });
-//   };
-
-//   const handleReset = () => {
-//     const email = document.getElementById("emailId").value;    
-
-//     resetUserPassword(email)
-//       .then(() => {
-//         return toast.success("Check your mail for password reset");
-//       })
-//       .catch(() => {
-//         if (email === "" || email === undefined) {
-//         return setErrorMsg("Please type email address first")
-//         }
-//         return window.open("https://mail.google.com/mail/", "_blank");
-//       });
-//   };
+    resetUserPassword(email)
+      .then(() => {
+        return toast.success("Check your mail for password reset");
+      })
+      .catch(() => {
+        if (email === "" || email === undefined) {
+        return setErrorMsg("Please type email address first")
+        }
+        return window.open("https://mail.google.com/mail/", "_blank");
+      });
+  };
 
   return (
-    <div className="font-[sans-serif] p-8 xl:mt-0 " 
-    //  ref={myRef}
+    <div
+      className="font-[sans-serif] p-8 xl:mt-0 "
+      //  ref={myRef}
     >
-      <div className="min-h-screen flex flex-col items-center justify-end md:justify-center xl:justify-end mt-32 lg:mt-24 xl:mt-0">
+      <div className="min-h-screen flex flex-col items-center justify-end md:justify-center xl:justify-end lg:mt-24 xl:mt-0">
         <div className="bg-white grid md:grid-cols-2 items-center gap-4 max-md:gap-8 max-w-6xl max-md:max-w-lg w-full p-4 m-4 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)] rounded-md">
           <div className="md:max-w-md w-full px-4 py-4">
-            <form 
-            // onSubmit={handleLogin}
-            >
+            <form
+             onSubmit={handleSubmit(onSubmit)}
+             >
               <div className="mb-12">
                 <h3 className="text-gray-800 text-4xl font-extrabold">
                   Login in
@@ -108,10 +119,10 @@ const Login = () => {
                 </label>
                 <div className="relative flex items-center">
                   <input
-                    name="email"
+                    {...register("email")}
                     type="text"
                     id="emailId"
-                    className="w-full text-gray-800 text-base border-b border-gray-300 focus:border-blue-600 px-2 py-3 outline-none"
+                    className="w-full text-white text-base border-b border-gray-300 focus:border-blue-600 px-2 py-3 outline-none"
                     placeholder="Enter email"
                   />
                   <HiOutlineMailOpen className="absolute right-4 text-2xl text-gray-400" />
@@ -125,14 +136,14 @@ const Login = () => {
                 </label>
                 <div className="relative flex items-center">
                   <input
-                    name="password"
+                    {...register("password")}
                     type={showPassword ? "text" : "password"}
-                    className="w-full text-gray-800 text-base border-b border-gray-300 focus:border-blue-600 px-2 py-3 outline-none"
+                    className="w-full text-white text-base border-b border-gray-300 focus:border-blue-600 px-2 py-3 outline-none"
                     placeholder="Enter password"
                   />
                   <button
                     type="button"
-                    // onClick={() => setShowPassword(!showPassword)}
+                    onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-4  text-2xl text-gray-400 cursor-pointer"
                   >
                     {showPassword ? <FaEyeSlash></FaEyeSlash> : <FaEye></FaEye>}
@@ -144,7 +155,7 @@ const Login = () => {
                 <div className="flex items-center">
                   <input
                     id="remember-me"
-                    name="remember-me"
+                    {...register("remember-me")}
                     type="checkbox"
                     className="h-4 w-4 shrink-0 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                   />
@@ -158,7 +169,7 @@ const Login = () => {
                 <div>
                   <button
                     type="button"
-                    // onClick={handleReset}
+                    onClick={handleReset}
                     className="text-blue-600 cursor-pointer font-semibold text-sm hover:underline"
                   >
                     Forgot Password?
@@ -176,10 +187,12 @@ const Login = () => {
               </div>
 
               <div className="mt-12">
-                <p className="text-center text-xl">Or SignUp using</p>
+                <p className="text-center text-xl text-gray-700">
+                  Or SignUp using
+                </p>
                 <div className="space-x-6 flex justify-center mt-6">
                   <button
-                    // onClick={googlePopUp}
+                    onClick={googlePopUp}
                     type="button"
                     className="border-none p-0 outline-none btn bg-inherit hover:bg-inherit hover:shadow-none shadow-none hover:scale-110 duration-300 ease-in-out"
                   >

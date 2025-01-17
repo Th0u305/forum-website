@@ -23,6 +23,7 @@ import AnalyticsPage from "./Components/Pages/Dashboard/pages/AnalyticsPage";
 import SettingsPage from "./Components/Pages/Dashboard/pages/SettingsPage";
 import ErrorPage from "./Components/Pages/ErrorPage/ErrorPage";
 import Login from "./Components/Pages/Login/Login";
+import PrivateRoute from "./Components/Pages/Private/Routes/PrivateRoute";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -34,8 +35,8 @@ createRoot(document.getElementById("root")).render(
         <QueryClientProvider client={queryClient}>
           <Routes>
             <Route path="/" element={<Root></Root>}>
-            <Route path="*" element={<ErrorPage></ErrorPage>}></Route>
-            <Route path="login" element={<Login></Login>}></Route>
+              <Route path="*" element={<ErrorPage></ErrorPage>}></Route>
+              <Route path="/login" element={<Login></Login>}></Route>
               <Route element={<Home></Home>}>
                 <Route index element={<Posts></Posts>}></Route>
                 <Route path="post/:id" index element={<SinglePost></SinglePost>}></Route>
@@ -43,21 +44,18 @@ createRoot(document.getElementById("root")).render(
                 <Route path="top" index element={<TopPosts></TopPosts>}></Route>
               </Route>
               <Route path="/membership" index element={<Membership></Membership>} ></Route>
-            </Route>
-          </Routes>
-
-          <Routes>
-            <Route element={<DashboardRoot></DashboardRoot>}>
+          
+              <Route path="/dashboard" element={<PrivateRoute><DashboardRoot></DashboardRoot></PrivateRoute>}>
                 <Route path="/dashboard" index element={<OverviewPage></OverviewPage>}></Route>
-                <Route path='/dashboard/products' index element={<ProductsPage></ProductsPage>} ></Route>
-                <Route path='/dashboard/users' index element={<UsersPage></UsersPage>}></Route>
-				        <Route path='/dashboard/sales' index element={<SalesPage></SalesPage>}></Route>
-				        <Route path='/dashboard/orders' index element={<OrdersPage></OrdersPage>}></Route>
-				        <Route path='/dashboard/analytics' index  element={<AnalyticsPage></AnalyticsPage>} ></Route>
-				        <Route path='/dashboard/settings' index element={<SettingsPage></SettingsPage>}></Route>
-            </Route>
+                <Route path='products' index element={<PrivateRoute><ProductsPage></ProductsPage></PrivateRoute>} ></Route>
+                <Route path='users' index element={<UsersPage></UsersPage>}></Route>
+				        <Route path='sales' index element={<SalesPage></SalesPage>}></Route>
+				        <Route path='orders' index element={<OrdersPage></OrdersPage>}></Route>
+				        <Route path='analytics' index  element={<AnalyticsPage></AnalyticsPage>} ></Route>
+				        <Route path='settings' index element={<SettingsPage></SettingsPage>}></Route>
+              </Route>
+            </Route> 
           </Routes>
-
         </QueryClientProvider>
       </NextThemesProvider>
     </NextUIProvider>
