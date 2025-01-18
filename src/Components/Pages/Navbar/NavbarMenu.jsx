@@ -81,6 +81,9 @@ export default function NavbarMenu2() {
 
   const handleSignOut =()=>{
     signOutUser();
+    if (!user) {
+     return toast.error("Your're not logged in")
+    }
     toast.success("Signed out successfully")
   }
 

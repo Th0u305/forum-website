@@ -24,6 +24,7 @@ import SettingsPage from "./Components/Pages/Dashboard/pages/SettingsPage";
 import ErrorPage from "./Components/Pages/ErrorPage/ErrorPage";
 import Login from "./Components/Pages/Login/Login";
 import PrivateRoute from "./Components/Pages/Private/Routes/PrivateRoute";
+import Register from "./Components/Pages/Register/Register";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -33,29 +34,34 @@ createRoot(document.getElementById("root")).render(
     <NextUIProvider>
       <NextThemesProvider attribute="class" defaultTheme="dark">
         <QueryClientProvider client={queryClient}>
+
           <Routes>
-            <Route path="/" element={<Root></Root>}>
-              <Route path="*" element={<ErrorPage></ErrorPage>}></Route>
-              <Route path="/login" element={<Login></Login>}></Route>
-              <Route element={<Home></Home>}>
-                <Route index element={<Posts></Posts>}></Route>
-                <Route path="post/:id" index element={<SinglePost></SinglePost>}></Route>
-                <Route path="latest" index element={<LatestData></LatestData>}></Route>
-                <Route path="top" index element={<TopPosts></TopPosts>}></Route>
+            <Route path="*" element={<ErrorPage />} />
+
+            <Route path="/" element={<Root />}>
+              <Route element={<Home />}>
+                <Route index element={<Posts />} />
+                <Route path="post/:id" element={<SinglePost />} />
+                <Route path="latest" element={<LatestData />} />
+                <Route path="top" element={<TopPosts />} />
               </Route>
-              <Route path="/membership" index element={<Membership></Membership>} ></Route>
-          
-              <Route path="/dashboard" element={<PrivateRoute><DashboardRoot></DashboardRoot></PrivateRoute>}>
-                <Route path="/dashboard" index element={<OverviewPage></OverviewPage>}></Route>
-                <Route path='products' index element={<PrivateRoute><ProductsPage></ProductsPage></PrivateRoute>} ></Route>
-                <Route path='users' index element={<UsersPage></UsersPage>}></Route>
-				        <Route path='sales' index element={<SalesPage></SalesPage>}></Route>
-				        <Route path='orders' index element={<OrdersPage></OrdersPage>}></Route>
-				        <Route path='analytics' index  element={<AnalyticsPage></AnalyticsPage>} ></Route>
-				        <Route path='settings' index element={<SettingsPage></SettingsPage>}></Route>
-              </Route>
-            </Route> 
+              <Route path="/membership" element={<Membership />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+            </Route>
+
+            <Route path="/dashboard" element={<DashboardRoot />}>
+                <Route path="/dashboard" element={<PrivateRoute><OverviewPage /></PrivateRoute>}/>
+                <Route path="products" element={<PrivateRoute><ProductsPage /></PrivateRoute>} />
+                <Route path="users" element={<PrivateRoute><UsersPage /></PrivateRoute>} />
+                <Route path="sales" element={<PrivateRoute><SalesPage /></PrivateRoute>} />
+                <Route path="orders" element={<OrdersPage />} />
+                <Route path="analytics" element={<AnalyticsPage />} />
+                <Route path="settings" element={<SettingsPage />} />
+            </Route>
+            
           </Routes>
+
         </QueryClientProvider>
       </NextThemesProvider>
     </NextUIProvider>

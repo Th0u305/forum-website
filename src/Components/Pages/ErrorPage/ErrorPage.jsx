@@ -3,8 +3,8 @@
 export default function ErrorPage() {
   return (
     <div className="h-screen w-full bg-yellow-600 text-gray-900">
-      <section className="home grid h-screen pt-32 pb-16">
-        <div className="container grid content-center gap-12 lg:max-w-5xl lg:grid-cols-2 lg:items-center">
+      <section className=" h-screen pt-32 pb-16">
+        <div className="mx-auto container grid content-center gap-12 lg:max-w-5xl lg:grid-cols-2 lg:items-center">
           <div className="justify-self-center text-center lg:text-left">
             <p className="pb-2 font-semibold">Error 404</p>
             <h1 className="pb-4 text-5xl font-bold lg:text-6xl">Hey Buddy</h1>
