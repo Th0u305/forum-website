@@ -58,12 +58,12 @@ const Login = () => {
 
     signInUser(email, password)
       .then(() => {
-        e.target.reset();
+        reset();
         toast.success("Successfully logged in!");
-        navigate(state);
+        return navigate(state);
       })
       .catch(() => {
-        toast.error("Invalid credentials. Password or Email");
+        return toast.error("Invalid credentials. Password or Email");
       });
   };
 

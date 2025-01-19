@@ -1,5 +1,6 @@
 import {
   createUserWithEmailAndPassword,
+  deleteUser,
   GoogleAuthProvider,
   onAuthStateChanged,
   sendPasswordResetEmail,
@@ -109,6 +110,12 @@ const ContextProvider = ({ children }) => {
   }
 
 
+  //delete user from firebase
+  const deleteUserData = () =>{
+    return deleteUser(user)
+  }
+
+
   const contextData = {
     signInWithGoogle,
     signOutUser,
@@ -120,6 +127,7 @@ const ContextProvider = ({ children }) => {
     createUser,
     updateUserProfile,
     resetUserPassword,
+    deleteUserData,
     myRef
   };
 

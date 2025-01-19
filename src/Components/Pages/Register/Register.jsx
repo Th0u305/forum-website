@@ -6,8 +6,8 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import toast from "react-hot-toast";
 import { AuthContext } from "../../Context/ContextProvider";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router";
-import { Input, Spinner } from "@nextui-org/react";
+import { Link, useLocation, useNavigate } from "react-router";
+import { Input, Spinner } from "@heroui/react";
 import useAxiosPublic from "../../Hooks/useAxiosPublic";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -32,6 +32,7 @@ const Register = () => {
   const [file, setFile] = useState();
   const [imageUrl, setImageUrl] = useState();
   const axiosPublic = useAxiosPublic();
+  const {state} = useLocation()
 
   const googlePopUp = () => {
     if (user && user?.email) {
@@ -39,15 +40,23 @@ const Register = () => {
     }
     signInWithGoogle().then((result) => {
       setUser(result.user);
+
+      const userInfo = {
+        name: result.user.displayName,
+        email: result.user.email,
+        photo: result.user.photoURL,
+      };
+
+      axiosPublic.post("/addUser", userInfo);
+
       toast.success("Successfully Logged in");
+
       navigate(state);
     });
   };
 
   const onsubmit = async (e) => {
-    setFile(e.photo[0]);
-
-    if (!file) return;
+    if (!e.photo[0]) return;
 
     const name = e.name;
     const email = e.email;
@@ -78,47 +87,49 @@ const Register = () => {
       );
       return;
     }
+    Swal.fire({
+      position: "center",
+      icon: "warning",
+      title: "Creating your account",
+      showConfirmButton: false,
+      timer: 3000,
+    });
 
-    createUser(email, password)
+    const formData = new FormData();
+    formData.append("file", e.photo[0]);
+    formData.append("upload_preset", "formProject");
+
+    const result = await axios.post(
+      `https://api.cloudinary.com/v1_1/${image_hosting_cloud_name}/image/upload`,
+      formData
+    );
+
+    const userInfo = {
+      name: name,
+      email: email,
+      photo: result.data.url,
+    };
+
+    axiosPublic.post("/addUser", userInfo);
+
+    createUser(email, password) 
       .then(() => {
         signOutUser();
+
         Swal.fire({
           title: "Account Created Successfully",
           icon: "success",
           draggable: false,
         }).then((result) => {
-          console.log(result);
+          if (result.isConfirmed) {
+            navigate("/login");
+          }
         });
-        navigate("/login");
-        reset()
+        reset();
       })
       .catch(() => {
         return toast.error("This user already exists");
       });
-
-    setTimeout(async () => {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("upload_preset", "formProject");
-
-      try {
-        const result = await axios.post(
-          `https://api.cloudinary.com/v1_1/${image_hosting_cloud_name}/image/upload`,
-          formData
-        );
-        setImageUrl(result.data.url);
-      } catch (error) {
-        return toast.error("Something Went Wrong try again");
-      }
-
-      const userInfo = {
-        name: name,
-        email: email,
-        photo: imageUrl,
-      };
-
-      axiosPublic.post("/addUser", userInfo);
-    }, 3000);
   };
 
   return (

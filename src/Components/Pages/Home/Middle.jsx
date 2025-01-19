@@ -2,7 +2,7 @@ import useAxiosCategory from "../../Hooks/useAxiosCategory";
 import useAxiosTags from "../../Hooks/useAxiosTags";
 import React, { useContext, useState } from "react";
 import Select from "react-select";
-import { Card, CardBody, Image, Tab, Tabs, Textarea } from "@nextui-org/react";
+import { Card, CardBody, Image, Tab, Tabs, Textarea } from "@heroui/react";
 import { Outlet, useLocation } from "react-router";
 import { DataContextProvider } from "../../Context/DataContext";
 

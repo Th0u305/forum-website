@@ -14,7 +14,7 @@ import {
   DropdownMenu,
   DropdownItem,
   DropdownTrigger,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import ThemeSwitcher from "./Theme";
 import { NavLink } from "react-router";
 import { useContext } from "react";

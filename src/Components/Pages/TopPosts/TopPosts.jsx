@@ -9,7 +9,7 @@ import {
   Image,
   Spinner,
   user,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { FaThumbsUp } from "react-icons/fa";
 import { FaThumbsDown } from "react-icons/fa";
 import { FaComment } from "react-icons/fa6";

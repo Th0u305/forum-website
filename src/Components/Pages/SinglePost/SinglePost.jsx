@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import useAxiosComments from "../../Hooks/useAxiosComments";
 import useAxiosPosts from "../../Hooks/useAxiosPosts";
-import { Button, Card, CardBody, CardHeader, Image, Spinner } from "@nextui-org/react";
+import { Button, Card, CardBody, CardHeader, Image, Spinner } from "@heroui/react";
 import { FaComment, FaShare, FaThumbsDown, FaThumbsUp } from "react-icons/fa";
 import useAxiosMergeData from "../../Hooks/useAxiosMergeData";
 import useAxiosUsers from "../../Hooks/useAxiosUser";

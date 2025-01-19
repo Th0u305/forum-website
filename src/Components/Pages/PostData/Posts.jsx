@@ -6,7 +6,7 @@ import {
   Image,
   Spinner,
   user,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import useAxiosPosts from "../../Hooks/useAxiosPosts";
 import useAxiosUsers from "../../Hooks/useAxiosUser";
 import useAxiosComments from "../../Hooks/useAxiosComments";

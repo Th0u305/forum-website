@@ -4,10 +4,7 @@ import { BrowserRouter, Route, Routes } from "react-router";
 import Root from "./Components/Root/Root";
 import Home from "./Components/Pages/Home/Home";
 import "./index.css";
-import { NextUIProvider } from "@nextui-org/react";
-import { ThemeProvider as NextThemesProvider } from "next-themes";
 import Membership from "./Components/Pages/Membership/Membership";
-
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Posts from "./Components/Pages/PostData/Posts";
 import SinglePost from "./Components/Pages/SinglePost/SinglePost";
@@ -25,13 +22,17 @@ import ErrorPage from "./Components/Pages/ErrorPage/ErrorPage";
 import Login from "./Components/Pages/Login/Login";
 import PrivateRoute from "./Components/Pages/Private/Routes/PrivateRoute";
 import Register from "./Components/Pages/Register/Register";
+import { HeroUIProvider } from "@heroui/react";
+import {ThemeProvider as NextThemesProvider} from "next-themes";
+import AdminRoutes from "./Components/Pages/Private/Routes/AdminRoutes";
+
 
 // Create a client
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")).render(
   <BrowserRouter>
-    <NextUIProvider>
+    <HeroUIProvider>
       <NextThemesProvider attribute="class" defaultTheme="dark">
         <QueryClientProvider client={queryClient}>
 
@@ -53,7 +54,7 @@ createRoot(document.getElementById("root")).render(
             <Route path="/dashboard" element={<DashboardRoot />}>
                 <Route path="/dashboard" element={<PrivateRoute><OverviewPage /></PrivateRoute>}/>
                 <Route path="products" element={<PrivateRoute><ProductsPage /></PrivateRoute>} />
-                <Route path="users" element={<PrivateRoute><UsersPage /></PrivateRoute>} />
+                <Route path="users" element={<PrivateRoute><AdminRoutes><UsersPage /></AdminRoutes></PrivateRoute>} />
                 <Route path="sales" element={<PrivateRoute><SalesPage /></PrivateRoute>} />
                 <Route path="orders" element={<OrdersPage />} />
                 <Route path="analytics" element={<AnalyticsPage />} />
@@ -64,6 +65,6 @@ createRoot(document.getElementById("root")).render(
 
         </QueryClientProvider>
       </NextThemesProvider>
-    </NextUIProvider>
+    </HeroUIProvider>
   </BrowserRouter>
 );

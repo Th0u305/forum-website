@@ -1,20 +1,21 @@
-import { Navigate, useLocation } from "react-router-dom";
-import useAdmin from "../hooks/useAdmin";
-import useAuth from "../hooks/useAuth";
+import { useContext } from "react";
+import useAdmin from "../../../Hooks/useAdmin";
+import { Navigate, useLocation } from "react-router";
+import { AuthContext } from "../../../Context/ContextProvider";
 
 const AdminRoutes = ({children}) => {
   const [isAdmin, isAdminLoading] = useAdmin();
-  const { user, loading } = useAuth();
-  const location = useLocation();
+  const { user, loading } = useContext(AuthContext);
+  const {pathname} = useLocation()
 
   if (loading || isAdminLoading) {
-    return <progress className="progress w-56"></progress>;
+    return  <span className="loading loading-spinner loading-lg"></span>
   }
 
   if (user && isAdmin) {
     return children;
   } else {
-    return <Navigate to="/" state={{ from: location }} replace></Navigate>;
+    return <Navigate to="/" state={pathname}></Navigate>;
   }
 };
 

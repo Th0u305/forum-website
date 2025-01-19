@@ -28,6 +28,7 @@ const useAxiosSecure = () => {
   // );
 
 
+  
   // if cookie-parser used to store cookie
 
   // request interceptor to add authorization header for every secure call to teh api
@@ -49,7 +50,7 @@ const useAxiosSecure = () => {
       const status = error.response.status;
 
       if (status === 401 || status === 403) {
-        await logOut();
+        await signOut();
         navigate("/login");
       }
       return Promise.reject(error);
