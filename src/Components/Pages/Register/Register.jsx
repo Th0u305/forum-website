@@ -32,7 +32,7 @@ const Register = () => {
   const [file, setFile] = useState();
   const [imageUrl, setImageUrl] = useState();
   const axiosPublic = useAxiosPublic();
-  const {state} = useLocation()
+  const { state } = useLocation();
 
   const googlePopUp = () => {
     if (user && user?.email) {
@@ -109,23 +109,22 @@ const Register = () => {
       email: email,
       photo: result.data.url,
     };
-
     axiosPublic.post("/addUser", userInfo);
 
-    createUser(email, password) 
+    createUser(email, password)
       .then(() => {
         signOutUser();
-
         Swal.fire({
           title: "Account Created Successfully",
           icon: "success",
           draggable: false,
         }).then((result) => {
+          reset();
+
           if (result.isConfirmed) {
             navigate("/login");
           }
         });
-        reset();
       })
       .catch(() => {
         return toast.error("This user already exists");
@@ -311,6 +310,7 @@ const Register = () => {
                 </a>
               </label>
             </div>
+            <p className="text-red-600">{errorMessage}</p>
           </div>
 
           <button

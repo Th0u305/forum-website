@@ -1,17 +1,18 @@
 import useAxiosSecure from './useAxiosSecure';
 import { useQuery } from '@tanstack/react-query';
 
-const useAxiosSecureData = () => {
+const useAxiosAdminData = () => {
+    
     const axiosSecure = useAxiosSecure()
 
     const {data : users = [] , refetch} = useQuery({
-        queryKey : ["users"], 
+        queryKey : ["users"],
         queryFn : async () =>{
-            const res = await axiosSecure.get("/getDataA") 
+            const res = await axiosSecure.get("/getDataAdmin") 
             return res.data
         }
     })
     return [users, refetch]
 };
 
-export default useAxiosSecureData;
+export default useAxiosAdminData;

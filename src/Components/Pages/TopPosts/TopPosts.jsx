@@ -19,7 +19,7 @@ const TopPosts = () => {
   const [mergedData = limitData] = useAxiosMergeData();
   const [users] = useAxiosUsers();
 
-const limitData = mergedData.slice(0,5)
+  const limitData = mergedData.slice(0, 5);
   return (
     <div className="mt-12">
       {limitData?.length > 0 ? (
@@ -50,18 +50,19 @@ const limitData = mergedData.slice(0,5)
               />
               <CardBody className="flex flex-row gap-5">
                 <Button size="sm" variant="flat">
-                  <FaThumbsUp /> {item.upVotes}
+                  <FaThumbsUp className="text-blue-400" />
+                  {item.upVotes}
                 </Button>
                 <Button size="sm" variant="flat">
-                  <FaThumbsDown />{item.downVotes}
+                <FaThumbsDown className="text-red-400" />
+                  {item.downVotes}
                 </Button>
                 <Button size="sm" variant="flat">
-                  <FaComment />
+               <FaComment className="text-green-400" />
                   {item.commentData.length}
                 </Button>
                 <Button size="sm" variant="flat">
-                  <FaShare />
-
+                <FaShare className="text-yellow-400" />
                   {item.commentData.length + 15}
                 </Button>
               </CardBody>

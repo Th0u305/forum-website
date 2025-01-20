@@ -1,20 +1,19 @@
 import { UserCheck, UserPlus, UsersIcon, UserX } from "lucide-react";
 import { motion } from "framer-motion";
-
 import Header from "../components/common/Header";
 import StatCard from "../components/common/StatCard";
 import UsersTable from "../components/users/UsersTable";
 import UserGrowthChart from "../components/users/UserGrowthChart";
 import UserActivityHeatmap from "../components/users/UserActivityHeatmap";
 import UserDemographicsChart from "../components/users/UserDemographicsChart";
-import useAxiosSecureData from "../../../Hooks/useAxiosSecureData";
-import axios from "axios";
+import useAxiosAdminData from "../../../../Hooks/useAxiosAdminData";
 
 
 
 const UsersPage = () => {
 
-  const [users] = useAxiosSecureData()
+  const [users,refetch] = useAxiosAdminData()  
+  refetch()
   
   return (
     <div className="flex-1 overflow-auto relative z-10">
@@ -31,19 +30,19 @@ const UsersPage = () => {
           <StatCard
             name="Total Users"
             icon={UsersIcon}
-            value={users.length}
+            value={users?.users?.length}
             color="#6366F1"
           />
           <StatCard
             name="New Users Today"
             icon={UserPlus}
-            value={users.length-15}
+            value={users?.users?.length-15}
             color="#10B981"
           />
           <StatCard
             name="Active Users"
             icon={UserCheck}
-            value={users.length-10}
+            value={users?.users?.length-10}
             color="#F59E0B"
           />
           <StatCard

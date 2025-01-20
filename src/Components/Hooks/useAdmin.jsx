@@ -9,12 +9,12 @@ const useAdmin = () => {
     const {data : isAdmin, isPending : isAdminLoading} = useQuery({
         queryKey : [user?.email, "isAdmin"],
         enabled : !loading,
-        queryFn : async () =>{
-            const res = await axiosSecure.get(`${import.meta.env.VITE_AUTH_VALIDATION}/${user?.email}`);
-            return res.data            
+        queryFn : async () =>{            
+            const res = await axiosSecure.get(`${import.meta.env.VITE_AUTH_VALIDATION}/${user?.email}`);            
+            return res.data
         }
     })
-    return[isAdmin, isAdminLoading]
+    return[isAdmin]
     
 };
 

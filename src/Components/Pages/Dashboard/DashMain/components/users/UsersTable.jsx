@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Search } from "lucide-react";
-import useAxiosSecureData from "../../../../Hooks/useAxiosSecureData";
+import useAxiosSecureData from "../../../../../Hooks/useAxiosSecureData";
 import {
   Dropdown,
   DropdownMenu,
@@ -11,19 +11,26 @@ import {
   DropdownSection,
 } from "@heroui/react";
 import { useForm } from "react-hook-form";
-import useAxiosSecure from "../../../../Hooks/useAxiosSecure";
 import Swal from "sweetalert2";
 import { useContext } from "react";
-import { AuthContext } from "../../../../Context/ContextProvider";
-import { firebaseAuth } from "../../../Private/firebase/firebase.config";
-import { deleteUser, EmailAuthProvider, GoogleAuthProvider, reauthenticateWithCredential, reauthenticateWithPopup } from "firebase/auth";
+import { firebaseAuth } from "../../../../Private/firebase/firebase.config";
+import {
+  deleteUser,
+  EmailAuthProvider,
+  GoogleAuthProvider,
+  reauthenticateWithCredential,
+  reauthenticateWithPopup,
+} from "firebase/auth";
+import useAxiosAdminData from "../../../../../Hooks/useAxiosAdminData";
+import { AuthContext } from "../../../../../Context/ContextProvider";
+import useAxiosSecure from "../../../../../Hooks/useAxiosSecure";
 
 const UsersTable = () => {
-  const [users, refetch] = useAxiosSecureData();
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredUsers, setFilteredUsers] = useState();
   const axiosSecure = useAxiosSecure();
-  const {deleteUserData,user} = useContext(AuthContext);
+  const { deleteUserData, user } = useContext(AuthContext);
+  const [users,refetch] = useAxiosAdminData()  
 
   const {
     register,
@@ -36,13 +43,14 @@ const UsersTable = () => {
     refetch();
     const term = e.target.value.toLowerCase();
     setSearchTerm(term);
-    const filtered = users.filter(
+    const filtered = users.users?.filter(
       (user) =>
-        user.username?.toLowerCase()?.includes(term) ||
-        user.email?.toLowerCase()?.includes(term) ||
+        user?.username?.toLowerCase()?.includes(term) ||
+        user?.email?.toLowerCase()?.includes(term) ||
         user?.role?.toLowerCase()?.includes(term) ||
         user?.membershipStatus?.toLowerCase()?.includes(term)
     );
+    refetch()
     setFilteredUsers(filtered);
   };
 
@@ -92,11 +100,32 @@ const UsersTable = () => {
     });
   };
 
-  const handleDelete = async (id) =>{
-console.log(user);
+  const handleDelete = async (id) => {
 
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axiosSecure.delete(`/adminPriv/${id}`).then((res) => {
+          if (res.status === 200) {
+            Swal.fire({
+              title: "Deleted!",
+              text: "User has been deleted",
+              icon: "success",
+            });
+            refetch();
+          }
+        });
+      }
+    });
 
-	// const user = firebaseAuth.currentUser;
+    // const user = firebaseAuth.currentUser;
 
     // const { isConfirmed } = await Swal.fire({
     //   title: "Are you sure?",
@@ -108,17 +137,17 @@ console.log(user);
     // });
 
     // if (isConfirmed && user) {
-       
-	// 	try {
-	// 	const provider = new GoogleAuthProvider()
-	// 	await reauthenticateWithPopup(user, provider)
-	// 	console.log("Reauthenticated successfully.");
 
-	// 	await user.delete();
-	// 	alert("Deleted User")
-	// 	}catch(error){
-	// 		alert("Error", error)
-	// 	}
+    // 	try {
+    // 	const provider = new GoogleAuthProvider()
+    // 	await reauthenticateWithPopup(user, provider)
+    // 	console.log("Reauthenticated successfully.");
+
+    // 	await user.delete();
+    // 	alert("Deleted User")
+    // 	}catch(error){
+    // 		alert("Error", error)
+    // 	}
     //   const { value: password } = await Swal.fire({
     //     title: "Enter your password",
     //     input: "password",
@@ -148,28 +177,25 @@ console.log(user);
     //   }
     // }
 
-
-
-
-	// axiosSecure.delete(`/adminPriv/${id}`).then(res => console.log(res.data))
-	// Swal.fire({
-	// 	title: "Are you sure?",
-	// 	text: "You won't be able to revert this!",
-	// 	icon: "warning",
-	// 	showCancelButton: true,
-	// 	confirmButtonColor: "#3085d6",
-	// 	cancelButtonColor: "#d33",
-	// 	confirmButtonText: "Yes, delete it!"
-	//   }).then((result) => {
-	// 	if (result.isConfirmed) {
-	// 	  Swal.fire({
-	// 		title: "Deleted!",
-	// 		text: "Your file has been deleted.",
-	// 		icon: "success"
-	// 	  });
-	// 	}
-	//   });
-  }
+    // axiosSecure.delete(`/adminPriv/${id}`).then(res => console.log(res.data))
+    // Swal.fire({
+    // 	title: "Are you sure?",
+    // 	text: "You won't be able to revert this!",
+    // 	icon: "warning",
+    // 	showCancelButton: true,
+    // 	confirmButtonColor: "#3085d6",
+    // 	cancelButtonColor: "#d33",
+    // 	confirmButtonText: "Yes, delete it!"
+    //   }).then((result) => {
+    // 	if (result.isConfirmed) {
+    // 	  Swal.fire({
+    // 		title: "Deleted!",
+    // 		text: "Your file has been deleted.",
+    // 		icon: "success"
+    // 	  });
+    // 	}
+    //   });
+  };
 
   return (
     <motion.div
@@ -214,7 +240,7 @@ console.log(user);
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-700">
-            {(filteredUsers || users)?.map((user) => (
+            {(filteredUsers || users.users)?.map((user) => (
               <motion.tr
                 key={user?._id}
                 initial={{ opacity: 0 }}
@@ -336,7 +362,10 @@ console.log(user);
                       </DropdownMenu>
                     </form>
                   </Dropdown>
-                  <button className="text-red-400 hover:text-red-300" onClick={()=> handleDelete(user._id)}>
+                  <button
+                    className="text-red-400 hover:text-red-300"
+                    onClick={() => handleDelete(user._id)}
+                  >
                     Delete
                   </button>
                 </td>

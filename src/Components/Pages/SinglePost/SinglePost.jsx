@@ -45,18 +45,17 @@ const SinglePost = () => {
           />
           <CardBody className="flex flex-row gap-5">
             <Button size="sm" variant="flat">
-              <FaThumbsUp />
+            <FaThumbsUp className="text-blue-400" />
             </Button>
             <Button size="sm" variant="flat">
-              <FaThumbsDown />
+            <FaThumbsDown className="text-red-400" />
             </Button>
             <Button size="sm" variant="flat">
-              <FaComment />
+            <FaComment className="text-green-400" />
               {mergedData[0]?.commentData.length}
             </Button>
             <Button size="sm" variant="flat">
-              <FaShare />
-
+            <FaShare className="text-yellow-400" />
               {mergedData[0]?.commentData.length + 15}
             </Button>
           </CardBody>
