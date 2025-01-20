@@ -14,7 +14,6 @@ const MyPost = () => {
   const axiosSecure = useAxiosSecure();
 
   axiosSecure.get(`/myPost/${user.email}`).then((res) => setPostData(res.data));
-  // console.log(postData);
 
   return (
     <div className="flex-1 relative z-10 overflow-auto">
