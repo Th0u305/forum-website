@@ -3,16 +3,26 @@ import {
   Card,
   CardBody,
   CardHeader,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownSection,
+  DropdownTrigger,
   Image,
   Spinner,
-  user,
 } from "@heroui/react";
 import useAxiosPosts from "../../Hooks/useAxiosPosts";
 import useAxiosUsers from "../../Hooks/useAxiosUser";
 import useAxiosComments from "../../Hooks/useAxiosComments";
-import { FaThumbsUp } from "react-icons/fa";
+import {
+  FaFlag,
+  FaListUl,
+  FaRegLifeRing,
+  FaRegSave,
+  FaThumbsUp,
+} from "react-icons/fa";
 import { FaThumbsDown } from "react-icons/fa";
-import { FaComment } from "react-icons/fa6";
+import { FaComment, FaDeleteLeft } from "react-icons/fa6";
 import { FaShare } from "react-icons/fa";
 import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
@@ -22,7 +32,7 @@ import { DataContextProvider } from "../../Context/DataContext";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import { AuthContext } from "../../Context/ContextProvider";
 import toast from "react-hot-toast";
-import { m } from "framer-motion";
+import Swal from "sweetalert2";
 
 const Posts = () => {
   const [posts] = useAxiosPosts();
@@ -60,10 +70,36 @@ const Posts = () => {
 
     axiosSecure.patch("/updateLikes", { filter }).then((res) => {
       if (res.data.modifiedCount > 0) {
-        refetch()
+        refetch();
       }
     });
   };
+
+  // const showInputModal = async () => {
+  //   const { value: userInput } = await Swal.fire({
+  //     title: "Type your report",
+  //     input: "textarea",
+  //     inputPlaceholder: "Type something...",
+  //     showCancelButton: true,
+  //     confirmButtonText: "Submit",
+  //     cancelButtonText: "Cancel",
+  //     inputValidator: (value) => {
+  //       if (!value) {
+  //         return "You need to write something!";
+  //       }
+  //     },
+  //   });
+  //   console.log(userInput);
+    
+
+  //   if (userInput) {
+  //     Swal.fire({
+  //       title: "You entered:",
+  //       text: userInput,
+  //       icon: "success",
+  //     });
+  //   }
+  // };
 
   return (
     <div className="w-fit mx-auto">
@@ -92,30 +128,64 @@ const Posts = () => {
                 className="object-cover rounded-xl cursor-pointer"
                 src={item?.image}
               />
-              <CardBody className="flex flex-row gap-5">
-                <Button
-                  size="sm"
-                  variant="flat"
-                  onPress={() => handleLikes("upVotes", item.id)}
-                >
-                  <FaThumbsUp className="text-blue-400" />
-                  {item.upVotes}
-                </Button>
-                <Button
-                  size="sm"
-                  variant="flat"
-                  onPress={() => handleLikes("downVotes", item.id)}
-                >
-                  <FaThumbsDown className="text-red-400" /> {item.downVotes}
-                </Button>
-                <Button size="sm" variant="flat">
-                  <FaComment className="text-green-400" />
-                  {item.commentData.length}
-                </Button>
-                <Button size="sm" variant="flat">
-                  <FaShare className="text-yellow-400" />
-                  {item.commentData.length + 15}
-                </Button>
+              <CardBody className="flex flex-row gap-5 justify-between">
+                <div className="flex gap-5 flex-wrap">
+                  <Button
+                    size="sm"
+                    variant="flat"
+                    onPress={() => handleLikes("upVotes", item.id)}
+                  >
+                    <FaThumbsUp className="text-blue-400" />
+                    {item.upVotes}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="flat"
+                    onPress={() => handleLikes("downVotes", item.id)}
+                  >
+                    <FaThumbsDown className="text-red-400" /> {item.downVotes}
+                  </Button>
+                  <Button size="sm" variant="flat">
+                    <FaComment className="text-green-400" />
+                    {item.commentData.length}
+                  </Button>
+                  <Button size="sm" variant="flat">
+                    <FaShare className="text-yellow-400" />
+                    {item.commentData.length + 15}
+                  </Button>
+                </div>
+                <div>
+                  <Dropdown>
+                    <DropdownTrigger>
+                      <Button size="sm" variant="flat">
+                        <FaListUl className="text-violet-500 text-xl"></FaListUl>
+                      </Button>
+                    </DropdownTrigger>
+                    <DropdownMenu aria-label="Static Actions" variant="faded">
+                      <DropdownItem textValue="ff" key="new">
+                        <FaRegSave className="inline-flex mr-3 text-blue-400" />{" "}
+                        Save post
+                      </DropdownItem>
+                      <DropdownItem textValue="ss" key="copy">
+                        <FaDeleteLeft className="inline-flex mr-3 text-yellow-400" />{" "}
+                        Hide post
+                      </DropdownItem>
+                      <DropdownItem textValue="w" key="edit">
+                        <FaRegLifeRing className="inline-flex mr-3 text-green-400" />{" "}
+                        Block
+                      </DropdownItem>
+                      <DropdownSection showDivider></DropdownSection>
+                      <DropdownItem
+                        // onPress={() => showInputModal()}
+                        textValue="4t"
+                        className="text-red-400"
+                      >
+                        <FaFlag className="inline-flex mr-3" />
+                        Report Post
+                      </DropdownItem>
+                    </DropdownMenu>
+                  </Dropdown>
+                </div>
               </CardBody>
             </CardBody>
             {item.commentData.map((item2, index) => (

@@ -16,6 +16,7 @@ const AnnText = () => {
       <CardHeader className="flex flex-col gap-8">
         <h4 className="font-bold text-yellow-600 text-large mx-auto">Latest Announcements</h4>
         <p className="max-w-md break-words break-all">{announcement?.announcements}</p>
+        <img className="w-24 h-24 object-cover" src={announcement?.image} alt="" />
       </CardHeader>
       <CardBody></CardBody>
     </Card>

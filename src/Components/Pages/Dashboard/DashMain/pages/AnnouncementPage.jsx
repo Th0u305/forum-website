@@ -9,6 +9,8 @@ import { Card, CardHeader, CardBody, Image, Button } from "@heroui/react";
 import { FaComment, FaShare, FaThumbsDown, FaThumbsUp } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
+import axios from "axios";
+const image_hosting_cloud_name = import.meta.env.VITE_IMAGE_CLOUD_NAME;
 
 const Announcement = () => {
   const {
@@ -30,12 +32,38 @@ const Announcement = () => {
     setFilterData(filterData);
   }, [refetch()]);
 
-  const onsubmit = (e) => {
+
+  const onsubmit = async (e) => {
+
+
+
+    Swal.fire({
+      position: "center",
+      icon: "warning",
+      title: "Creating your announcement post",
+      showConfirmButton: false,
+      timer: 3000,
+    });
+    
+
+    
+    const formData = new FormData();
+    formData.append("file", e.photo[0]);
+    formData.append("upload_preset", "formProject");
+
+    const result = await axios.post(
+      `https://api.cloudinary.com/v1_1/${image_hosting_cloud_name}/image/upload`,
+      formData
+    );
+
+
     const data = {
       title: e.title,
       details: e.postDetails,
       adminId: filterData.id,
+      image : result.data.url
     };
+
     axiosSecure.post("/announcement", { data }).then((res) => {
       if (res.status === 200) {
         Swal.fire({
@@ -44,11 +72,11 @@ const Announcement = () => {
           draggable: false,
         });
         reset();
-      }else{
+      } else {
         return Swal.fire({
           title: "Something went wrong please try again",
           icon: "warning",
-          draggable: false
+          draggable: false,
         });
       }
     });
@@ -59,7 +87,9 @@ const Announcement = () => {
     <div className="flex-1 relative z-10 overflow-auto">
       <Header title={"Announcement"} />
 
-      <main className="max-w-7xl mx-auto py-6 px-4 lg:px-8 h-screen space-y-10">
+      <main className="max-w-7xl mx-auto py-6 px-4 lg:px-8 space-y-10">
+        <AnnTable />
+
         <motion.div
           className=""
           initial={{ opacity: 0, y: 20 }}
@@ -133,6 +163,7 @@ const Announcement = () => {
 
                 <div className="space-y-8 font-[sans-serif] mb-5">
                   <input
+                  {...register("photo")}
                     type="file"
                     className="w-full text-gray-500 font-medium text-lg bg-gray-100 file:cursor-pointer cursor-pointer file:border-0 file:py-3 file:px-4 file:mr-4 file:bg-gray-800 file:hover:bg-gray-700 file:text-white rounded-md"
                   />
@@ -147,8 +178,6 @@ const Announcement = () => {
             </div>
           </div>
         </motion.div>
-
-        <AnnTable />
       </main>
     </div>
   );

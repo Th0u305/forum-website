@@ -1,38 +1,22 @@
 import { motion } from "framer-motion";
 import { Edit, Search, Trash2 } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
-import useAxiosSecure from "../../../../../Hooks/useAxiosSecure";
-import useAxiosAnn from "../../../../../Hooks/useAxiosAnn";
-import useAxiosSecureData from "../../../../../Hooks/useAxiosSecureData";
-import { AuthContext } from "../../../../../Context/ContextProvider";
 
-const PostTable = () => {
+const PostTable = ({ postData }) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [postData, setPostData] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState(postData);
-  const [ann, refetch] = useAxiosAnn();
-  const axiosSecure = useAxiosSecure();
+  const [filteredProducts, setFilteredProducts] = useState();
 
 
-    // const { user } = useContext(AuthContext);
-  // const [users] = useAxiosSecureData();
-  // const axiosSecure = useAxiosSecure();
-  
-  // axiosSecure.get(`/myPost/${user.email}`).then((res) => setPostData(res.data));
-
-  
-  // console.log(postData);
   const handleSearch = (e) => {
-    refetch();
     const term = e.target.value.toLowerCase();
     setSearchTerm(term);
-    const filtered = postData.users?.filter(
-      (item) =>
-        item?.title?.toLowerCase()?.includes(term)
+    const filtered = postData.filter((item) =>
+      item?.title?.toLowerCase()?.includes(term)
     );
-    refetch()
-    setFilteredUsers(filtered);
+    setFilteredProducts(filtered);
   };
+
+  
 
   return (
     <motion.div
@@ -69,37 +53,36 @@ const PostTable = () => {
           </thead>
 
           <tbody className="divide-y divide-gray-700">
-            {filteredProducts ||
-              postData?.map((item,index) => (
-                <motion.tr
-                  key={index}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100 flex gap-2 items-center">
-                    <img
-                      src="https://images.unsplash.com/photo-1627989580309-bfaf3e58af6f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8d2lyZWxlc3MlMjBlYXJidWRzfGVufDB8fDB8fHww"
-                      alt="Product img"
-                      className="size-10 rounded-full"
-                    />
-                    {item?.title}
-                  </td>
+            {(filteredProducts || postData)?.map((item, index) => (
+              <motion.tr
+                key={index}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.3 }}
+              >
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100 flex gap-2 items-center">
+                  <img
+                    src="https://images.unsplash.com/photo-1627989580309-bfaf3e58af6f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8d2lyZWxlc3MlMjBlYXJidWRzfGVufDB8fDB8fHww"
+                    alt="Product img"
+                    className="size-10 rounded-full"
+                  />
+                  {item?.title}
+                </td>
 
-                  <td className="px-6 py-4 whitespace-nowrap text-ellipsis text-sm text-gray-300 break-words text-wrap max-w-xs">
-                    {item?.description}
-                  </td>
+                <td className="px-6 py-4 whitespace-nowrap text-ellipsis text-sm text-gray-300 break-words text-wrap max-w-xs">
+                  {item?.description}
+                </td>
 
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                    <button className="text-indigo-400 hover:text-indigo-300 mr-2">
-                      <Edit size={18} />
-                    </button>
-                    <button className="text-red-400 hover:text-red-300">
-                      <Trash2 size={18} />
-                    </button>
-                  </td>
-                </motion.tr>
-              ))}
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
+                  <button className="text-indigo-400 hover:text-indigo-300 mr-2">
+                    <Edit size={18} />
+                  </button>
+                  <button className="text-red-400 hover:text-red-300">
+                    <Trash2 size={18} />
+                  </button>
+                </td>
+              </motion.tr>
+            ))}
           </tbody>
         </table>
       </div>

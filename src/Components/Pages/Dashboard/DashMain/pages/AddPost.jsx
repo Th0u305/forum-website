@@ -11,6 +11,8 @@ import useAxiosSecure from "../../../../Hooks/useAxiosSecure";
 import Swal from "sweetalert2";
 import makeAnimated from "react-select/animated";
 import { AuthContext } from "../../../../Context/ContextProvider";
+import axios from "axios";
+const image_hosting_cloud_name = import.meta.env.VITE_IMAGE_CLOUD_NAME;
 
 const AddPost = () => {
   const [tags] = useAxiosTags();
@@ -53,6 +55,8 @@ const AddPost = () => {
     setSelectedOption2(option);
   };
 
+
+
   const onsubmit = async (e) => {
     await refetch();
     if (e.postTitle.length < 5) {
@@ -73,6 +77,26 @@ const AddPost = () => {
     );
     const result = await selectedOption?.map(({ label }) => label);
 
+
+    Swal.fire({
+      position: "center",
+      icon: "warning",
+      title: "Creating your post",
+      showConfirmButton: false,
+      timer: 3000,
+    });
+    
+
+    
+    const formData = new FormData();
+    formData.append("file", e.photo[0]);
+    formData.append("upload_preset", "formProject");
+
+    const result2 = await axios.post(
+      `https://api.cloudinary.com/v1_1/${image_hosting_cloud_name}/image/upload`,
+      formData
+    );
+
     const data = {
       id: users?.postTotal + 1,
       authorId: findUser?.id,
@@ -84,8 +108,9 @@ const AddPost = () => {
       comments: [],
       category: selectedOption2?.label,
       createdAt: Date(),
-      image: "",
+      image: result2.data.url,
     };
+
 
     axiosSecure.post("/addPosts", { data }).then((res) => {
       if (res.status === 200) {
@@ -94,7 +119,7 @@ const AddPost = () => {
           icon: "success",
           draggable: false,
         });
-        // reset()
+        reset()
       }
     });
   };
@@ -207,6 +232,7 @@ const AddPost = () => {
 
                 <div className="space-y-8 font-[sans-serif] mb-5">
                   <input
+                  {...register("photo")}
                     type="file"
                     className="w-full text-gray-500 font-medium text-lg bg-gray-100 file:cursor-pointer cursor-pointer file:border-0 file:py-3 file:px-4 file:mr-4 file:bg-gray-800 file:hover:bg-gray-700 file:text-white rounded-md"
                   />
