@@ -1,4 +1,3 @@
-import ProductsTable from "../components/products/ProductsTable";
 import { motion } from "framer-motion";
 import Header from "../components/common/Header";
 import { useContext, useEffect, useState } from "react";

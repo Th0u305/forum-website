@@ -21,18 +21,6 @@ import { useContext } from "react";
 import { AuthContext } from "../../Context/ContextProvider";
 import toast from "react-hot-toast";
 
-export const AcmeLogo = () => {
-  return (
-    <svg fill="none" height="36" viewBox="0 0 32 32" width="36">
-      <path
-        clipRule="evenodd"
-        d="M17.6482 10.1305L15.8785 7.02583L7.02979 22.5499H10.5278L17.6482 10.1305ZM19.8798 14.0457L18.11 17.1983L19.394 19.4511H16.8453L15.1056 22.5499H24.7272L19.8798 14.0457Z"
-        fill="currentColor"
-        fillRule="evenodd"
-      />
-    </svg>
-  );
-};
 
 export const SearchIcon = ({
   size = 24,
@@ -89,21 +77,21 @@ export default function NavbarMenu2() {
 
   return (
     <Navbar isBlurred={false}  className="mt-5 bg-[#19191c] h-20 rounded-2xl">
-      <NavbarContent className="lg:hidden" justify="start">
+      <NavbarContent className="md:hidden" justify="start">
         <NavbarMenuToggle />
       </NavbarContent>
 
-      <NavbarContent className="lg:hidden pr-3" justify="center">
+      <NavbarContent className="md:hidden pr-3" justify="center">
         <NavbarBrand>
-          <AcmeLogo />
+          <img className="w-11" src="https://res.cloudinary.com/dmegxaayi/image/upload/v1737414032/uvxcsxpapylanoocwcrg.png" alt="" />
           <p className="font-bold text-inherit">TopicTree</p>
         </NavbarBrand>
       </NavbarContent>
 
-      <NavbarContent className="hidden lg:flex gap-4" justify="center">
+      <NavbarContent className="hidden md:flex gap-4" justify="center">
         <NavbarBrand>
-          <AcmeLogo />
-          <p className="font-bold text-inherit">TopicTree</p>
+        <img className="w-11" src="https://res.cloudinary.com/dmegxaayi/image/upload/v1737414032/uvxcsxpapylanoocwcrg.png" alt="" />
+        <p className="font-bold text-inherit">TopicTree</p>
         </NavbarBrand>
         <NavbarItem>
           <Link isBlock color="foreground" href="/">
@@ -124,12 +112,12 @@ export default function NavbarMenu2() {
 
       <NavbarContent justify="end">
         <NavbarContent as="div" className="items-center" justify="end">
-        <NavbarItem className="hidden lg:block">
+        <NavbarItem className="hidden md:block">
           <Button as={Link} color="primary" href="/login" variant="flat" size="md">
             Login
           </Button>
         </NavbarItem>
-         <div className="hidden lg:block">
+         <div className="hidden md:block">
          <Input
             classNames={{
               base: "max-w-full sm:max-w-[12rem] h-10",
@@ -150,26 +138,22 @@ export default function NavbarMenu2() {
               <Avatar
                 isBordered
                 as="button"
-                className="transition-transform"
-                color="primary"
+                className=" transition-transform"
+                color="default"
                 name="Jason Hughes"
-                size="sm"
-                src={user?.photoURL}
+                size="md"
+                src={user?.photoURL || user?.image || "https://res.cloudinary.com/dmegxaayi/image/upload/v1737414981/d1peu0xv4p0v43sfpfmt.png"}
               />
             </DropdownTrigger>
             <DropdownMenu aria-label="Profile Actions" variant="flat">
               <DropdownItem key="profile" className="h-14 gap-2">
                 <p className="font-semibold">Signed in as</p>
-                <p className="font-semibold">{user?.email}</p>
+                <p className="font-semibold">{user?.email || "example@gmail.com"}</p>
               </DropdownItem>
-              <DropdownItem key="settings">My Settings</DropdownItem>
-              <DropdownItem key="team_settings">Team Settings</DropdownItem>
-              <DropdownItem key="analytics">Analytics</DropdownItem>
-              <DropdownItem key="system">System</DropdownItem>
-              <DropdownItem key="configurations">Configurations</DropdownItem>
-              <DropdownItem key="help_and_feedback">
-                Help & Feedback
-              </DropdownItem>
+              <DropdownItem key="profile1" href="/dashboard/profile">My Settings</DropdownItem>
+              <DropdownItem key="overview" href="/dashboard/overview">Dashboard</DropdownItem>
+              {user && <DropdownItem key="Add post" href="/dashboard/addPost">Add Post</DropdownItem>}
+              {user &&  <DropdownItem key="My post" href="/dashboard/myPost">My Post</DropdownItem>}
               <DropdownItem key="logout" color="danger" onPress={()=> handleSignOut()}>
                 Log Out
               </DropdownItem>

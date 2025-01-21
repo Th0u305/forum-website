@@ -6,6 +6,7 @@ import useAxiosSecureData from "../../../../Hooks/useAxiosSecureData";
 import useAxiosSecure from "../../../../Hooks/useAxiosSecure";
 import { Card, CardHeader, CardBody, Image, Button } from "@heroui/react";
 import { FaComment, FaShare, FaThumbsDown, FaThumbsUp } from "react-icons/fa";
+import PostTable from "../components/post/PostTable";
 
 const MyPost = () => {
   const { user } = useContext(AuthContext);
@@ -20,6 +21,9 @@ const MyPost = () => {
       <Header title={"My Posts"} />
 
       <main className="max-w-7xl mx-auto py-6 px-4 lg:px-8 h-screen">
+        <div>
+          <PostTable postData={postData}></PostTable>
+        </div>
         <motion.div
           className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 h-full gap-5"
           initial={{ opacity: 0, y: 20 }}

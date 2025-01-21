@@ -1,18 +1,14 @@
 import {
   BarChart2,
-  DollarSign,
   Home,
   MegaphoneIcon,
   Menu,
-  ShoppingBag,
-  ShoppingCart,
-  TrendingUp,
   User,
   Users,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Link, NavLink } from "react-router";
+import { NavLink } from "react-router";
 import { CgComment } from "react-icons/cg";
 import { FaCommentDots } from "react-icons/fa";
 import { HiOutlineDocumentReport } from "react-icons/hi";
@@ -29,7 +25,7 @@ const SIDEBAR_ITEMS = [
     name: "Overview",
     icon: BarChart2,
     color: "#6366f1",
-    href: "/dashboard",
+    href: "/dashboard/overview",
   },
   {
     name: "All Users",

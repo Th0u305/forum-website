@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import useAxiosMergeData from "../../Hooks/useAxiosMergeData";
 import useAxiosUsers from "../../Hooks/useAxiosUser";
 import {
@@ -14,12 +14,38 @@ import { FaThumbsUp } from "react-icons/fa";
 import { FaThumbsDown } from "react-icons/fa";
 import { FaComment } from "react-icons/fa6";
 import { FaShare } from "react-icons/fa";
+import { AuthContext } from "../../Context/ContextProvider";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router";
 
 const TopPosts = () => {
-  const [mergedData = limitData] = useAxiosMergeData();
+  const [mergedData = limitData, refetch] = useAxiosMergeData();
   const [users] = useAxiosUsers();
+  const {user} = useContext(AuthContext);
+  const axiosSecure = useAxiosSecure()
+  const navigate = useNavigate()
 
   const limitData = mergedData.slice(0, 5);
+
+
+  const handleLikes = (data, id) => {
+    if (!user && !user?.email) {
+      return toast.error("You're not logged in");
+    }
+
+    const filter = {
+      name: data,
+      id: id,
+    };
+
+    axiosSecure.patch("/updateLikes", { filter }).then((res) => {
+      if (res.data.modifiedCount > 0) {
+        refetch()
+      }
+    });
+  };
+
   return (
     <div className="mt-12">
       {limitData?.length > 0 ? (
@@ -49,11 +75,11 @@ const TopPosts = () => {
                 width={700}
               />
               <CardBody className="flex flex-row gap-5">
-                <Button size="sm" variant="flat">
+                <Button size="sm" variant="flat" onPress={()=>handleLikes("upVotes", item.id)}>
                   <FaThumbsUp className="text-blue-400" />
                   {item.upVotes}
                 </Button>
-                <Button size="sm" variant="flat">
+                <Button size="sm" variant="flat" onPress={()=>handleLikes("downVotes", item.id)}>
                 <FaThumbsDown className="text-red-400" />
                   {item.downVotes}
                 </Button>

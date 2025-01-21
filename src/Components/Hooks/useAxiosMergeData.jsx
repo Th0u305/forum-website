@@ -3,7 +3,7 @@ import useAxiosPublic from "./useAxiosPublic";
 
 const useAxiosMergeData = () => {
     const axiosPublic = useAxiosPublic()
-    const {refetch, data : mergedData = []} = useQuery({
+    const { data : mergedData = [],refetch} = useQuery({
         queryKey : ["mergedAllData"],
         queryFn : async ()=>{
             const res = await axiosPublic.get("/mergedAllData")

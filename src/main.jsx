@@ -51,14 +51,14 @@ createRoot(document.getElementById("root")).render(
               <Route path="/register" element={<Register />} />
             </Route>
 
-            <Route element={<DashboardMain></DashboardMain>}>
-              <Route path="/dashboard" element={<PrivateRoute><DashboardRoot /></PrivateRoute>}>
-                  <Route path="overview" element={<PrivateRoute><AdminRoutes><OverviewPage /></AdminRoutes></PrivateRoute>}/>
-                  <Route path="users" element={<PrivateRoute><AdminRoutes><UsersPage /></AdminRoutes></PrivateRoute>} />
+            <Route path="/dashboard" element={<DashboardMain></DashboardMain>}>
+              <Route  element={<PrivateRoute><DashboardRoot /></PrivateRoute>}>
+                  <Route path="overview" element={<AdminRoutes><OverviewPage /></AdminRoutes>}/>
+                  <Route path="users" element={<AdminRoutes><UsersPage /></AdminRoutes>} />
                   <Route path="addPost" element={<PrivateRoute><AddPost /></PrivateRoute>} />
                   <Route path="myPost" element={<PrivateRoute><MyPost/></PrivateRoute>} />
-                  <Route path="reports" element={<PrivateRoute><AdminRoutes><Reported /></AdminRoutes></PrivateRoute>} />
-                  <Route path="announcement" element={<PrivateRoute><AdminRoutes><Announcement /></AdminRoutes></PrivateRoute>} />
+                  <Route path="reports" element={<AdminRoutes><Reported /></AdminRoutes>} />
+                  <Route path="announcement" element={<AdminRoutes><Announcement /></AdminRoutes>} />
                   <Route path="profile" element={<PrivateRoute><SettingsPage/></PrivateRoute>} />
               </Route>
             </Route>

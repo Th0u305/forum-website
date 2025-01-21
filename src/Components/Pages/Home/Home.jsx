@@ -1,28 +1,27 @@
 import { Card, CardBody } from "@heroui/react";
 import LeftSideBar from "./LeftSideBar";
 import Middle from "./Middle";
+import CardText from "./CardText";
+import AnnText from "./AnnText";
 
-const Home = () => {
+
+const Home = () => {  
   return (
-    <section className=" lg:grid lg:grid-cols-8 lg:gap-8 mt-12 space-y-5 lg:space-y-0">
-      <div className="lg:col-span-2">
-        <LeftSideBar></LeftSideBar>
+    <section className="md:grid md:grid-cols-3 lg:grid lg:grid-cols-8 lg:gap-8 mt-12 space-y-5 md:space-y-0 gap-5">
+      <div className="lg:col-span-2 space-y-12">
+        <div className="space-y-5">
+          <LeftSideBar></LeftSideBar>
+          <AnnText></AnnText>
+        </div>
+        <div className="hidden md:block lg:hidden">
+          <CardText></CardText>
+        </div>
       </div>
-      <div className="lg:col-span-4">
+      <div className="lg:col-span-4 md:col-span-2">
         <Middle></Middle>
       </div>
       <div className="lg:col-span-2 hidden lg:block">
-        <Card>
-          <CardBody>
-            <h1>
-              Tired of scrolling through the same posts? When you create an
-              account you’ll always come back to where you left off. With an
-              account you can also be notified of new replies, save bookmarks,
-              and use likes to thank others. We can all work together to make
-              this community great. heart
-            </h1>
-          </CardBody>
-        </Card>
+        <CardText></CardText>
       </div>
     </section>
   );
