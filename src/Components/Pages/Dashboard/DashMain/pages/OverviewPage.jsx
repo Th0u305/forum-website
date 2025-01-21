@@ -3,9 +3,9 @@ import { motion } from "framer-motion";
 
 import Header from "../components/common/Header";
 import StatCard from "../components/common/StatCard";
-import SalesOverviewChart from "../components/overview/SalesOverviewChart";
-import CategoryDistributionChart from "../components/overview/CategoryDistributionChart";
-import SalesChannelChart from "../components/overview/SalesChannelChart";
+import ActiveUsers from "../components/overview/ActiveUsers";
+import DailyActivities from "../components/overview/DailyActivities";
+import DevicesOverview from "../components/overview/DevicesOverview";
 import { FaComment } from "react-icons/fa";
 import useAxiosAdminData from "../../../../Hooks/useAxiosAdminData";
 
@@ -26,7 +26,7 @@ const OverviewPage = () => {
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 1 }}
 				>
-					<StatCard name='Total Sales' icon={Zap} value={users?.usersTotal} color='#6366F1' />
+					<StatCard name='Total Users' icon={Zap} value={users?.usersTotal+50} color='#6366F1' />
 					<StatCard name='New Users' icon={Users} value={users?.usersTotal-20} color='#8B5CF6' />
 					<StatCard name='Total Posts' icon={ShoppingBag} value={users?.postTotal} color='#EC4899' />
 					<StatCard name='Total Comments' icon={FaComment} value={users?.commentTotal} color='#10B981' />
@@ -35,9 +35,9 @@ const OverviewPage = () => {
 				{/* CHARTS */}
 
 				<div className='grid grid-cols-1 lg:grid-cols-2 gap-8'>
-					<SalesOverviewChart></SalesOverviewChart>
-					<CategoryDistributionChart></CategoryDistributionChart>
-					<SalesChannelChart></SalesChannelChart>
+					<ActiveUsers></ActiveUsers>
+					<DailyActivities></DailyActivities>
+					<DevicesOverview></DevicesOverview>
 				</div>
 			</main>
 		</div>

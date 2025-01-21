@@ -1,75 +1,67 @@
 import { motion } from "framer-motion";
 import Header from "../components/common/Header";
-import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../../../../Context/ContextProvider";
-import useAxiosSecureData from "../../../../Hooks/useAxiosSecureData";
+import { useEffect, useState } from "react";
 import useAxiosSecure from "../../../../Hooks/useAxiosSecure";
 import { Card, CardHeader, CardBody, Image, Button } from "@heroui/react";
-import { FaComment, FaShare, FaThumbsDown, FaThumbsUp } from "react-icons/fa";
+import ReportStatus from "../components/report/ReportStatus";
+import useAxiosMergeReport from "../../../../Hooks/useAxiosMergedReport";
+
 const Reported = () => {
-	const { user } = useContext(AuthContext);
-	const [users, refetch] = useAxiosSecureData();
-	const [postData, setPostData] = useState([]);
-	const axiosSecure = useAxiosSecure();
-  
-	axiosSecure.get(`/myPost/${user.email}`).then((res) => setPostData(res.data));
-	return (
-		<div className='flex-1 overflow-auto relative z-10 bg-gray-900'>
-			<Header title={"Reported Comments and Posts"} />
+  const axiosSecure = useAxiosSecure();
+  const [reportData, refetch] = useAxiosMergeReport();
 
-			<main className="max-w-7xl mx-auto py-6 px-4 lg:px-8 h-screen">
-      <motion.div
-        className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 h-full gap-5"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1 }}
-      >
-        {postData.map((item, index) => (
-          <motion.div
-            key={index}
-            whileHover={{
-              y: -5,
-              boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.5)",
-            }}
-            transition={{ duration: 0.3 }}
-          >
-            <Card className="h-full">
-              <CardBody className="overflow-visible">
-                <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
-                  <h4 className="font-bold text-large">{item.title}</h4>
-                  <p className="max-w-md">{item.description}</p>
-                </CardHeader>
+  refetch()
 
-                <CardBody>
-                  {" "}
-                  <Image
-                    alt="image not available"
-                    className="object-cover rounded-xl cursor-pointer"
-                    src={item.image}
-                    width={700}
-                  />
+  return (
+    <div className="flex-1 overflow-auto relative z-10 bg-gray-900">
+      <Header title={"Reported Comments and Posts"} />
+
+      <main className="max-w-7xl mx-auto py-6 px-4 lg:px-8 h-screen space-y-10">
+        <ReportStatus reportData={reportData} refetch={refetch}></ReportStatus>
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 h-full gap-5"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+        >
+          {reportData.map((item, index) => (
+            <motion.div
+              className=""
+              key={index}
+              whileHover={{
+                y: -5,
+                boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.5)",
+              }}
+              transition={{ duration: 0.3 }}
+            >
+              <Card className="h-full ">
+                <CardBody className="overflow-visible ">
+                  <CardHeader className="pb-0 pt-2 px-4 flex-col items-start gap-3">
+                    <h4 className="font-bold text-medium">
+                      Report Category: {item?.reportOption}
+                    </h4>
+                    <div>
+                      <p className="text-sm">
+                        Reported user:{" "}
+                        {item?.author?.username || item?.author?.name}
+                      </p>
+                      <p className="text-sm">
+                        Reported Email: {item?.author?.email}
+                      </p>
+                    </div>
+                  </CardHeader>
+                  <CardBody>
+                    <p className="max-w-md">
+                      Report description: {item?.reportDetails}
+                    </p>
+                  </CardBody>
                 </CardBody>
-                <CardBody className="flex flex-row gap-5 justify-center items-center">
-                  <Button size="sm" variant="flat">
-                    <FaThumbsUp className="text-blue-400" />
-                  </Button>
-                  <Button size="sm" variant="flat">
-                    <FaThumbsDown className="text-red-400" />
-                  </Button>
-                  <Button size="sm" variant="flat">
-                    <FaComment className="text-green-400" />
-                  </Button>
-                  <Button size="sm" variant="flat">
-                    <FaShare className="text-yellow-400" />
-                  </Button>
-                </CardBody>
-              </CardBody>
-            </Card>
-          </motion.div>
-        ))}
-      </motion.div>
-    </main>
-		</div>
-	);
+              </Card>
+            </motion.div>
+          ))}
+        </motion.div>
+      </main>
+    </div>
+  );
 };
-export default Reported; 
+export default Reported;

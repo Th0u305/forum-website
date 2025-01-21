@@ -6,27 +6,38 @@ import {
   Card,
   CardBody,
   CardHeader,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownSection,
+  DropdownTrigger,
   Image,
   Spinner,
   user,
 } from "@heroui/react";
-import { FaThumbsUp } from "react-icons/fa";
+import {
+  FaFlag,
+  FaListUl,
+  FaRegLifeRing,
+  FaRegSave,
+  FaThumbsUp,
+} from "react-icons/fa";
 import { FaThumbsDown } from "react-icons/fa";
-import { FaComment } from "react-icons/fa6";
+import { FaComment, FaDeleteLeft } from "react-icons/fa6";
 import { FaShare } from "react-icons/fa";
 import { AuthContext } from "../../Context/ContextProvider";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
+import Swal from "sweetalert2";
 
 const LatestData = () => {
-  const [mergedData = randomData , refetch] = useAxiosMergeData();
+  const [mergedData = randomData, refetch] = useAxiosMergeData();
   const [users] = useAxiosUsers();
-  const {user} = useContext(AuthContext);
-  const axiosSecure = useAxiosSecure()
-  const navigate = useNavigate()
-  const randomData = mergedData.slice(-20)
-
+  const { user } = useContext(AuthContext);
+  const axiosSecure = useAxiosSecure();
+  const navigate = useNavigate();
+  const randomData = mergedData.slice(-20);
 
   const handleLikes = (data, id) => {
     if (!user && !user?.email) {
@@ -40,18 +51,75 @@ const LatestData = () => {
 
     axiosSecure.patch("/updateLikes", { filter }).then((res) => {
       if (res.data.modifiedCount > 0) {
-        refetch()
+        refetch();
       }
     });
   };
 
+  const showInputModal = async (postData) => {
+    const { value: userInput } = await Swal.fire({
+      title: "Enter Your Text",
+      input: "textarea",
+      inputPlaceholder: "Type your report...",
+      html: `
+            <div class="">
+              <label for="countries" class="block text-sm font-medium text-gray-900 dark:text-gray-400">Select an option</label>
+              <select id="reportOption"  class="mt-5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <option value="" selected >Select a category option</option>
+                <option value="Suicide or self-injury">Suicide or self-injury</option>
+                <option value="Child abuse">Child abuse</option>
+                <option value="Human trafficking">Human trafficking</option>
+                <option value="Convicted sex offenders">Convicted sex offenders</option>
+                <option value="False news">False news</option>
+                <option value="Intellectual property infringement">Intellectual property infringement</option>
+                <option value="Intellectual property infringement">Content from friends</option>
+                <option value="DContent from groupsE">Content from groups</option>
+                <option value="Public follower content">Public follower content</option>
+                <option value="Unconnected content">Unconnected content</option>
+              </select>
+            </div>
+          `,
+      showCancelButton: true,
+      confirmButtonText: "Submit",
+      cancelButtonText: "Cancel",
+      inputValidator: (value) => {
+        const optionValue = document.getElementById("reportOption")?.value;
+
+        if (!value) {
+          return "You need to write something!";
+        }
+        if (optionValue.length === 0) {
+          return "Please select and option";
+        }
+      },
+    });
+
+    const filterUser = users.find((item) => item.email === user.email);
+    const optionValue = document.getElementById("reportOption")?.value;
+
+    const data = {
+      postId: postData.id,
+      userId: filterUser.id,
+      reportDetails: userInput,
+      reportOption: optionValue,
+    };
+
+    axiosSecure.post("/makeReport", { data }).then((res) => {
+      if (res.status === 200) {
+        Swal.fire({
+          title: "Your report has bean submitted",
+          icon: "success",
+        });
+      }
+    });
+  };
 
   return (
     <div className="mt-12">
       {randomData?.length > 0 ? (
         randomData?.map((item, index) => (
           <Card className="py-4 w-fit mb-12" key={index}>
-            <CardHeader className="pb-0 pt-2 px-4 flex-col items-start gap-5">
+            <CardHeader className="pb-0 pt-2 px-4 w-fit flex-col items-start gap-5">
               <div className="flex items-center gap-2">
                 <Image
                   alt="Card background"
@@ -66,30 +134,73 @@ const LatestData = () => {
                 <p className="max-w-md">{item.description}</p>
               </div>
             </CardHeader>
-            <CardBody className="overflow-visible py-2">
+            <CardBody className="overflow-visible py-2 w-fit">
               <Image
                 alt="Card background"
                 onClick={() => navigate(`/post/${item._id}`)}
                 className="object-cover rounded-xl cursor-pointer"
                 src={item?.image}
-                width={700}
+                // width={700}
               />
-              <CardBody className="flex flex-row gap-5">
-                <Button size="sm" variant="flat" onPress={()=>handleLikes("upVotes", item.id)}>
-                <FaThumbsUp className="text-blue-400" />
-                {item.upVotes}
-                </Button>
-                <Button size="sm" variant="flat" onPress={()=>handleLikes("downVotes", item.id)}>
-                <FaThumbsDown className="text-red-400" />{item.downVotes}
-                </Button>
-                <Button size="sm" variant="flat">
-                <FaComment className="text-green-400" />
-                  {item.commentData.length}
-                </Button>
-                <Button size="sm" variant="flat">
-                <FaShare className="text-yellow-400" />
-                  {item.commentData.length + 15}
-                </Button>
+              <CardBody className="flex flex-row gap-5 justify-between">
+                <div className="flex gap-5">
+                  <Button
+                    size="sm"
+                    variant="flat"
+                    onPress={() => handleLikes("upVotes", item.id)}
+                  >
+                    <FaThumbsUp className="text-blue-400" />
+                    {item.upVotes}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="flat"
+                    onPress={() => handleLikes("downVotes", item.id)}
+                  >
+                    <FaThumbsDown className="text-red-400" />
+                    {item.downVotes}
+                  </Button>
+                  <Button size="sm" variant="flat">
+                    <FaComment className="text-green-400" />
+                    {item.commentData.length}
+                  </Button>
+                  <Button size="sm" variant="flat">
+                    <FaShare className="text-yellow-400" />
+                    {item.commentData.length + 15}
+                  </Button>
+                </div>
+                <div>
+                  <Dropdown>
+                    <DropdownTrigger>
+                      <Button size="sm" variant="flat">
+                        <FaListUl className="text-violet-500 text-xl"></FaListUl>
+                      </Button>
+                    </DropdownTrigger>
+                    <DropdownMenu aria-label="Static Actions" variant="faded">
+                      <DropdownItem textValue="ff" key="new">
+                        <FaRegSave className="inline-flex mr-3 text-blue-400" />{" "}
+                        Save post
+                      </DropdownItem>
+                      <DropdownItem textValue="ss" key="copy">
+                        <FaDeleteLeft className="inline-flex mr-3 text-yellow-400" />{" "}
+                        Hide post
+                      </DropdownItem>
+                      <DropdownItem textValue="w" key="edit">
+                        <FaRegLifeRing className="inline-flex mr-3 text-green-400" />{" "}
+                        Block
+                      </DropdownItem>
+                      <DropdownSection showDivider></DropdownSection>
+                      <DropdownItem
+                        onPress={() => showInputModal(item)}
+                        textValue="4t"
+                        className="text-red-400"
+                      >
+                        <FaFlag className="inline-flex mr-3" />
+                        Report Post
+                      </DropdownItem>
+                    </DropdownMenu>
+                  </Dropdown>
+                </div>
               </CardBody>
             </CardBody>
             {item.commentData.map((item2, index) => (
@@ -99,7 +210,9 @@ const LatestData = () => {
                   className="object-cover rounded-full w-10 h-10"
                   src={users[item2.authorId]?.profileImage}
                 />
-                <p className="bg-slate-600 text-white p-3 rounded-2xl">{item2.text}</p>
+                <p className="bg-slate-600 text-white p-3 rounded-2xl">
+                  {item2.text}
+                </p>
               </CardBody>
             ))}
           </Card>

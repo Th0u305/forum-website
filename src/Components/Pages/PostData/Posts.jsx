@@ -11,9 +11,7 @@ import {
   Image,
   Spinner,
 } from "@heroui/react";
-import useAxiosPosts from "../../Hooks/useAxiosPosts";
 import useAxiosUsers from "../../Hooks/useAxiosUser";
-import useAxiosComments from "../../Hooks/useAxiosComments";
 import {
   FaFlag,
   FaListUl,
@@ -28,18 +26,14 @@ import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import useAxiosMergeData from "../../Hooks/useAxiosMergeData";
 import { useContext } from "react";
-import { DataContextProvider } from "../../Context/DataContext";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import { AuthContext } from "../../Context/ContextProvider";
 import toast from "react-hot-toast";
 import Swal from "sweetalert2";
 
 const Posts = () => {
-  const [posts] = useAxiosPosts();
   const [users] = useAxiosUsers();
-  const [comments] = useAxiosComments();
   const [mergedData, refetch] = useAxiosMergeData();
-  const { latest } = useContext(DataContextProvider);
   const axiosSecure = useAxiosSecure();
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
@@ -47,8 +41,9 @@ const Posts = () => {
   useEffect(() => {
     refetch();
   }, [mergedData]);
-  // Front end merged Data
 
+
+  // Front end merged Data
   // const mergedData = posts
   //   .map((post) => ({
   //     ...post,
@@ -57,6 +52,7 @@ const Posts = () => {
   //   }))
   //   .sort(() => Math.random() - 0.5);
   // console.log(mergedData);
+
 
   const handleLikes = (data, id) => {
     if (!user && !user?.email) {
@@ -75,31 +71,63 @@ const Posts = () => {
     });
   };
 
-  // const showInputModal = async () => {
-  //   const { value: userInput } = await Swal.fire({
-  //     title: "Type your report",
-  //     input: "textarea",
-  //     inputPlaceholder: "Type something...",
-  //     showCancelButton: true,
-  //     confirmButtonText: "Submit",
-  //     cancelButtonText: "Cancel",
-  //     inputValidator: (value) => {
-  //       if (!value) {
-  //         return "You need to write something!";
-  //       }
-  //     },
-  //   });
-  //   console.log(userInput);
-    
+  const showInputModal = async (postData) => {
+    const { value: userInput } = await Swal.fire({
+      title: "Enter Your Text",
+      input: "textarea",
+      inputPlaceholder: "Type your report...",
+      html: `
+          <div class="">
+            <label for="countries" class="block text-sm font-medium text-gray-900 dark:text-gray-400">Select an option</label>
+            <select id="reportOption"  class="mt-5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              <option value="" selected >Select a category option</option>
+              <option value="Suicide or self-injury">Suicide or self-injury</option>
+              <option value="Child abuse">Child abuse</option>
+              <option value="Human trafficking">Human trafficking</option>
+              <option value="Convicted sex offenders">Convicted sex offenders</option>
+              <option value="False news">False news</option>
+              <option value="Intellectual property infringement">Intellectual property infringement</option>
+              <option value="Intellectual property infringement">Content from friends</option>
+              <option value="DContent from groupsE">Content from groups</option>
+              <option value="Public follower content">Public follower content</option>
+              <option value="Unconnected content">Unconnected content</option>
+            </select>
+          </div>
+        `,
+      showCancelButton: true,
+      confirmButtonText: "Submit",
+      cancelButtonText: "Cancel",
+      inputValidator: (value) => {
+        const optionValue = document.getElementById("reportOption")?.value;
 
-  //   if (userInput) {
-  //     Swal.fire({
-  //       title: "You entered:",
-  //       text: userInput,
-  //       icon: "success",
-  //     });
-  //   }
-  // };
+        if (!value) {
+          return "You need to write something!";
+        }
+        if (optionValue.length === 0) {
+          return "Please select and option";
+        }
+      },
+    })
+
+    const filterUser = users.find((item) => item.email === user.email);
+    const optionValue = document.getElementById("reportOption")?.value;
+
+    const data = {
+      postId: postData.id,
+      userId: filterUser.id,
+      reportDetails: userInput,
+      reportOption: optionValue,
+    };
+
+    axiosSecure.post("/makeReport", { data }).then((res) => {
+      if (res.status === 200) {
+        Swal.fire({
+          title: "Your report has bean submitted",
+          icon: "success",
+        });
+      }
+    });
+  };
 
   return (
     <div className="w-fit mx-auto">
@@ -176,7 +204,7 @@ const Posts = () => {
                       </DropdownItem>
                       <DropdownSection showDivider></DropdownSection>
                       <DropdownItem
-                        // onPress={() => showInputModal()}
+                        onPress={() => showInputModal(item)}
                         textValue="4t"
                         className="text-red-400"
                       >

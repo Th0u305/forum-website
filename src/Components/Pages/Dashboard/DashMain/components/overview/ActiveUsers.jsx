@@ -2,21 +2,21 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { motion } from "framer-motion";
 
 const salesData = [
-	{ name: "Jul", sales: 4200 },
-	{ name: "Aug", sales: 3800 },
-	{ name: "Sep", sales: 5100 },
-	{ name: "Oct", sales: 4600 },
-	{ name: "Nov", sales: 5400 },
-	{ name: "Dec", sales: 7200 },
-	{ name: "Jan", sales: 6100 },
-	{ name: "Feb", sales: 5900 },
-	{ name: "Mar", sales: 6800 },
-	{ name: "Apr", sales: 6300 },
-	{ name: "May", sales: 7100 },
-	{ name: "Jun", sales: 7500 },
+	{ name: "Jul", users: 42 },
+	{ name: "Aug", users: 38 },
+	{ name: "Sep", users: 51 },
+	{ name: "Oct", users: 46 },
+	{ name: "Nov", users: 54 },
+	{ name: "Dec", users: 72 },
+	{ name: "Jan", users: 61 },
+	{ name: "Feb", users: 59 },
+	{ name: "Mar", users: 68 },
+	{ name: "Apr", users: 63 },
+	{ name: "May", users: 71 },
+	{ name: "Jun", users: 75 },
 ];
 
-const SalesOverviewChart = () => {
+const ActiveUsers = () => {
 	return (
 		<motion.div
 			className='bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700'
@@ -24,7 +24,7 @@ const SalesOverviewChart = () => {
 			animate={{ opacity: 1, y: 0 }}
 			transition={{ delay: 0.2 }}
 		>
-			<h2 className='text-lg font-medium mb-4 text-gray-100'>Sales Overview</h2>
+			<h2 className='text-lg font-medium mb-4 text-gray-100'>Active Users</h2>
 
 			<div className='h-80'>
 				<ResponsiveContainer width={"100%"} height={"100%"}>
@@ -41,7 +41,7 @@ const SalesOverviewChart = () => {
 						/>
 						<Line
 							type='monotone'
-							dataKey='sales'
+							dataKey='users'
 							stroke='#6366F1'
 							strokeWidth={3}
 							dot={{ fill: "#6366F1", strokeWidth: 2, r: 6 }}
@@ -53,4 +53,4 @@ const SalesOverviewChart = () => {
 		</motion.div>
 	);
 };
-export default SalesOverviewChart;
+export default ActiveUsers;

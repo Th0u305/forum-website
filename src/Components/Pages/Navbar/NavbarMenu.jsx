@@ -146,15 +146,15 @@ export default function NavbarMenu2() {
               />
             </DropdownTrigger>
             <DropdownMenu aria-label="Profile Actions" variant="flat">
-              <DropdownItem key="profile" className="h-14 gap-2">
+              <DropdownItem textValue="0p" key="profile" className="h-14 gap-2">
                 <p className="font-semibold">Signed in as</p>
                 <p className="font-semibold">{user?.email || "example@gmail.com"}</p>
               </DropdownItem>
-              <DropdownItem key="profile1" href="/dashboard/profile">My Settings</DropdownItem>
-              <DropdownItem key="overview" href="/dashboard/overview">Dashboard</DropdownItem>
-              {user && <DropdownItem key="Add post" href="/dashboard/addPost">Add Post</DropdownItem>}
-              {user &&  <DropdownItem key="My post" href="/dashboard/myPost">My Post</DropdownItem>}
-              <DropdownItem key="logout" color="danger" onPress={()=> handleSignOut()}>
+              <DropdownItem textValue="dd" key="profile1" href="/dashboard/profile">My Settings</DropdownItem>
+              <DropdownItem textValue="ff" key="overview" href="/dashboard/overview">Dashboard</DropdownItem>
+              {user && <DropdownItem textValue="bb" key="Add post" href="/dashboard/addPost">Add Post</DropdownItem>}
+              {user &&  <DropdownItem textValue="pp" key="My post" href="/dashboard/myPost">My Post</DropdownItem>}
+              <DropdownItem textValue="nb" key="logout" color="danger" onPress={()=> handleSignOut()}>
                 Log Out
               </DropdownItem>
             </DropdownMenu>
