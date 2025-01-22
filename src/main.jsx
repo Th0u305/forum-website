@@ -26,6 +26,8 @@ import MyPost from "./Components/Pages/Dashboard/DashMain/pages/MyPostPage";
 import Announcement from "./Components/Pages/Dashboard/DashMain/pages/AnnouncementPage";
 import SettingsPage from "./Components/Pages/Dashboard/DashMain/pages/ProfilePage";
 import DashboardMain from "./Components/Pages/Dashboard/DashboardMain";
+import MakePayment from "./Components/Pages/payment/MakePayment";
+import PaymentHistory from "./Components/Pages/Dashboard/DashMain/pages/PaymentHistory";
 
 
 // Create a client
@@ -49,10 +51,11 @@ createRoot(document.getElementById("root")).render(
               <Route path="/membership" element={<Membership />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/payments/:id" element={<PrivateRoute><MakePayment/></PrivateRoute>}/>
             </Route>
 
             <Route path="/dashboard" element={<DashboardMain></DashboardMain>}>
-              <Route  element={<PrivateRoute><DashboardRoot /></PrivateRoute>}>
+              <Route element={<PrivateRoute><DashboardRoot /></PrivateRoute>}>
                   <Route path="overview" element={<AdminRoutes><OverviewPage /></AdminRoutes>}/>
                   <Route path="users" element={<AdminRoutes><UsersPage /></AdminRoutes>} />
                   <Route path="addPost" element={<PrivateRoute><AddPost /></PrivateRoute>} />
@@ -60,9 +63,9 @@ createRoot(document.getElementById("root")).render(
                   <Route path="reports" element={<AdminRoutes><Reported /></AdminRoutes>} />
                   <Route path="announcement" element={<AdminRoutes><Announcement /></AdminRoutes>} />
                   <Route path="profile" element={<PrivateRoute><SettingsPage/></PrivateRoute>} />
+                  <Route path="paymentHistory" element={<PrivateRoute><PaymentHistory/></PrivateRoute>}></Route>
               </Route>
             </Route>
-
           </Routes>
 
         </QueryClientProvider>

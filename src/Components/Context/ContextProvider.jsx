@@ -13,17 +13,17 @@ import React, { createContext, useEffect, useState } from "react";
 import { firebaseAuth } from "../Pages/Private/firebase/firebase.config";
 export const AuthContext = createContext();
 const googleProvider = new GoogleAuthProvider();
-import { useRef } from 'react';
+import { useRef } from "react";
 import axios from "axios";
-import useAxiosPublic from "../Hooks/useAxiosPublic";
+import { useLocation, useNavigate } from "react-router";
 
 const ContextProvider = ({ children }) => {
-
+  const [money, setMoney] = useState("");
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const myRef = useRef(null)
-  const axiosPublic = useAxiosPublic()
-
+  const myRef = useRef(null);
+  const { pathname } = useLocation();
+  const [membershipName, setMembershipName] = useState()
 
   // register or create account
   const createUser = (email, password) => {
@@ -33,62 +33,64 @@ const ContextProvider = ({ children }) => {
 
   // sign in method
 
-  const signInUser = (email, password) =>{
-    setLoading(true)
-    return signInWithEmailAndPassword(firebaseAuth, email, password)
-}
+  const signInUser = (email, password) => {
+    setLoading(true);
+    return signInWithEmailAndPassword(firebaseAuth, email, password);
+  };
 
   // check for current logged user
   useEffect(() => {
-    const unSubscribe = onAuthStateChanged(firebaseAuth, async (currentUser) => {            
-      if (currentUser?.email) {
-        setLoading(false)
-        setUser(currentUser);
-        const {data} = await axios.post (`${import.meta.env.VITE_API_URL}/jwt`, {email:currentUser?.email}, {withCredentials : true})  
-      }else{
-        setLoading(false)
-        setUser(currentUser)
-        const {data} = await axios.get (`${import.meta.env.VITE_API_URL}/logout`, {withCredentials : true})
+    const unSubscribe = onAuthStateChanged(firebaseAuth, async (currentUser) => {
+        if (currentUser?.email) {
+          setLoading(false);
+          setUser(currentUser);
+          const { data } = await axios.post( `${import.meta.env.VITE_API_URL}/jwt`,{ email: currentUser?.email },{ withCredentials: true });
+        } else {
+          setLoading(false);
+          setUser(currentUser);
+          const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/logout`,{ withCredentials: true }
+          );
+        }
       }
-      });
+    );
     return () => {
       unSubscribe();
     };
-  }, []);
+  }, [pathname]);
+
+  // using local storage method
+  
+  //   useEffect(() => {
+  //     const unsubscribe = onAuthStateChanged(firebaseAuth, currentUser => {
+  //         setUser(currentUser);
+  //         if (currentUser) {
+  //             // get token and store client
+  //             const userInfo = { email: currentUser.email };
+  //             axiosPublic.post('/jwt', userInfo)
+  //                 .then(res => {
+  //                     if (res.data.token) {
+  //                         localStorage.setItem('access-token', res.data.token);
+  //                         setLoading(false);
+  //                     }
+  //                 })
+  //         }
+  //         else {
+  //             // TODO: remove token (if token stored in the client side: Local storage, caching, in memory)
+  //             localStorage.removeItem('access-token');
+  //             setLoading(false);
+  //         }
+
+  //     });
+  //     return () => {
+  //         return unsubscribe();
+  //     }
+  // }, [axiosPublic])
 
 
-
-// using local storage method
-
-//   useEffect(() => {
-//     const unsubscribe = onAuthStateChanged(firebaseAuth, currentUser => {
-//         setUser(currentUser);
-//         if (currentUser) {
-//             // get token and store client
-//             const userInfo = { email: currentUser.email };
-//             axiosPublic.post('/jwt', userInfo)
-//                 .then(res => {
-//                     if (res.data.token) {
-//                         localStorage.setItem('access-token', res.data.token);
-//                         setLoading(false);
-//                     }
-//                 })
-//         }
-//         else {
-//             // TODO: remove token (if token stored in the client side: Local storage, caching, in memory)
-//             localStorage.removeItem('access-token');
-//             setLoading(false);
-//         }
-        
-//     });
-//     return () => {
-//         return unsubscribe();
-//     }
-// }, [axiosPublic])
 
   // sign out user
   const signOutUser = () => {
-    setLoading(true)
+    setLoading(true);
     return signOut(firebaseAuth);
   };
 
@@ -97,26 +99,25 @@ const ContextProvider = ({ children }) => {
     return signInWithPopup(firebaseAuth, googleProvider);
   };
 
-  
-  // reset password 
+  // reset password
 
-  const resetUserPassword =(email)=>{
-    return sendPasswordResetEmail(firebaseAuth, email)
-  }
+  const resetUserPassword = (email) => {
+    return sendPasswordResetEmail(firebaseAuth, email);
+  };
 
- // update user profile
-  const updateUserProfile = (updateData) =>{
-    return updateProfile(firebaseAuth.currentUser, updateData)
-  }
-
+  // update user profile
+  const updateUserProfile = (updateData) => {
+    return updateProfile(firebaseAuth.currentUser, updateData);
+  };
 
   //delete user from firebase
-  const deleteUserData = () =>{
-    return deleteUser(user)
-  }
-
+  const deleteUserData = () => {
+    return deleteUser(user);
+  };
 
   const contextData = {
+    money,
+    setMoney,
     signInWithGoogle,
     signOutUser,
     user,
@@ -128,7 +129,9 @@ const ContextProvider = ({ children }) => {
     updateUserProfile,
     resetUserPassword,
     deleteUserData,
-    myRef
+    myRef,
+    membershipName,
+    setMembershipName
   };
 
   return (

@@ -29,8 +29,6 @@ const Register = () => {
   const [errorMessage2, setErrorMessage2] = useState("");
   const [errorMessage3, setErrorMessage3] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [file, setFile] = useState();
-  const [imageUrl, setImageUrl] = useState();
   const axiosPublic = useAxiosPublic();
   const { state } = useLocation();
 

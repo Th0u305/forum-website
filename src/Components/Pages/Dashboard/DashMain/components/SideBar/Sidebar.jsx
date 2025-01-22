@@ -10,7 +10,7 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { NavLink } from "react-router";
 import { CgComment } from "react-icons/cg";
-import { FaCommentDots } from "react-icons/fa";
+import { FaCommentDots, FaMoneyBill } from "react-icons/fa";
 import { HiOutlineDocumentReport } from "react-icons/hi";
 import useAdmin from "../../../../../Hooks/useAdmin";
 
@@ -58,6 +58,12 @@ const SIDEBAR_ITEMS = [
     href: "/dashboard/announcement",
   },
   {
+    name: "Payments History",
+    icon: FaMoneyBill,
+    color: "#F59E0B",
+    href: "/dashboard/paymentHistory",
+  },
+  {
     name: "Profile",
     icon: User,
     color: "#6EE7B7",
@@ -85,6 +91,12 @@ const SIDEBAR_ITEMS2 = [
     href: "/dashboard/myPost",
   },
   {
+    name: "Payments History",
+    icon: FaMoneyBill,
+    color: "#F59E0B",
+    href: "/dashboard/paymentHistory",
+  },
+  {
     name: "Profile",
     icon: User,
     color: "#6EE7B7",
@@ -94,7 +106,6 @@ const SIDEBAR_ITEMS2 = [
 
 const Sidebar = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [admin, setAdmin] = useState({});
   const [isAdmin] = useAdmin();
 
   return (
