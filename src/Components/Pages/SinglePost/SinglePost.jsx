@@ -34,6 +34,7 @@ import { Clock, Tags } from "lucide-react";
 import Swal from "sweetalert2";
 import { FaDeleteLeft } from "react-icons/fa6";
 import { FacebookShareButton } from "react-share";
+import { Helmet } from "react-helmet-async";
 
 const SinglePost = () => {
   const params = useParams();
@@ -128,9 +129,11 @@ const SinglePost = () => {
     Platinum: "text-[#e5e4e2]", // Platinum color
   };
 
-
   return (
     <div className="mt-12">
+      <Helmet>
+        <title>TopicTree | Post</title>
+      </Helmet>
       {singleData?.length > 0 ? (
         singleData.map((item) => (
           <Card className="py-4 mb-12">

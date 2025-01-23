@@ -40,6 +40,11 @@ export default function Middle() {
     },
     {
       id: "Top",
+      label: "",
+      href: "#",
+    },
+    {
+      id: "Top1",
       label: "Top",
       href: "top",
     },
@@ -94,8 +99,8 @@ export default function Middle() {
 
   return (
     <div className="space-y-5">
-      <Card className="grid grid-cols-2 w-full justify-items-center md:grid-cols-4 xl:grid-cols-3 p-3 gap-3 md:py-5 md:px-2 xl:py-11 lg:p-6 overflow-visible xl:justify-items-start">
-        <div className="w-fit z-30 md:col-span-2 xl:col-span-1">
+      <Card className="grid grid-cols-1 justify-items-center content-center gap-5 py-5 md:grid-cols-4 md:py-5 md:px-2 xl:py-11 lg:p-6 overflow-visible xl:justify-items-start">
+        <div className="w-fit z-30 md:col-span-2 mx-auto">
           <Select
             options={options2} // Pass custom options
             value={selectedOption2} // Bind selected value
@@ -147,7 +152,7 @@ export default function Middle() {
           />
         </div>
 
-        <div className="w-44 z-30 md:col-span-2 xl:col-span-1">
+        <div className="w-44 z-30 md:col-span-2 mx-auto">
           <Select
             options={options} // Pass custom options
             value={selectedOption} // Bind selected value
@@ -199,13 +204,14 @@ export default function Middle() {
           />
         </div>
 
-        <div className="col-span-full md:col-span-2 xl:col-span-1 md:mt-3 xl:mt-0 border-2 border-gray-400 rounded-lg">
+        <div className="w-[11.5rem] xl:mt-0 border-2 mx-auto border-gray-400 rounded-lg md:col-span-2">
           <Tabs
             items={tabs}
             selectedKey={pathname}
             // onSelectionChange={setSelected}
             aria-label="Tabs variants"
             variant="underlined"
+            className="w-full gap-5"
           >
             {(item) => (
               <Tab
@@ -217,10 +223,10 @@ export default function Middle() {
           </Tabs>
         </div>
 
-        <div>
+        <div className="md:col-span-2 z-20 mx-auto">
           <Select
             options={options3} // Pass custom options
-            value={selectedOption2} // Bind selected value
+            value={selectedOption3} // Bind selected value
             onChange={handleChange3} // Handle change
             styles={{
               control: (base) => ({

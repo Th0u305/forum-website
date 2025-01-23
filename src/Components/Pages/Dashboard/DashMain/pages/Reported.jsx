@@ -5,15 +5,18 @@ import useAxiosSecure from "../../../../Hooks/useAxiosSecure";
 import { Card, CardHeader, CardBody, Image, Button } from "@heroui/react";
 import ReportStatus from "../components/report/ReportStatus";
 import useAxiosMergeReport from "../../../../Hooks/useAxiosMergedReport";
+import { Helmet } from "react-helmet-async";
 
 const Reported = () => {
-  const axiosSecure = useAxiosSecure();
   const [reportData, refetch] = useAxiosMergeReport();
 
-  refetch()
+  refetch();
 
   return (
     <div className="flex-1 relative z-10 bg-gray-900">
+      <Helmet>
+        <title>Dashboard | Reports</title>
+      </Helmet>
       <Header title={"Reported Comments and Posts"} />
 
       <main className="max-w-7xl mx-auto py-6 px-4 lg:px-8 h-screen space-y-10">

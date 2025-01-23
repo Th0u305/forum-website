@@ -6,18 +6,24 @@ import useAxiosSecure from "../../../../Hooks/useAxiosSecure";
 import { Card, CardHeader, CardBody, Image, Button } from "@heroui/react";
 import { FaComment, FaShare, FaThumbsDown, FaThumbsUp } from "react-icons/fa";
 import PostTable from "../components/post/PostTable";
+import { Helmet } from "react-helmet-async";
 
 const MyPost = () => {
   const { user } = useContext(AuthContext);
   const [postData, setPostData] = useState([]);
   const axiosSecure = useAxiosSecure();
 
-  useEffect(()=>{
-    axiosSecure.get(`/myPost/${user.email}`).then((res) => setPostData(res.data));
-  },[])
+  useEffect(() => {
+    axiosSecure
+      .get(`/myPost/${user.email}`)
+      .then((res) => setPostData(res.data));
+  }, []);
 
   return (
     <div className="flex-1 relative z-10 overflow-auto">
+      <Helmet>
+        <title>Dashboard | My Posts</title>
+      </Helmet>
       <Header title={"My Posts"} />
 
       <main className="max-w-7xl mx-auto py-6 px-4 lg:px-8">

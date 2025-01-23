@@ -1,18 +1,18 @@
 import { motion } from "framer-motion";
-import Header from "../Dashboard/DashMain/components/common/Header";
-import { Card, CardHeader, CardBody, Image, Button } from "@heroui/react";
 
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import CheckoutForm from "./CheckoutForm";
+import { Helmet } from "react-helmet-async";
 
 const stripePromise = loadStripe(import.meta.env.VITE_Payment_Gateway_PK);
 
 const MakePayment = () => {
   return (
     <div className="flex-1 relative z-10 overflow-auto">
-      {/* <Header title={"Payments"} /> */}
-
+      <Helmet>
+        <title>TopicTree | Payment</title>
+      </Helmet>
       <main className="max-w-7xl mx-auto py-6 px-4 lg:px-8">
         <motion.div
           className=""

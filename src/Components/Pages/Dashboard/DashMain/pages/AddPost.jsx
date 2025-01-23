@@ -12,6 +12,8 @@ import Swal from "sweetalert2";
 import makeAnimated from "react-select/animated";
 import { AuthContext } from "../../../../Context/ContextProvider";
 import axios from "axios";
+import { Helmet } from "react-helmet-async";
+
 const image_hosting_cloud_name = import.meta.env.VITE_IMAGE_CLOUD_NAME;
 
 const AddPost = () => {
@@ -55,8 +57,6 @@ const AddPost = () => {
     setSelectedOption2(option);
   };
 
-
-
   const onsubmit = async (e) => {
     await refetch();
     if (e.postTitle.length < 5) {
@@ -77,7 +77,6 @@ const AddPost = () => {
     );
     const result = await selectedOption?.map(({ label }) => label);
 
-
     Swal.fire({
       position: "center",
       icon: "warning",
@@ -85,9 +84,7 @@ const AddPost = () => {
       showConfirmButton: false,
       timer: 3000,
     });
-    
 
-    
     const formData = new FormData();
     formData.append("file", e.photo[0]);
     formData.append("upload_preset", "formProject");
@@ -111,7 +108,6 @@ const AddPost = () => {
       image: result2.data.url,
     };
 
-
     axiosSecure.post("/addPosts", { data }).then((res) => {
       if (res.status === 200) {
         Swal.fire({
@@ -119,13 +115,16 @@ const AddPost = () => {
           icon: "success",
           draggable: false,
         });
-        reset()
+        reset();
       }
     });
   };
 
   return (
     <div className="flex-1 overflow-auto relative z-10">
+      <Helmet>
+        <title>Dashboard | Add Post</title>
+      </Helmet>
       <Header title="Add Post" />
       <main className="max-w-7xl mx-auto py-6 px-4 lg:px-8">
         {/* SALES STATS */}
@@ -232,7 +231,7 @@ const AddPost = () => {
 
                 <div className="space-y-8 font-[sans-serif] mb-5">
                   <input
-                  {...register("photo")}
+                    {...register("photo")}
                     type="file"
                     className="w-full text-gray-500 font-medium text-lg bg-gray-100 file:cursor-pointer cursor-pointer file:border-0 file:py-3 file:px-4 file:mr-4 file:bg-gray-800 file:hover:bg-gray-700 file:text-white rounded-md"
                   />

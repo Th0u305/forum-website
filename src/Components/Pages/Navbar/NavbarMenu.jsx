@@ -205,12 +205,12 @@ export default function NavbarMenu2() {
                     className="h-14 gap-2"
                   >
                     <p className="font-semibold inline-flex">
-                      <FaMedal
+                     {user &&  <FaMedal
                         className={`${
                           badgeColors[filterUser?.badge[0] || "Platinum"] ||
                           "text-gray-500"
                         } text-2xl mr-4 mb-2`}
-                      ></FaMedal>
+                      ></FaMedal>}
                       Signed in as <h1 className=""></h1>
                     </p>
 

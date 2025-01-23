@@ -5,11 +5,11 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../../Context/ContextProvider";
 import useAxiosSecureData from "../../../../Hooks/useAxiosSecureData";
 import useAxiosSecure from "../../../../Hooks/useAxiosSecure";
-import { Card, CardHeader, CardBody, Image, Button } from "@heroui/react";
-import { FaComment, FaShare, FaThumbsDown, FaThumbsUp } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import axios from "axios";
+import { Helmet } from "react-helmet-async";
+
 const image_hosting_cloud_name = import.meta.env.VITE_IMAGE_CLOUD_NAME;
 
 const Announcement = () => {
@@ -32,11 +32,7 @@ const Announcement = () => {
     setFilterData(filterData);
   }, [refetch()]);
 
-
   const onsubmit = async (e) => {
-
-
-
     Swal.fire({
       position: "center",
       icon: "warning",
@@ -44,9 +40,7 @@ const Announcement = () => {
       showConfirmButton: false,
       timer: 3000,
     });
-    
 
-    
     const formData = new FormData();
     formData.append("file", e.photo[0]);
     formData.append("upload_preset", "formProject");
@@ -56,12 +50,11 @@ const Announcement = () => {
       formData
     );
 
-
     const data = {
       title: e.title,
       details: e.postDetails,
       adminId: filterData.id,
-      image : result.data.url
+      image: result.data.url,
     };
 
     axiosSecure.post("/announcement", { data }).then((res) => {
@@ -85,6 +78,9 @@ const Announcement = () => {
 
   return (
     <div className="flex-1 relative z-10 overflow-auto">
+      <Helmet>
+        <title>Dashboard | Announcement</title>
+      </Helmet>
       <Header title={"Announcement"} />
 
       <main className="max-w-7xl mx-auto py-6 px-4 lg:px-8 space-y-10">
@@ -163,7 +159,7 @@ const Announcement = () => {
 
                 <div className="space-y-8 font-[sans-serif] mb-5">
                   <input
-                  {...register("photo")}
+                    {...register("photo")}
                     type="file"
                     className="w-full text-gray-500 font-medium text-lg bg-gray-100 file:cursor-pointer cursor-pointer file:border-0 file:py-3 file:px-4 file:mr-4 file:bg-gray-800 file:hover:bg-gray-700 file:text-white rounded-md"
                   />

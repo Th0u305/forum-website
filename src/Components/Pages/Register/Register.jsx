@@ -11,6 +11,7 @@ import { Input, Spinner } from "@heroui/react";
 import useAxiosPublic from "../../Hooks/useAxiosPublic";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { Helmet } from "react-helmet-async";
 
 const image_hosting_cloud_name = import.meta.env.VITE_IMAGE_CLOUD_NAME;
 
@@ -131,6 +132,9 @@ const Register = () => {
 
   return (
     <div className="mt-12">
+      <Helmet>
+        <title>TopicTree | Register</title>
+      </Helmet>
       <div className="bg-white grid md:grid-cols-2 gap-16 w-full sm:p-8 p-6 shadow-md rounded-md overflow-hidden">
         <div className="max-md:order-1 space-y-6">
           <div className="md:mb-16 mb-8">

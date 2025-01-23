@@ -42,11 +42,8 @@ const Posts = () => {
   const { user, searchData, setSearchData } = useContext(AuthContext);
   const axiosPublic = useAxiosPublic();
   const [pageNumber, setPageNumber] = useState([]);
-
-  useEffect(() => {
-    refetch();
-  }, [mergedData]);
-
+    
+  
   // Front end merged Data
   // const mergedData = posts
   //   .map((post) => ({
@@ -69,7 +66,7 @@ const Posts = () => {
 
     axiosSecure.patch("/updateLikes", { filter }).then((res) => {
       if (res.data.modifiedCount > 0) {
-        refetch();
+        refetch()
       }
     });
   };
@@ -141,7 +138,7 @@ const Posts = () => {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
-  }, [pageNumber]);
+  }, [pageNumber,mergedData]);
 
   const badgeColors = {
     Bronze: "text-[#cd7f32]", // Bronze color
@@ -152,7 +149,7 @@ const Posts = () => {
   return (
     <div className="mx-auto">
       {mergedData?.length > 0 ? (
-        (searchData.length > 0 ? searchData : mergedData).map((item, index) => (
+        (searchData.length === 0 ? mergedData : searchData).map((item, index) => (
           <Card className="py-4 mb-12" key={index}>
             <CardHeader className="pb-0 pt-2 px-4 flex-col items-start gap-5">
               <div className="flex items-center gap-2">
@@ -161,11 +158,11 @@ const Posts = () => {
                   className="rounded-full w-12 h-12 object-cover"
                   src={item.author?.profileImage}
                 />
-                <h1>{item.author.username}</h1>
+                <h1>{item?.author?.username}</h1>
                 <h1>
                   <FaMedal
                     className={`${
-                      badgeColors[item?.author?.badges[0]] || "text-gray-500"
+                      badgeColors[item?.author?.badges[0] || item?.author?.badge || "Bronze"] || "text-gray-500"
                     } text-2xl`}
                   ></FaMedal>
                 </h1>
@@ -250,7 +247,7 @@ const Posts = () => {
                 <Image
                   alt="Card background"
                   className="object-cover rounded-full w-10 h-10"
-                  src={users[item2.authorId]?.profileImage}
+                  src={item?.author?.profileImage || users[item2.authorId]?.profileImage}
                 />
                 <p className="bg-slate-600 text-white p-3 rounded-2xl max-w-md">
                   {item2.text}

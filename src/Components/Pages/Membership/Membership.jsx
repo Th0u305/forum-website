@@ -1,10 +1,10 @@
 import { CheckIcon } from "@heroicons/react/20/solid";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { AuthContext } from "../../Context/ContextProvider";
 import { Button } from "@heroui/react";
-import { useLocation, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
-import toast from "react-hot-toast";
+import { Helmet } from "react-helmet-async";
 
 const tiers = [
   {
@@ -81,22 +81,18 @@ function classNames(...classes) {
 export default function Membership() {
   const navigate = useNavigate();
   const axiosSecure = useAxiosSecure();
-  const { setMoney, setMembershipName} = useContext(AuthContext);
-
+  const { setMoney, setMembershipName } = useContext(AuthContext);
 
   const handlePayment = async (id, name) => {
-    
     if (name === "Bronze") {
-    
-      return navigate("#")
+      return navigate("#");
     }
     const result = await axiosSecure.get("/getRandUUid");
 
     axiosSecure.post(`/paymentsUuidRand/${result.data}`).then((res) => {
-  
       if (res.data) {
         setMoney(parseInt(id));
-        setMembershipName(name)
+        setMembershipName(name);
         navigate(`/payments/${result.data}`);
       }
     });
@@ -104,6 +100,9 @@ export default function Membership() {
 
   return (
     <div className="relative isolate bg-[#dadada] px-6 py-24 sm:py-32 lg:px-8 rounded-2xl mt-5">
+      <Helmet>
+        <title>TopicTree | Membership</title>
+      </Helmet>
       <div
         aria-hidden="true"
         className="absolute inset-x-0 -top-3 -z-10 transform-gpu overflow-hidden px-36 blur-3xl"

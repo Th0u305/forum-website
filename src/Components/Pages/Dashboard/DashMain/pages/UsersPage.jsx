@@ -7,16 +7,17 @@ import UserGrowthChart from "../components/users/UserGrowthChart";
 import UserActivityHeatmap from "../components/users/UserActivityHeatmap";
 import UserDemographicsChart from "../components/users/UserDemographicsChart";
 import useAxiosAdminData from "../../../../Hooks/useAxiosAdminData";
-
-
+import { Helmet } from "react-helmet-async";
 
 const UsersPage = () => {
+  const [users, refetch] = useAxiosAdminData();
+  refetch();
 
-  const [users,refetch] = useAxiosAdminData()  
-  refetch()
-  
   return (
     <div className="flex-1 overflow-auto relative z-10">
+      <Helmet>
+        <title>Dashboard | Users</title>
+      </Helmet>
       <Header title="Users" />
 
       <main className="max-w-7xl mx-auto py-6 px-4 lg:px-8">
@@ -36,13 +37,13 @@ const UsersPage = () => {
           <StatCard
             name="New Users Today"
             icon={UserPlus}
-            value={users?.users?.length-15}
+            value={users?.users?.length - 15}
             color="#10B981"
           />
           <StatCard
             name="Active Users"
             icon={UserCheck}
-            value={users?.users?.length-10}
+            value={users?.users?.length - 10}
             color="#F59E0B"
           />
           <StatCard

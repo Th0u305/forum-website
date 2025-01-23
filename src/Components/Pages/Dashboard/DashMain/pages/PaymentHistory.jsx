@@ -4,15 +4,14 @@ import { Search } from "lucide-react";
 import Header from "../components/common/Header";
 import useAxiosPaymentHist from "../../../../Hooks/useAxiosPaymentHist";
 import { AuthContext } from "../../../../Context/ContextProvider";
+import { Helmet } from "react-helmet-async";
 
 const PaymentHistory = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredUsers, setFilteredUsers] = useState();
-  const [history , refetch] = useAxiosPaymentHist() 
-  const {user} = useContext(AuthContext)
+  const [history, refetch] = useAxiosPaymentHist();
+  const { user } = useContext(AuthContext);
 
-
- 
   const handleSearch = (e) => {
     refetch();
     const term = e.target.value.toLowerCase();
@@ -26,6 +25,9 @@ const PaymentHistory = () => {
 
   return (
     <div className=" relative z-10  bg-gray-900">
+      <Helmet>
+        <title>Dashboard | Payment History</title>
+      </Helmet>
       <Header title={"Payment History"} />
 
       <main className="max-w-7xl mx-auto py-6 px-4 lg:px-8 h-screen space-y-10 flex w-full justify-center items-center">
@@ -63,7 +65,7 @@ const PaymentHistory = () => {
                     Purchase
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
-                  transactionsId
+                    transactionsId
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                     Amount
@@ -105,7 +107,7 @@ const PaymentHistory = () => {
 
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
-                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-800 text-green-100"`}    
+                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-800 text-green-100"`}
                       >
                         {item?.transactionsId}
                       </span>

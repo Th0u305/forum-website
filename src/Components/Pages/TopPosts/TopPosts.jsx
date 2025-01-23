@@ -1,6 +1,3 @@
-import React, { useContext, useEffect, useState } from "react";
-import useAxiosMergeData from "../../Hooks/useAxiosMergeData";
-import useAxiosUsers from "../../Hooks/useAxiosUser";
 import {
   Button,
   Card,
@@ -12,35 +9,50 @@ import {
   DropdownSection,
   DropdownTrigger,
   Image,
+  Pagination,
   Spinner,
-  user,
 } from "@heroui/react";
+import useAxiosUsers from "../../Hooks/useAxiosUser";
 import {
   FaFlag,
   FaListUl,
-  FaMedal,
   FaRegLifeRing,
   FaRegSave,
   FaThumbsUp,
 } from "react-icons/fa";
 import { FaThumbsDown } from "react-icons/fa";
-import { FaComment, FaDeleteLeft } from "react-icons/fa6";
+import { FaComment, FaDeleteLeft, FaMedal } from "react-icons/fa6";
 import { FaShare } from "react-icons/fa";
-import { AuthContext } from "../../Context/ContextProvider";
-import useAxiosSecure from "../../Hooks/useAxiosSecure";
-import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
+import { useEffect, useState } from "react";
+import useAxiosMergeData from "../../Hooks/useAxiosMergeData";
+import { useContext } from "react";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
+import { AuthContext } from "../../Context/ContextProvider";
+import toast from "react-hot-toast";
 import Swal from "sweetalert2";
 import { FacebookShareButton } from "react-share";
+import useAxiosPublic from "../../Hooks/useAxiosPublic";
 
-const TopPosts = () => {
-  const [mergedData = limitData, refetch] = useAxiosMergeData();
+const Posts = () => {
   const [users] = useAxiosUsers();
-  const { user } = useContext(AuthContext);
+  const [mergedData, refetch] = useAxiosMergeData();
   const axiosSecure = useAxiosSecure();
   const navigate = useNavigate();
+  const { user, searchData, setSearchData } = useContext(AuthContext);
+  const axiosPublic = useAxiosPublic();
+  const [pageNumber, setPageNumber] = useState([]);
 
-  const limitData = mergedData.slice(0, 5);
+  
+  // Front end merged Data
+  // const mergedData = posts
+  //   .map((post) => ({
+  //     ...post,
+  //     author: users.find((user) => user.id === post.authorId),
+  //     comment: comments.filter((comment) => comment.authorId === post.authorId),
+  //   }))
+  //   .sort(() => Math.random() - 0.5);
+  // console.log(mergedData);
 
   const handleLikes = (data, id) => {
     if (!user && !user?.email) {
@@ -54,7 +66,7 @@ const TopPosts = () => {
 
     axiosSecure.patch("/updateLikes", { filter }).then((res) => {
       if (res.data.modifiedCount > 0) {
-        refetch();
+        refetch()
       }
     });
   };
@@ -65,23 +77,23 @@ const TopPosts = () => {
       input: "textarea",
       inputPlaceholder: "Type your report...",
       html: `
-            <div class="">
-              <label for="countries" class="block text-sm font-medium text-gray-900 dark:text-gray-400">Select an option</label>
-              <select id="reportOption"  class="mt-5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                <option value="" selected >Select a category option</option>
-                <option value="Suicide or self-injury">Suicide or self-injury</option>
-                <option value="Child abuse">Child abuse</option>
-                <option value="Human trafficking">Human trafficking</option>
-                <option value="Convicted sex offenders">Convicted sex offenders</option>
-                <option value="False news">False news</option>
-                <option value="Intellectual property infringement">Intellectual property infringement</option>
-                <option value="Intellectual property infringement">Content from friends</option>
-                <option value="DContent from groupsE">Content from groups</option>
-                <option value="Public follower content">Public follower content</option>
-                <option value="Unconnected content">Unconnected content</option>
-              </select>
-            </div>
-          `,
+          <div class="">
+            <label for="countries" class="block text-sm font-medium text-gray-900 dark:text-gray-400">Select an option</label>
+            <select id="reportOption"  class="mt-5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              <option value="" selected >Select a category option</option>
+              <option value="Suicide or self-injury">Suicide or self-injury</option>
+              <option value="Child abuse">Child abuse</option>
+              <option value="Human trafficking">Human trafficking</option>
+              <option value="Convicted sex offenders">Convicted sex offenders</option>
+              <option value="False news">False news</option>
+              <option value="Intellectual property infringement">Intellectual property infringement</option>
+              <option value="Intellectual property infringement">Content from friends</option>
+              <option value="DContent from groupsE">Content from groups</option>
+              <option value="Public follower content">Public follower content</option>
+              <option value="Unconnected content">Unconnected content</option>
+            </select>
+          </div>
+        `,
       showCancelButton: true,
       confirmButtonText: "Submit",
       cancelButtonText: "Cancel",
@@ -117,6 +129,16 @@ const TopPosts = () => {
     });
   };
 
+  useEffect(() => {
+    axiosPublic
+      .get(`/mergedAllData?page=${pageNumber}`)
+      .then((res) => {
+        setSearchData(res.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, [pageNumber,mergedData]);
 
   const badgeColors = {
     Bronze: "text-[#cd7f32]", // Bronze color
@@ -124,11 +146,10 @@ const TopPosts = () => {
     Platinum: "text-[#e5e4e2]", // Platinum color
   };
 
-
   return (
-    <div className="mt-12">
-      {limitData?.length > 0 ? (
-        limitData.map((item, index) => (
+    <div className="mx-auto">
+      {mergedData?.length > 0 ? (
+        (searchData.length === 0 ? mergedData : searchData).map((item, index) => (
           <Card className="py-4 mb-12" key={index}>
             <CardHeader className="pb-0 pt-2 px-4 flex-col items-start gap-5">
               <div className="flex items-center gap-2">
@@ -137,11 +158,11 @@ const TopPosts = () => {
                   className="rounded-full w-12 h-12 object-cover"
                   src={item.author?.profileImage}
                 />
-                <h1>{item.author.username}</h1>
+                <h1>{item?.author?.username}</h1>
                 <h1>
                   <FaMedal
                     className={`${
-                      badgeColors[item?.author?.badges[0]] || "text-gray-500"
+                      badgeColors[item?.author?.badges[0] || item?.author?.badge || "Bronze"] || "text-gray-500"
                     } text-2xl`}
                   ></FaMedal>
                 </h1>
@@ -160,7 +181,7 @@ const TopPosts = () => {
                 src={item?.image}
               />
               <CardBody className="flex flex-row flex-wrap gap-5 justify-between">
-                <div className="flex gap-5">
+                <div className="flex gap-5 flex-wrap">
                   <Button
                     size="sm"
                     variant="flat"
@@ -174,8 +195,7 @@ const TopPosts = () => {
                     variant="flat"
                     onPress={() => handleLikes("downVotes", item.id)}
                   >
-                    <FaThumbsDown className="text-red-400" />
-                    {item.downVotes}
+                    <FaThumbsDown className="text-red-400" /> {item.downVotes}
                   </Button>
                   <Button size="sm" variant="flat">
                     <FaComment className="text-green-400" />
@@ -229,7 +249,9 @@ const TopPosts = () => {
                   className="object-cover rounded-full w-10 h-10"
                   src={users[item2.authorId]?.profileImage}
                 />
-                <p className="bg-gray-600 p-3 rounded-2xl">{item2.text}</p>
+                <p className="bg-slate-600 text-white p-3 rounded-2xl max-w-md">
+                  {item2.text}
+                </p>
               </CardBody>
             ))}
           </Card>
@@ -239,8 +261,14 @@ const TopPosts = () => {
           <Spinner size="lg" />
         </div>
       )}
+      <Pagination
+        className="mx-auto w-fit"
+        initialPage={1}
+        total={10}
+        onChange={(initialPage) => setPageNumber(initialPage)}
+      />
     </div>
   );
 };
 
-export default TopPosts;
+export default Posts;

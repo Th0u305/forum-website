@@ -1,8 +1,11 @@
-
+import { Helmet } from "react-helmet-async";
 
 export default function ErrorPage() {
   return (
     <div className="h-screen w-full bg-yellow-600 text-gray-900">
+      <Helmet>
+        <title>404</title>
+      </Helmet>
       <section className=" h-screen pt-32 pb-16">
         <div className="mx-auto container grid content-center gap-12 lg:max-w-5xl lg:grid-cols-2 lg:items-center">
           <div className="justify-self-center text-center lg:text-left">
