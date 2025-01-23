@@ -9,6 +9,7 @@ import {
   DropdownSection,
   DropdownTrigger,
   Image,
+  Input,
   Pagination,
   Spinner,
 } from "@heroui/react";
@@ -33,7 +34,7 @@ import toast from "react-hot-toast";
 import Swal from "sweetalert2";
 import { FacebookShareButton } from "react-share";
 import useAxiosPublic from "../../Hooks/useAxiosPublic";
-import { m } from "framer-motion";
+
 
 const Posts = () => {
   const [users] = useAxiosUsers();
@@ -43,8 +44,7 @@ const Posts = () => {
   const { user, searchData, setSearchData } = useContext(AuthContext);
   const axiosPublic = useAxiosPublic();
   const [pageNumber, setPageNumber] = useState([]);
-    
-  
+
   // Front end merged Data
   // const mergedData = posts
   //   .map((post) => ({
@@ -54,6 +54,10 @@ const Posts = () => {
   //   }))
   //   .sort(() => Math.random() - 0.5);
   // console.log(mergedData);
+// console.log(users);
+
+  const filterUser = users?.users?.find((item) => item?.email === user?.email);
+
 
   const handleLikes = (data, id) => {
     if (!user && !user?.email) {
@@ -67,7 +71,7 @@ const Posts = () => {
 
     axiosSecure.patch("/updateLikes", { filter }).then((res) => {
       if (res.data.modifiedCount > 0) {
-        refetch()
+        refetch();
       }
     });
   };
@@ -139,7 +143,7 @@ const Posts = () => {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
-  }, [pageNumber,mergedData]);
+  }, [pageNumber, mergedData]);
 
   const badgeColors = {
     Bronze: "text-[#cd7f32]", // Bronze color
@@ -147,116 +151,129 @@ const Posts = () => {
     Platinum: "text-[#e5e4e2]", // Platinum color
   };
 
+
   return (
     <div className="mx-auto">
       {mergedData?.length > 0 ? (
-        (searchData.length === 0 ? mergedData : searchData).map((item, index) => (
-          <Card className="py-4 mb-12" key={index}>
-            <CardHeader className="pb-0 pt-2 px-4 flex-col items-start gap-5">
-              <div className="flex items-center gap-2">
-                <Image
-                  alt="Card background"
-                  className="rounded-full w-12 h-12 object-cover"
-                  src={item.author?.profileImage}
-                />
-                <h1>{item?.author?.username}</h1>
-                <h1>
-                  <FaMedal
-                    className={`${
-                      badgeColors[item?.author?.badges[0] || item?.author?.badge || "Bronze"] || "text-gray-500"
-                    } text-2xl`}
-                  ></FaMedal>
-                </h1>
-              </div>
+        (searchData.length === 0 ? mergedData : searchData).map(
+          (item, index) => (
+            <Card className="py-4 mb-12" key={index}>
+              <CardHeader className="pb-0 pt-2 px-4 flex-col items-start gap-5">
+                <div className="flex items-center gap-2">
+                  <Image
+                    alt="Card background"
+                    className="rounded-full w-12 h-12 object-cover"
+                    src={item.author?.profileImage}
+                  />
+                  <h1>{item?.author?.username}</h1>
+                  <h1>
+                    <FaMedal
+                      className={`${
+                        badgeColors[
+                          item?.author?.badges[0] ||
+                            item?.author?.badge ||
+                            "Bronze"
+                        ] || "text-gray-500"
+                      } text-2xl`}
+                    ></FaMedal>
+                  </h1>
+                </div>
 
-              <div className="text-start">
-                <h4 className="font-bold text-large">{item.title}</h4>
-                <p className="max-w-md">{item.description}</p>
-              </div>
-            </CardHeader>
-            <CardBody className="overflow-visible py-2">
-              <Image
-                alt="Card background"
-                onClick={() => navigate(`/post/${item._id}`)}
-                className="object-cover md:w-screen rounded-xl cursor-pointer"
-                src={item?.image}
-              />
-              <CardBody className="flex flex-row flex-wrap gap-5 justify-between">
-                <div className="flex gap-5 flex-wrap">
-                  <Button
-                    size="sm"
-                    variant="flat"
-                    onPress={() => handleLikes("upVotes", item.id)}
-                  >
-                    <FaThumbsUp className="text-blue-400" />
-                    {item.upVotes}
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="flat"
-                    onPress={() => handleLikes("downVotes", item.id)}
-                  >
-                    <FaThumbsDown className="text-red-400" /> {item.downVotes}
-                  </Button>
-                  <Button size="sm" variant="flat">
-                    <FaComment className="text-green-400" />
-                    {item.commentData.length}
-                  </Button>
-                  <Button size="sm" variant="flat" className="p-0 ">
-                    <FacebookShareButton url="google.com" className="h-8 w-16">
-                      <FaShare className="text-yellow-400 inline-flex mr-2" />
-                      {item.commentData.length + 15}
-                    </FacebookShareButton>
-                  </Button>
+                <div className="text-start">
+                  <h4 className="font-bold text-large">{item.title}</h4>
+                  <p className="max-w-md">{item.description}</p>
                 </div>
-                <div>
-                  <Dropdown>
-                    <DropdownTrigger>
-                      <Button size="sm" variant="flat">
-                        <FaListUl className="text-violet-500 text-xl"></FaListUl>
-                      </Button>
-                    </DropdownTrigger>
-                    <DropdownMenu aria-label="Static Actions" variant="faded">
-                      <DropdownItem textValue="ff" key="new">
-                        <FaRegSave className="inline-flex mr-3 text-blue-400" />{" "}
-                        Save post
-                      </DropdownItem>
-                      <DropdownItem textValue="ss" key="copy">
-                        <FaDeleteLeft className="inline-flex mr-3 text-yellow-400" />{" "}
-                        Hide post
-                      </DropdownItem>
-                      <DropdownItem textValue="w" key="edit">
-                        <FaRegLifeRing className="inline-flex mr-3 text-green-400" />{" "}
-                        Block
-                      </DropdownItem>
-                      <DropdownSection showDivider></DropdownSection>
-                      <DropdownItem
-                        onPress={() => showInputModal(item)}
-                        textValue="4t"
-                        className="text-red-400"
-                      >
-                        <FaFlag className="inline-flex mr-3" />
-                        Report Post
-                      </DropdownItem>
-                    </DropdownMenu>
-                  </Dropdown>
-                </div>
-              </CardBody>
-            </CardBody>
-            {item.commentData.map((item2, index) => (
-              <CardBody key={index} className="flex flex-row gap-5">
+              </CardHeader>
+              <CardBody className="overflow-visible py-2">
                 <Image
                   alt="Card background"
-                  className="object-cover rounded-full w-10 h-10"
-                  src={item?.author?.profileImage || users[item2.authorId]?.profileImage}
+                  onClick={() => navigate(`/post/${item._id}`)}
+                  className="object-cover md:w-screen rounded-xl cursor-pointer"
+                  src={item?.image}
                 />
-                <p className="bg-slate-600 text-white p-3 rounded-2xl max-w-md">
-                  {item2.text}
-                </p>
+                <CardBody className="flex flex-row flex-wrap gap-5 justify-between">
+                  <div className="flex gap-5 flex-wrap">
+                    <Button
+                      size="sm"
+                      variant="flat"
+                      onPress={() => handleLikes("upVotes", item.id)}
+                    >
+                      <FaThumbsUp className="text-blue-400" />
+                      {item.upVotes}
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="flat"
+                      onPress={() => handleLikes("downVotes", item.id)}
+                    >
+                      <FaThumbsDown className="text-red-400" /> {item.downVotes}
+                    </Button>
+                    <Button size="sm" variant="flat">
+                      <FaComment className="text-green-400" />
+                      {item.commentData.length}
+                    </Button>
+                    <Button size="sm" variant="flat" className="p-0 ">
+                      <FacebookShareButton
+                        url="google.com"
+                        className="h-8 w-16"
+                      >
+                        <FaShare className="text-yellow-400 inline-flex mr-2" />
+                        {item.commentData.length + 15}
+                      </FacebookShareButton>
+                    </Button>
+                  </div>
+                  <div>
+                    <Dropdown>
+                      <DropdownTrigger>
+                        <Button size="sm" variant="flat">
+                          <FaListUl className="text-violet-500 text-xl"></FaListUl>
+                        </Button>
+                      </DropdownTrigger>
+                      <DropdownMenu aria-label="Static Actions" variant="faded">
+                        <DropdownItem textValue="ff" key="new">
+                          <FaRegSave className="inline-flex mr-3 text-blue-400" />{" "}
+                          Save post
+                        </DropdownItem>
+                        <DropdownItem textValue="ss" key="copy">
+                          <FaDeleteLeft className="inline-flex mr-3 text-yellow-400" />{" "}
+                          Hide post
+                        </DropdownItem>
+                        <DropdownItem textValue="w" key="edit">
+                          <FaRegLifeRing className="inline-flex mr-3 text-green-400" />{" "}
+                          Block
+                        </DropdownItem>
+                        <DropdownSection showDivider></DropdownSection>
+                        <DropdownItem
+                          onPress={() => showInputModal(item)}
+                          textValue="4t"
+                          className="text-red-400"
+                        >
+                          <FaFlag className="inline-flex mr-3" />
+                          Report Post
+                        </DropdownItem>
+                      </DropdownMenu>
+                    </Dropdown>
+                  </div>
+                </CardBody>
               </CardBody>
-            ))}
-          </Card>
-        ))
+              {item?.commentData?.map((item2, index) => (
+                <CardBody key={index} className="flex flex-row gap-5">
+                  <Image
+                    alt="Card background"
+                    className="object-cover rounded-full w-10 h-10"
+                    src={
+                      item?.author?.profileImage ||
+                      users[item2.authorId]?.profileImage
+                    }
+                  />
+                  <p className="bg-slate-600 text-white p-3 rounded-2xl max-w-md">
+                    {item2.text}
+                  </p>
+                </CardBody>
+              ))}
+            </Card>
+          )
+        )
       ) : (
         <div className="w-fit mx-auto mt-20">
           <Spinner size="lg" />

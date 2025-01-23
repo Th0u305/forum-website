@@ -281,7 +281,7 @@ export default function Middle() {
 
       </Card>
       
-      <Card>
+      {/* <Card>
         <CardBody>
           <CardBody className="flex flex-row gap-5">
             <Image
@@ -299,7 +299,7 @@ export default function Middle() {
             
           </CardBody>
         </CardBody>
-      </Card>
+      </Card> */}
 
 
       <div className="mx-auto">
