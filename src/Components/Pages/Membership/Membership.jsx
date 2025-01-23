@@ -15,7 +15,7 @@ const tiers = [
     description:
       "The perfect plan if you're just getting started with our product.",
     features: [
-      "Limited posts (max 20 posts per month).",
+      "Limited posts (max 5 posts per month).",
       "Limited access to advanced features",
       "Bronze badge on the profile.",
       "24-hour support response time",

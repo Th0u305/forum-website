@@ -156,6 +156,7 @@ const Announcement = () => {
 
                 <div className="space-y-8 font-[sans-serif] mb-5">
                   <input
+                  required
                     {...register("photo")}
                     type="file"
                     className="w-full text-gray-500 font-medium text-lg bg-gray-100 file:cursor-pointer cursor-pointer file:border-0 file:py-3 file:px-4 file:mr-4 file:bg-gray-800 file:hover:bg-gray-700 file:text-white rounded-md"

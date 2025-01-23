@@ -13,6 +13,7 @@ import makeAnimated from "react-select/animated";
 import { AuthContext } from "../../../../Context/ContextProvider";
 import axios from "axios";
 import { Helmet } from "react-helmet-async";
+import { useNavigate } from "react-router";
 
 const image_hosting_cloud_name = import.meta.env.VITE_IMAGE_CLOUD_NAME;
 
@@ -28,6 +29,7 @@ const AddPost = () => {
   const [users, refetch] = useAxiosSecureData();
   const axiosSecure = useAxiosSecure();
   const animatedComponents = makeAnimated();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const filterData = users?.users?.find((item) => item.email === user.email);
@@ -59,65 +61,80 @@ const AddPost = () => {
 
   const onsubmit = async (e) => {
     await refetch();
-    if (e.postTitle.length < 5) {
-      return setErrorMsg("Please write more than 5 words");
-    } else {
-      setErrorMsg("");
+
+    if (
+      (filterData.posts.length === 5 &&
+        filterData.membershipStatus === "Bronze") ||
+      filterData.membershipStatus === "Free"
+    ) {
+      Swal.fire({
+        title: "Buy membership!",
+        text: "You reached your limit as a free user , You can only post 5 post per month",
+        icon: "error",
+        draggable: false,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/membership");
+        }
+      });
+      return;
     }
+    // if (e.postTitle.length < 5) {
+    //   return setErrorMsg("Please write more than 5 words");
+    // } else {
+    //   setErrorMsg("");
+    // }
 
-    if (e.postDetails.length < 10) {
-      return setErrorMsg2("Please write more than 10 words");
-    } else {
-      setErrorMsg2("");
-    }
-    await refetch();
+    // if (e.postDetails.length < 10) {
+    //   return setErrorMsg2("Please write more than 10 words");
+    // } else {
+    //   setErrorMsg2("");
+    // }
+    // await refetch();
 
-    const findUser = await users?.users?.find(
-      (item) => item.email === user.email
-    );
-    const result = await selectedOption?.map(({ label }) => label);
+    // const result = await selectedOption?.map(({ label }) => label);
 
-    Swal.fire({
-      position: "center",
-      icon: "warning",
-      title: "Creating your post",
-      showConfirmButton: false,
-      timer: 3000,
-    });
+    // Swal.fire({
+    //   position: "center",
+    //   icon: "warning",
+    //   title: "Creating your post",
+    //   showConfirmButton: false,
+    //   timer: 3000,
+    // });
 
-    const formData = new FormData();
-    formData.append("file", e.photo[0]);
-    formData.append("upload_preset", "formProject");
+    // const formData = new FormData();
+    // formData.append("file", e.photo[0]);
+    // formData.append("upload_preset", "formProject");
 
-    const result2 = await axios.post(
-      `https://api.cloudinary.com/v1_1/${image_hosting_cloud_name}/image/upload`,
-      formData
-    );
+    // const result2 = await axios.post(
+    //   `https://api.cloudinary.com/v1_1/${image_hosting_cloud_name}/image/upload`,
+    //   formData
+    // );
 
-    const data = {
-      id: users?.postTotal + 1,
-      authorId: findUser?.id,
-      title: e?.postTitle,
-      description: e?.postDetails,
-      tags: result,
-      upVotes: null,
-      downVotes: null,
-      comments: [],
-      category: selectedOption2?.label,
-      createdAt: Date(),
-      image: result2.data.url,
-    };
+    // const data = {
+    //   id: users?.postTotal + 1,
+    //   authorId: filterData?.id,
+    //   title: e?.postTitle,
+    //   description: e?.postDetails,
+    //   tags: result,
+    //   upVotes: null,
+    //   downVotes: null,
+    //   comments: [],
+    //   category: selectedOption2?.label,
+    //   createdAt: Date(),
+    //   image: result2.data.url,
+    // };
 
-    axiosSecure.post("/addPosts", { data }).then((res) => {
-      if (res.status === 200) {
-        Swal.fire({
-          title: "Post Added",
-          icon: "success",
-          draggable: false,
-        });
-        reset();
-      }
-    });
+    // axiosSecure.post("/addPosts", { data }).then((res) => {
+    //   if (res.status === 200) {
+    //     Swal.fire({
+    //       title: "Post Added",
+    //       icon: "success",
+    //       draggable: false,
+    //     });
+    //     reset();
+    //   }
+    // });
   };
 
   return (
@@ -228,6 +245,7 @@ const AddPost = () => {
 
                 <div className="space-y-8 font-[sans-serif] mb-5">
                   <input
+                    required
                     {...register("photo")}
                     type="file"
                     className="w-full text-gray-500 font-medium text-lg bg-gray-100 file:cursor-pointer cursor-pointer file:border-0 file:py-3 file:px-4 file:mr-4 file:bg-gray-800 file:hover:bg-gray-700 file:text-white rounded-md"
