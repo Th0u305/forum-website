@@ -20,6 +20,8 @@ import { NavLink, useLocation, useNavigate } from "react-router";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../Context/ContextProvider";
 import toast from "react-hot-toast";
+import useAxiosPublic from "../../Hooks/useAxiosPublic";
+import useAxiosMergeData from "../../Hooks/useAxiosMergeData";
 
 export const SearchIcon = ({
   size = 24,
@@ -59,9 +61,12 @@ export const SearchIcon = ({
 
 export default function NavbarMenu2() {
 
-  const { user, signOutUser} = useContext(AuthContext);
+  const { user, signOutUser, setSearchData} = useContext(AuthContext);
   const [isNavbar, setIsNavbar] = useState(true)
   const {pathname} = useLocation()
+  const axiosPublic = useAxiosPublic()
+  const [mergedData, refetch] = useAxiosMergeData();
+
 
 
   useEffect(() => {
@@ -74,7 +79,6 @@ export default function NavbarMenu2() {
 
 
 
-
   const handleSignOut = () => {
     signOutUser();
     if (!user) {
@@ -82,6 +86,18 @@ export default function NavbarMenu2() {
     }
     toast.success("Signed out successfully");
   };
+
+
+
+  const handleSearch = (data) =>{
+    axiosPublic.get(`/mergedAllData?filter=${data}`)
+      .then((res) => {
+        setSearchData(res.data)
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }
 
   return (
     <>
@@ -146,6 +162,8 @@ export default function NavbarMenu2() {
               </NavbarItem>
               <div className="hidden md:block">
                 <Input
+                id="inputValue"
+                  onChange={(e)=> handleSearch(e.target.value)}
                   classNames={{
                     base: "max-w-full sm:max-w-[12rem] h-10",
                     mainWrapper: "h-full",

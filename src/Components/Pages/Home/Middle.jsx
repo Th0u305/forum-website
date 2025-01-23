@@ -1,18 +1,29 @@
 import useAxiosCategory from "../../Hooks/useAxiosCategory";
 import useAxiosTags from "../../Hooks/useAxiosTags";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Select from "react-select";
-import { Card, CardBody, Image, Tab, Tabs, Textarea } from "@heroui/react";
+import {
+  Card,
+  CardBody,
+  Image,
+  Pagination,
+  Tab,
+  Tabs,
+  Textarea,
+} from "@heroui/react";
 import { Outlet, useLocation } from "react-router";
 import { DataContextProvider } from "../../Context/DataContext";
 import CardText from "./CardText";
+import useAxiosPublic from "../../Hooks/useAxiosPublic";
+import { AuthContext } from "../../Context/ContextProvider";
 
 export default function Middle() {
   const [tags] = useAxiosTags();
   const [category] = useAxiosCategory();
-  // const { selected, setSelected } = useContext(DataContextProvider);
-  // const [selected, setSelected] = React.useState();
   const { pathname } = useLocation();
+  const axiosPublic = useAxiosPublic();
+  const { setSearchData, searchData } = useContext(AuthContext);
+  const [pageNumber, setPageNumber] = useState([]);
 
   const options = tags.map((item) => ({
     value: item._id,
@@ -23,16 +34,10 @@ export default function Middle() {
     label: item.category,
   }));
 
-  const [selectedOption, setSelectedOption] = useState(null);
-  const [selectedOption2, setSelectedOption2] = useState(null);
-
-  // Handle selection change
-  const handleChange = (option) => {
-    setSelectedOption(option);
-  };
-  const handleChange2 = (option) => {
-    setSelectedOption2(option);
-  };
+  const options3 = [
+    { value: "chocolate", label: "Popularity " },
+    { value: "strawberry", label: "Disliked" }
+  ];
 
   let tabs = [
     {
@@ -47,8 +52,64 @@ export default function Middle() {
     },
   ];
 
+  const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedOption2, setSelectedOption2] = useState(null);
+  const [selectedOption3, setSelectedOption3] = useState(null);
+
+
+  // Handle selection change
+  const handleChange = (option) => {
+    setSelectedOption(option);
+  };
+
+  const handleChange2 = (option) => {
+    setSelectedOption2(option);
+  };
+
+  
+  const handleChange3 = (option) => {    
+    setSelectedOption3(option);
+
+    axiosPublic
+    .post(`/posts/popularity?filter=${option.label}`)
+    .then((res) => {
+      setSearchData(res.data);
+      
+    })
+    .catch((error) => {
+      console.error("Error fetching data:", error);
+    });
+  };
+
+  useEffect(() => {
+    axiosPublic
+      .get(
+        `/mergedAllData?filter=${
+          selectedOption?.label || selectedOption2?.label
+        }`
+      )
+      .then((res) => {
+        setSearchData(res.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, [selectedOption, selectedOption2]);
+
+  useEffect(() => {
+    axiosPublic
+      .get(`/mergedAllData?page=${pageNumber}`)
+      .then((res) => {
+        setSearchData(res.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, [pageNumber]);
+
+
   return (
-    <div className="space-y-5 ">
+    <div className="space-y-5">
       <Card className="grid grid-cols-2 w-full justify-items-center md:grid-cols-4 xl:grid-cols-3 p-3 gap-3 md:py-5 md:px-2 xl:py-11 lg:p-6 overflow-visible xl:justify-items-start">
         <div className="w-fit z-30 md:col-span-2 xl:col-span-1">
           <Select
@@ -67,6 +128,7 @@ export default function Middle() {
                 boxShadow: "none",
                 transition: "all 0.3s ease", // Smooth transition for focus and hover
                 width: "11.5rem",
+                cursor: "pointer",
               }),
               option: (base, { isFocused, isSelected }) => ({
                 ...base,
@@ -118,6 +180,7 @@ export default function Middle() {
                 boxShadow: "none",
                 transition: "all 0.3s ease", // Smooth transition for focus and hover
                 width: "11.5rem",
+                cursor: "pointer",
               }),
               option: (base, { isFocused, isSelected }) => ({
                 ...base,
@@ -152,7 +215,7 @@ export default function Middle() {
           />
         </div>
 
-        <div className="col-span-full md:col-span-4 xl:col-span-1 md:mt-3 xl:mt-0 border-2 border-gray-400 rounded-lg">
+        <div className="col-span-full md:col-span-2 xl:col-span-1 md:mt-3 xl:mt-0 border-2 border-gray-400 rounded-lg">
           <Tabs
             items={tabs}
             selectedKey={pathname}
@@ -169,6 +232,57 @@ export default function Middle() {
             )}
           </Tabs>
         </div>
+
+        <div>
+          <Select
+            options={options3} // Pass custom options
+            value={selectedOption2} // Bind selected value
+            onChange={handleChange3} // Handle change
+            styles={{
+              control: (base) => ({
+                ...base,
+                backgroundColor: "inherit",
+                color: "inherit",
+                border: "2px solid gray",
+                borderRadius: "0.5rem", // rounded-2xl equivalent
+                boxShadow: "none",
+                transition: "all 0.3s ease", // Smooth transition for focus and hover
+                width: "11.5rem",
+                cursor: "pointer",
+              }),
+              option: (base, { isFocused, isSelected }) => ({
+                ...base,
+                backgroundColor: isFocused ? "inherit" : "white",
+                color: isFocused ? "#007bff" : "black",
+                textAlign: "left",
+                transition: "all 0.3s ease", // Smooth hover effect
+                cursor: "pointer",
+              }),
+              menu: (base) => ({
+                ...base,
+                borderRadius: "0.5rem", // rounded-2xl equivalent for dropdown
+                border: "1px solid gray",
+                overflow: "hidden", // Prevents border-radius from being overridden
+                transition: "opacity 0.3s ease, transform 0.3s ease", // Smooth open/close effect
+                opacity: 1,
+                transform: "scaleY(1)",
+              }),
+              menuList: (base) => ({
+                ...base,
+                padding: 0, // Optional: clean padding inside menu
+              }),
+              singleValue: (base) => ({
+                ...base,
+                color: "inherit",
+              }),
+              input: (base) => ({
+                ...base,
+                color: "revert", // Set search input text color to white
+              }),
+            }}
+          />
+        </div>
+
       </Card>
       {/* 
       <Card>
@@ -193,6 +307,13 @@ export default function Middle() {
       <div className="mx-auto">
         <Outlet></Outlet>
       </div>
+
+      <Pagination
+        className="mx-auto w-fit"
+        initialPage={1}
+        total={10}
+        onChange={(initialPage) => setPageNumber(initialPage)}
+      />
     </div>
   );
 }

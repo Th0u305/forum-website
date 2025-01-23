@@ -126,7 +126,7 @@ const SinglePost = () => {
     <div className="mt-12">
       {singleData?.length > 0 ? (
         singleData.map((item) => (
-          <Card className="py-4 w-fit mb-12">
+          <Card className="py-4 mb-12">
             <CardHeader className="pb-0 pt-2 px-4 flex-col items-start gap-5">
               <div className="flex items-center gap-2">
                 <Image

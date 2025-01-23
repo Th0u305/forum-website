@@ -118,7 +118,7 @@ const LatestData = () => {
     <div className="mt-12">
       {randomData?.length > 0 ? (
         randomData?.map((item, index) => (
-          <Card className="py-4 w-fit mb-12" key={index}>
+          <Card className="py-4 mb-12" key={index}>
             <CardHeader className="pb-0 pt-2 px-4 w-fit flex-col items-start gap-5">
               <div className="flex items-center gap-2">
                 <Image
@@ -138,11 +138,11 @@ const LatestData = () => {
               <Image
                 alt="Card background"
                 onClick={() => navigate(`/post/${item._id}`)}
-                className="object-cover rounded-xl cursor-pointer"
+                className="object-cover md:w-screen rounded-xl cursor-pointer"
                 src={item?.image}
-                // width={700}
+               
               />
-              <CardBody className="flex flex-row gap-5 justify-between">
+              <CardBody className="flex flex-row flex-wrap gap-5 justify-between">
                 <div className="flex gap-5">
                   <Button
                     size="sm"

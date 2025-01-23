@@ -24,6 +24,7 @@ const ContextProvider = ({ children }) => {
   const myRef = useRef(null);
   const { pathname } = useLocation();
   const [membershipName, setMembershipName] = useState()
+  const [searchData, setSearchData] = useState([])
 
   // register or create account
   const createUser = (email, password) => {
@@ -131,7 +132,9 @@ const ContextProvider = ({ children }) => {
     deleteUserData,
     myRef,
     membershipName,
-    setMembershipName
+    setMembershipName,
+    searchData,
+    setSearchData
   };
 
   return (

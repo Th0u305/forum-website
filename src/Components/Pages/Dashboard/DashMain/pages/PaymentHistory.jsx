@@ -5,21 +5,20 @@ import Header from "../components/common/Header";
 import useAxiosPaymentHist from "../../../../Hooks/useAxiosPaymentHist";
 import { AuthContext } from "../../../../Context/ContextProvider";
 
-const PaymentHistory = ({ reportData }) => {
+const PaymentHistory = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredUsers, setFilteredUsers] = useState();
   const [history , refetch] = useAxiosPaymentHist() 
   const {user} = useContext(AuthContext)
-// console.log(history);  
-// console.log(user);
+
 
  
   const handleSearch = (e) => {
     refetch();
     const term = e.target.value.toLowerCase();
     setSearchTerm(term);
-    const filtered = reportData?.filter((user) =>
-      user?.reportOption?.toLowerCase()?.includes(term)
+    const filtered = history?.filter((item) =>
+      item?.purchasedMembership?.toLowerCase()?.includes(term)
     );
     setFilteredUsers(filtered);
     refetch();

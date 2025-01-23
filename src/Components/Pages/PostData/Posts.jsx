@@ -31,12 +31,23 @@ import { AuthContext } from "../../Context/ContextProvider";
 import toast from "react-hot-toast";
 import Swal from "sweetalert2";
 
+import {
+  FacebookShareCount,
+  HatenaShareCount,
+  OKShareCount,
+  PinterestShareCount,
+  RedditShareCount,
+  TumblrShareCount,
+  VKShareCount,
+} from "react-share";
+
 const Posts = () => {
   const [users] = useAxiosUsers();
   const [mergedData, refetch] = useAxiosMergeData();
   const axiosSecure = useAxiosSecure();
   const navigate = useNavigate();
-  const { user } = useContext(AuthContext);
+  const { user ,searchData} = useContext(AuthContext);
+
 
   useEffect(() => {
     refetch();
@@ -55,6 +66,7 @@ const Posts = () => {
 
 
   const handleLikes = (data, id) => {
+
     if (!user && !user?.email) {
       return toast.error("You're not logged in");
     }
@@ -128,12 +140,13 @@ const Posts = () => {
       }
     });
   };
+  
 
   return (
-    <div className="w-fit mx-auto">
+    <div className="mx-auto">
       {mergedData?.length > 0 ? (
-        mergedData.map((item, index) => (
-          <Card className="py-4 w-fit mb-12" key={index}>
+        (searchData.length > 0 ? searchData : mergedData).map((item, index) => (
+          <Card className="py-4 mb-12" key={index}>
             <CardHeader className="pb-0 pt-2 px-4 flex-col items-start gap-5">
               <div className="flex items-center gap-2">
                 <Image
@@ -153,10 +166,10 @@ const Posts = () => {
               <Image
                 alt="Card background"
                 onClick={() => navigate(`/post/${item._id}`)}
-                className="object-cover rounded-xl cursor-pointer"
+                className="object-cover md:w-screen rounded-xl cursor-pointer"
                 src={item?.image}
               />
-              <CardBody className="flex flex-row gap-5 justify-between">
+              <CardBody className="flex flex-row flex-wrap gap-5 justify-between">
                 <div className="flex gap-5 flex-wrap">
                   <Button
                     size="sm"
@@ -179,6 +192,7 @@ const Posts = () => {
                   </Button>
                   <Button size="sm" variant="flat">
                     <FaShare className="text-yellow-400" />
+                    <FacebookShareCount url="https://www.facebook.com/login/?next=https%3A%2F%2Fwww.facebook.com%2F" />
                     {item.commentData.length + 15}
                   </Button>
                 </div>
