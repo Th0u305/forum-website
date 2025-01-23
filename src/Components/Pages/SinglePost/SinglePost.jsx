@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router";
-import useAxiosComments from "../../Hooks/useAxiosComments";
 import useAxiosPosts from "../../Hooks/useAxiosPosts";
 import {
   Button,
@@ -19,6 +18,7 @@ import {
   FaComment,
   FaFlag,
   FaListUl,
+  FaMedal,
   FaRegLifeRing,
   FaRegSave,
   FaShare,
@@ -33,10 +33,10 @@ import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import { Clock, Tags } from "lucide-react";
 import Swal from "sweetalert2";
 import { FaDeleteLeft } from "react-icons/fa6";
+import { FacebookShareButton } from "react-share";
 
 const SinglePost = () => {
   const params = useParams();
-  const [posts] = useAxiosPosts();
   const [singleData, setSingleData] = useState([]);
   const [mergedData, refetch] = useAxiosMergeData();
   const [users] = useAxiosUsers();
@@ -122,6 +122,13 @@ const SinglePost = () => {
     });
   };
 
+  const badgeColors = {
+    Bronze: "text-[#cd7f32]", // Bronze color
+    Gold: "text-[#ffd700]", // Gold color
+    Platinum: "text-[#e5e4e2]", // Platinum color
+  };
+
+
   return (
     <div className="mt-12">
       {singleData?.length > 0 ? (
@@ -135,6 +142,13 @@ const SinglePost = () => {
                   src={item.author.profileImage}
                 />
                 <h1>{item.author.username}</h1>
+                <h1>
+                  <FaMedal
+                    className={`${
+                      badgeColors[item?.author?.badges[0]] || "text-gray-500"
+                    } text-2xl`}
+                  ></FaMedal>
+                </h1>
               </div>
 
               <div className="text-start">
@@ -171,9 +185,11 @@ const SinglePost = () => {
                     <FaComment className="text-green-400" />
                     {item.commentData.length}
                   </Button>
-                  <Button size="sm" variant="flat">
-                    <FaShare className="text-yellow-400" />
-                    {item.commentData.length + 15}
+                  <Button size="sm" variant="flat" className="p-0 ">
+                    <FacebookShareButton url="google.com" className="h-8 w-16">
+                      <FaShare className="text-yellow-400 inline-flex mr-2" />
+                      {item.commentData.length + 15}
+                    </FacebookShareButton>
                   </Button>
                 </div>
                 <div>

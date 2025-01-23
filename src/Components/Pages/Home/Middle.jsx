@@ -4,16 +4,10 @@ import React, { useContext, useEffect, useState } from "react";
 import Select from "react-select";
 import {
   Card,
-  CardBody,
-  Image,
-  Pagination,
   Tab,
   Tabs,
-  Textarea,
 } from "@heroui/react";
 import { Outlet, useLocation } from "react-router";
-import { DataContextProvider } from "../../Context/DataContext";
-import CardText from "./CardText";
 import useAxiosPublic from "../../Hooks/useAxiosPublic";
 import { AuthContext } from "../../Context/ContextProvider";
 
@@ -22,8 +16,7 @@ export default function Middle() {
   const [category] = useAxiosCategory();
   const { pathname } = useLocation();
   const axiosPublic = useAxiosPublic();
-  const { setSearchData, searchData } = useContext(AuthContext);
-  const [pageNumber, setPageNumber] = useState([]);
+  const { setSearchData } = useContext(AuthContext);
 
   const options = tags.map((item) => ({
     value: item._id,
@@ -96,16 +89,7 @@ export default function Middle() {
       });
   }, [selectedOption, selectedOption2]);
 
-  useEffect(() => {
-    axiosPublic
-      .get(`/mergedAllData?page=${pageNumber}`)
-      .then((res) => {
-        setSearchData(res.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  }, [pageNumber]);
+
 
 
   return (
@@ -307,13 +291,6 @@ export default function Middle() {
       <div className="mx-auto">
         <Outlet></Outlet>
       </div>
-
-      <Pagination
-        className="mx-auto w-fit"
-        initialPage={1}
-        total={10}
-        onChange={(initialPage) => setPageNumber(initialPage)}
-      />
     </div>
   );
 }

@@ -15,12 +15,14 @@ import {
   DropdownItem,
   DropdownTrigger,
 } from "@heroui/react";
+import { FaMedal } from "react-icons/fa6";
 import ThemeSwitcher from "./Theme";
-import { NavLink, useLocation, useNavigate } from "react-router";
+import { useLocation } from "react-router";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../Context/ContextProvider";
 import toast from "react-hot-toast";
 import useAxiosPublic from "../../Hooks/useAxiosPublic";
+import useAxiosSecureData from "../../Hooks/useAxiosSecureData";
 import useAxiosMergeData from "../../Hooks/useAxiosMergeData";
 
 export const SearchIcon = ({
@@ -60,14 +62,19 @@ export const SearchIcon = ({
 };
 
 export default function NavbarMenu2() {
+  const { user, signOutUser, setSearchData } = useContext(AuthContext);
+  const [isNavbar, setIsNavbar] = useState(true);
+  const { pathname } = useLocation();
+  const axiosPublic = useAxiosPublic();
+  const [users] = useAxiosSecureData();
 
-  const { user, signOutUser, setSearchData} = useContext(AuthContext);
-  const [isNavbar, setIsNavbar] = useState(true)
-  const {pathname} = useLocation()
-  const axiosPublic = useAxiosPublic()
-  const [mergedData, refetch] = useAxiosMergeData();
+  const filterUser = users?.users?.find((item) => item?.email === user?.email);
 
-
+  const badgeColors = {
+    Bronze: "text-[#cd7f32]", // Bronze color
+    Gold: "text-[#ffd700]", // Gold color
+    Platinum: "text-[#e5e4e2]", // Platinum color
+  };
 
   useEffect(() => {
     if (pathname.split("/")[1] === `payments`) {
@@ -77,8 +84,6 @@ export default function NavbarMenu2() {
     }
   }, [pathname]);
 
-
-
   const handleSignOut = () => {
     signOutUser();
     if (!user) {
@@ -87,17 +92,16 @@ export default function NavbarMenu2() {
     toast.success("Signed out successfully");
   };
 
-
-
-  const handleSearch = (data) =>{
-    axiosPublic.get(`/mergedAllData?filter=${data}`)
+  const handleSearch = (data) => {
+    axiosPublic
+      .get(`/mergedAllData?filter=${data}`)
       .then((res) => {
-        setSearchData(res.data)
+        setSearchData(res.data);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
-  }
+  };
 
   return (
     <>
@@ -162,8 +166,8 @@ export default function NavbarMenu2() {
               </NavbarItem>
               <div className="hidden md:block">
                 <Input
-                id="inputValue"
-                  onChange={(e)=> handleSearch(e.target.value)}
+                  id="inputValue"
+                  onChange={(e) => handleSearch(e.target.value)}
                   classNames={{
                     base: "max-w-full sm:max-w-[12rem] h-10",
                     mainWrapper: "h-full",
@@ -200,7 +204,16 @@ export default function NavbarMenu2() {
                     key="profile"
                     className="h-14 gap-2"
                   >
-                    <p className="font-semibold">Signed in as</p>
+                    <p className="font-semibold inline-flex">
+                      <FaMedal
+                        className={`${
+                          badgeColors[filterUser?.badge[0] || "Platinum"] ||
+                          "text-gray-500"
+                        } text-2xl mr-4 mb-2`}
+                      ></FaMedal>
+                      Signed in as <h1 className=""></h1>
+                    </p>
+
                     <p className="font-semibold">
                       {user?.email || "example@gmail.com"}
                     </p>

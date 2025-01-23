@@ -9,6 +9,7 @@ import {
   DropdownSection,
   DropdownTrigger,
   Image,
+  Pagination,
   Spinner,
 } from "@heroui/react";
 import useAxiosUsers from "../../Hooks/useAxiosUser";
@@ -20,7 +21,7 @@ import {
   FaThumbsUp,
 } from "react-icons/fa";
 import { FaThumbsDown } from "react-icons/fa";
-import { FaComment, FaDeleteLeft } from "react-icons/fa6";
+import { FaComment, FaDeleteLeft, FaMedal } from "react-icons/fa6";
 import { FaShare } from "react-icons/fa";
 import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
@@ -30,29 +31,21 @@ import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import { AuthContext } from "../../Context/ContextProvider";
 import toast from "react-hot-toast";
 import Swal from "sweetalert2";
-
-import {
-  FacebookShareCount,
-  HatenaShareCount,
-  OKShareCount,
-  PinterestShareCount,
-  RedditShareCount,
-  TumblrShareCount,
-  VKShareCount,
-} from "react-share";
+import { FacebookShareButton } from "react-share";
+import useAxiosPublic from "../../Hooks/useAxiosPublic";
 
 const Posts = () => {
   const [users] = useAxiosUsers();
   const [mergedData, refetch] = useAxiosMergeData();
   const axiosSecure = useAxiosSecure();
   const navigate = useNavigate();
-  const { user ,searchData} = useContext(AuthContext);
-
+  const { user, searchData, setSearchData } = useContext(AuthContext);
+  const axiosPublic = useAxiosPublic();
+  const [pageNumber, setPageNumber] = useState([]);
 
   useEffect(() => {
     refetch();
   }, [mergedData]);
-
 
   // Front end merged Data
   // const mergedData = posts
@@ -64,9 +57,7 @@ const Posts = () => {
   //   .sort(() => Math.random() - 0.5);
   // console.log(mergedData);
 
-
   const handleLikes = (data, id) => {
-
     if (!user && !user?.email) {
       return toast.error("You're not logged in");
     }
@@ -119,7 +110,7 @@ const Posts = () => {
           return "Please select and option";
         }
       },
-    })
+    });
 
     const filterUser = users.find((item) => item.email === user.email);
     const optionValue = document.getElementById("reportOption")?.value;
@@ -140,7 +131,23 @@ const Posts = () => {
       }
     });
   };
-  
+
+  useEffect(() => {
+    axiosPublic
+      .get(`/mergedAllData?page=${pageNumber}`)
+      .then((res) => {
+        setSearchData(res.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, [pageNumber]);
+
+  const badgeColors = {
+    Bronze: "text-[#cd7f32]", // Bronze color
+    Gold: "text-[#ffd700]", // Gold color
+    Platinum: "text-[#e5e4e2]", // Platinum color
+  };
 
   return (
     <div className="mx-auto">
@@ -155,6 +162,13 @@ const Posts = () => {
                   src={item.author?.profileImage}
                 />
                 <h1>{item.author.username}</h1>
+                <h1>
+                  <FaMedal
+                    className={`${
+                      badgeColors[item?.author?.badges[0]] || "text-gray-500"
+                    } text-2xl`}
+                  ></FaMedal>
+                </h1>
               </div>
 
               <div className="text-start">
@@ -190,10 +204,11 @@ const Posts = () => {
                     <FaComment className="text-green-400" />
                     {item.commentData.length}
                   </Button>
-                  <Button size="sm" variant="flat">
-                    <FaShare className="text-yellow-400" />
-                    <FacebookShareCount url="https://www.facebook.com/login/?next=https%3A%2F%2Fwww.facebook.com%2F" />
-                    {item.commentData.length + 15}
+                  <Button size="sm" variant="flat" className="p-0 ">
+                    <FacebookShareButton url="google.com" className="h-8 w-16">
+                      <FaShare className="text-yellow-400 inline-flex mr-2" />
+                      {item.commentData.length + 15}
+                    </FacebookShareButton>
                   </Button>
                 </div>
                 <div>
@@ -249,6 +264,12 @@ const Posts = () => {
           <Spinner size="lg" />
         </div>
       )}
+      <Pagination
+        className="mx-auto w-fit"
+        initialPage={1}
+        total={10}
+        onChange={(initialPage) => setPageNumber(initialPage)}
+      />
     </div>
   );
 };

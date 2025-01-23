@@ -18,6 +18,7 @@ import {
 import {
   FaFlag,
   FaListUl,
+  FaMedal,
   FaRegLifeRing,
   FaRegSave,
   FaThumbsUp,
@@ -30,6 +31,7 @@ import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
 import Swal from "sweetalert2";
+import { FacebookShareButton } from "react-share";
 
 const TopPosts = () => {
   const [mergedData = limitData, refetch] = useAxiosMergeData();
@@ -115,6 +117,14 @@ const TopPosts = () => {
     });
   };
 
+
+  const badgeColors = {
+    Bronze: "text-[#cd7f32]", // Bronze color
+    Gold: "text-[#ffd700]", // Gold color
+    Platinum: "text-[#e5e4e2]", // Platinum color
+  };
+
+
   return (
     <div className="mt-12">
       {limitData?.length > 0 ? (
@@ -128,6 +138,13 @@ const TopPosts = () => {
                   src={item.author?.profileImage}
                 />
                 <h1>{item.author.username}</h1>
+                <h1>
+                  <FaMedal
+                    className={`${
+                      badgeColors[item?.author?.badges[0]] || "text-gray-500"
+                    } text-2xl`}
+                  ></FaMedal>
+                </h1>
               </div>
 
               <div className="text-start">
@@ -164,9 +181,11 @@ const TopPosts = () => {
                     <FaComment className="text-green-400" />
                     {item.commentData.length}
                   </Button>
-                  <Button size="sm" variant="flat">
-                    <FaShare className="text-yellow-400" />
-                    {item.commentData.length + 15}
+                  <Button size="sm" variant="flat" className="p-0 ">
+                    <FacebookShareButton url="google.com" className="h-8 w-16">
+                      <FaShare className="text-yellow-400 inline-flex mr-2" />
+                      {item.commentData.length + 15}
+                    </FacebookShareButton>
                   </Button>
                 </div>
                 <div>
