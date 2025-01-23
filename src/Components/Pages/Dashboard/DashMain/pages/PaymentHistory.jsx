@@ -25,9 +25,6 @@ const PaymentHistory = () => {
 
   return (
     <div className=" relative z-10  bg-gray-900">
-      <Helmet>
-        <title>Dashboard | Payment History</title>
-      </Helmet>
       <Header title={"Payment History"} />
 
       <main className="max-w-7xl mx-auto py-6 px-4 lg:px-8 h-screen space-y-10 flex w-full justify-center items-center">

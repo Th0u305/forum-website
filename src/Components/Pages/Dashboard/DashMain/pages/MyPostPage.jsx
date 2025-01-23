@@ -21,9 +21,6 @@ const MyPost = () => {
 
   return (
     <div className="flex-1 relative z-10 overflow-auto">
-      <Helmet>
-        <title>Dashboard | My Posts</title>
-      </Helmet>
       <Header title={"My Posts"} />
 
       <main className="max-w-7xl mx-auto py-6 px-4 lg:px-8">

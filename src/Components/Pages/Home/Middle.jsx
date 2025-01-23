@@ -4,19 +4,26 @@ import React, { useContext, useEffect, useState } from "react";
 import Select from "react-select";
 import {
   Card,
+  CardBody,
+  Image,
   Tab,
   Tabs,
+  Textarea,
 } from "@heroui/react";
 import { Outlet, useLocation } from "react-router";
 import useAxiosPublic from "../../Hooks/useAxiosPublic";
 import { AuthContext } from "../../Context/ContextProvider";
+import useAxiosSecureData from "../../Hooks/useAxiosSecureData";
 
 export default function Middle() {
   const [tags] = useAxiosTags();
   const [category] = useAxiosCategory();
   const { pathname } = useLocation();
   const axiosPublic = useAxiosPublic();
-  const { setSearchData } = useContext(AuthContext);
+  const { setSearchData, user } = useContext(AuthContext);
+  const [users] = useAxiosSecureData();
+
+  // const filterUser = users?.users?.find((item) => item?.email === user?.email);
 
   const options = tags.map((item) => ({
     value: item._id,
@@ -93,7 +100,6 @@ export default function Middle() {
         console.error("Error fetching data:", error);
       });
   }, [selectedOption, selectedOption2]);
-
 
 
 
@@ -274,14 +280,14 @@ export default function Middle() {
         </div>
 
       </Card>
-      {/* 
-      <Card>
+      
+      {/* <Card>
         <CardBody>
           <CardBody className="flex flex-row gap-5">
             <Image
               alt="Card background"
               className="rounded-full w-12 h-12 object-cover"
-              src="https://res.cloudinary.com/dmegxaayi/image/upload/v1736827009/pexels-olly-3785079_irm1bg.jpg"
+              src={user?.photoURL}
             />
             <Textarea
               isClearable
@@ -294,6 +300,8 @@ export default function Middle() {
           </CardBody>
         </CardBody>
       </Card> */}
+
+
       <div className="mx-auto">
         <Outlet></Outlet>
       </div>

@@ -1,7 +1,6 @@
 import { Outlet, useLocation, useNavigate } from "react-router";
 import { useEffect } from "react";
-import { Helmet } from 'react-helmet-async';
-
+import { Helmet } from "react-helmet-async";
 
 function DashboardRoot() {
   const { pathname } = useLocation();
@@ -13,9 +12,6 @@ function DashboardRoot() {
   }, [pathname]);
   return (
     <div className="bg-gray-900 text-gray-100 overflow-hidden">
-      <Helmet>
-        <title>Dashboard</title>
-      </Helmet>
       <div className="ml-10 xl:ml-0">
         <Outlet></Outlet>
       </div>
