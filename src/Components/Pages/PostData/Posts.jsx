@@ -12,11 +12,13 @@ import {
   Input,
   Pagination,
   Spinner,
+  Textarea,
 } from "@heroui/react";
 import useAxiosUsers from "../../Hooks/useAxiosUser";
 import {
   FaFlag,
   FaListUl,
+  FaPaperPlane,
   FaRegLifeRing,
   FaRegSave,
   FaThumbsUp,
@@ -34,31 +36,36 @@ import toast from "react-hot-toast";
 import Swal from "sweetalert2";
 import { FacebookShareButton } from "react-share";
 import useAxiosPublic from "../../Hooks/useAxiosPublic";
-
+import useAxiosComments from "../../Hooks/useAxiosComments";
 
 const Posts = () => {
-  const [users] = useAxiosUsers();
+  const [users, userFetch] = useAxiosUsers();
   const [mergedData, refetch] = useAxiosMergeData();
+  const [comments, commentRefetch] = useAxiosComments();
   const axiosSecure = useAxiosSecure();
   const navigate = useNavigate();
   const { user, searchData, setSearchData } = useContext(AuthContext);
   const axiosPublic = useAxiosPublic();
   const [pageNumber, setPageNumber] = useState([]);
 
-  // Front end merged Data
-  // const mergedData = posts
-  //   .map((post) => ({
-  //     ...post,
-  //     author: users.find((user) => user.id === post.authorId),
-  //     comment: comments.filter((comment) => comment.authorId === post.authorId),
-  //   }))
-  //   .sort(() => Math.random() - 0.5);
-  // console.log(mergedData);
-// console.log(users);
+  const badgeColors = {
+    Bronze: "text-[#cd7f32]", // Bronze color
+    Gold: "text-[#ffd700]", // Gold color
+    Platinum: "text-[#e5e4e2]", // Platinum color
+  };
 
-  const filterUser = users?.users?.find((item) => item?.email === user?.email);
+  useEffect(() => {
+    axiosPublic
+      .get(`/mergedAllData?page=${pageNumber}`)
+      .then((res) => {
+        setSearchData(res.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, [pageNumber, mergedData]);
 
-
+  // update likes
   const handleLikes = (data, id) => {
     if (!user && !user?.email) {
       return toast.error("You're not logged in");
@@ -76,7 +83,14 @@ const Posts = () => {
     });
   };
 
+  // submit report
   const showInputModal = async (postData) => {
+    if (!user && !user?.email) {
+      return Swal.fire({
+        title: "You're not logged in",
+        icon: "warning",
+      });
+    }
     const { value: userInput } = await Swal.fire({
       title: "Enter Your Text",
       input: "textarea",
@@ -134,27 +148,35 @@ const Posts = () => {
     });
   };
 
-  useEffect(() => {
-    axiosPublic
-      .get(`/mergedAllData?page=${pageNumber}`)
-      .then((res) => {
-        setSearchData(res.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  }, [pageNumber, mergedData]);
+  userFetch();
+  // console.log(mergedData);
 
-  const badgeColors = {
-    Bronze: "text-[#cd7f32]", // Bronze color
-    Gold: "text-[#ffd700]", // Gold color
-    Platinum: "text-[#e5e4e2]", // Platinum color
+  // console.log(mergedData);
+
+  const handleComment = async (e, postId) => {
+    e.preventDefault();
+    const filterUser = await users?.find((item) => item?.email === user?.email);
+
+    const comment = e.target.comment.value;
+
+    const data = {
+      id: comments.length + 1,
+      postId: postId,
+      authorId: filterUser.id,
+      text: comment,
+      createdAt: Date(),
+      image: filterUser?.profileImage,
+    };
+
+    axiosSecure.post("/addComments", { data }).then((res) => {
+      console.log(res.data);
+    });
   };
-
+console.log(mergedData);
 
   return (
     <div className="mx-auto">
-      {mergedData?.length > 0 ? (
+      {(user?.email?.length && mergedData.length) > 0 ? (
         (searchData.length === 0 ? mergedData : searchData).map(
           (item, index) => (
             <Card className="py-4 mb-12" key={index}>
@@ -186,6 +208,7 @@ const Posts = () => {
               </CardHeader>
               <CardBody className="overflow-visible py-2">
                 <Image
+                  loading="lazy"
                   alt="Card background"
                   onClick={() => navigate(`/post/${item._id}`)}
                   className="object-cover md:w-screen rounded-xl cursor-pointer"
@@ -256,19 +279,44 @@ const Posts = () => {
                   </div>
                 </CardBody>
               </CardBody>
+
+              <CardBody>
+                <form
+                  className="flex flex-row gap-5"
+                  onSubmit={(e) => handleComment(e, item.id)}
+                >
+                  <Image
+                    alt="Card background"
+                    className="object-cover rounded-full w-8 h-8"
+                    src={user?.photoURL}
+                  />
+                  <Textarea
+                    name="comment"
+                    className="max-w-md relative"
+                    minRows={2}
+                    placeholder="Add a comment"
+                  />
+                  <button type="submit">
+                    <FaPaperPlane className="absolute z-50 right-24 top-7 text-2xl cursor-pointer active:scale-90 ease-in-out duration-200"></FaPaperPlane>
+                  </button>
+                </form>
+              </CardBody>
+
               {item?.commentData?.map((item2, index) => (
                 <CardBody key={index} className="flex flex-row gap-5">
                   <Image
                     alt="Card background"
-                    className="object-cover rounded-full w-10 h-10"
+                    className="object-cover rounded-full w-8 h-8"
                     src={
-                      item?.author?.profileImage ||
-                      users[item2.authorId]?.profileImage
+                      item2?.image ||
+                      users[item2.authorId]?.profileImage ||
+                      item?.author?.profileImage
                     }
                   />
-                  <p className="bg-slate-600 text-white p-3 rounded-2xl max-w-md">
-                    {item2.text}
-                  </p>
+                  <div className="text-sm bg-slate-600 text-white p-3 rounded-2xl max-w-md">
+                    <p className="text-black">{users[item2.authorId]?.username}</p>
+                    <p>{item2.text}</p>
+                  </div>
                 </CardBody>
               ))}
             </Card>

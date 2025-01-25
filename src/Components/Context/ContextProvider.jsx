@@ -59,7 +59,8 @@ const ContextProvider = ({ children }) => {
     return () => {
       unSubscribe();
     };
-  }, [pathname]);
+  }, [pathname, user]);
+  
 
   // using local storage method
   
