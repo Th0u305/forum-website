@@ -26,7 +26,7 @@ const ContextProvider = ({ children }) => {
   const { pathname } = useLocation();
   const [membershipName, setMembershipName] = useState()
   const [users] = useAxiosMergeData()
-  const [searchData, setSearchData] = useState(users)
+  const [searchData, setSearchData] = useState([])
 
   // register or create account
   const createUser = (email, password) => {

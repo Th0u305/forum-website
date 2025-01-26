@@ -89,7 +89,7 @@ const Announcement = () => {
           animate={{ opacity: 1, y: 0 }}
         >
           <div className="">
-            <div className="bg-[#e2e2e2] p-6 md:p-12 rounded-2xl">
+            <div className="bg-[#e2e2e2] p-6 md:p-12 rounded-lg">
               <form onSubmit={handleSubmit(onsubmit)}>
                 <div className="mb-5 w-fit mx-auto">
                   {user ? (
@@ -149,14 +149,14 @@ const Announcement = () => {
                     required
                     placeholder="Write your post description"
                     {...register("postDetails")}
-                    className="border-[#e5eaf2] border rounded-xl bg-white outline-none px-4 min-h-[200px] py-3 w-full focus:border-[#3B9DF8] focus:shadow-md text-gray-600"
+                    className="border-[#e5eaf2] border rounded-lg bg-white outline-none px-4 min-h-[200px] py-3 w-full focus:border-[#3B9DF8] focus:shadow-md text-gray-600"
                   />
                   <p className="text-red-600">{errorMsg2}</p>
                 </div>
 
                 <div className="space-y-8 font-[sans-serif] mb-5">
                   <input
-                  required
+                    required
                     {...register("photo")}
                     type="file"
                     className="w-full text-gray-500 font-medium text-lg bg-gray-100 file:cursor-pointer cursor-pointer file:border-0 file:py-3 file:px-4 file:mr-4 file:bg-gray-800 file:hover:bg-gray-700 file:text-white rounded-md"

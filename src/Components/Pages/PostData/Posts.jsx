@@ -9,13 +9,12 @@ import {
   DropdownSection,
   DropdownTrigger,
   Image,
-  Input,
   Pagination,
   Spinner,
-  Textarea,
 } from "@heroui/react";
 import useAxiosUsers from "../../Hooks/useAxiosUser";
 import {
+  FaEllipsisH,
   FaFlag,
   FaListUl,
   FaPaperPlane,
@@ -24,19 +23,26 @@ import {
   FaThumbsUp,
 } from "react-icons/fa";
 import { FaThumbsDown } from "react-icons/fa";
-import { FaComment, FaDeleteLeft, FaMedal } from "react-icons/fa6";
+import {
+  FaComment,
+  FaDeleteLeft,
+  FaEllipsisVertical,
+  FaMedal,
+} from "react-icons/fa6";
 import { FaShare } from "react-icons/fa";
 import { useNavigate } from "react-router";
-import { useEffect, useState } from "react";
 import useAxiosMergeData from "../../Hooks/useAxiosMergeData";
 import { useContext } from "react";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import { AuthContext } from "../../Context/ContextProvider";
-import toast from "react-hot-toast";
-import Swal from "sweetalert2";
 import { FacebookShareButton } from "react-share";
 import useAxiosPublic from "../../Hooks/useAxiosPublic";
 import useAxiosComments from "../../Hooks/useAxiosComments";
+import AddLikes from "../../Functions/AddLikes";
+import PageNumberData from "../../Functions/PageNumberData";
+import SubmitReport from "../../Functions/SubmitReport";
+import AddComments from "../../Functions/AddComments";
+import LoadComments from "../../Functions/LoadComments";
 
 const Posts = () => {
   const [users, userFetch] = useAxiosUsers();
@@ -46,144 +52,72 @@ const Posts = () => {
   const navigate = useNavigate();
   const { user, searchData, setSearchData } = useContext(AuthContext);
   const axiosPublic = useAxiosPublic();
-  const [pageNumber, setPageNumber] = useState([]);
 
   const badgeColors = {
     Bronze: "text-[#cd7f32]", // Bronze color
     Gold: "text-[#ffd700]", // Gold color
-    Platinum: "text-[#e5e4e2]", // Platinum color
+    Platinum: "text-[#ff6363]", // Platinum color
   };
 
-  useEffect(() => {
-    axiosPublic
-      .get(`/mergedAllData?page=${pageNumber}`)
-      .then((res) => {
-        setSearchData(res.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  }, [pageNumber, mergedData]);
+  const handlePageNumber = (id) => {
+    return PageNumberData(id, axiosPublic, setSearchData);
+  };
 
   // update likes
   const handleLikes = (data, id) => {
-    if (!user && !user?.email) {
-      return toast.error("You're not logged in");
-    }
-
-    const filter = {
-      name: data,
-      id: id,
-    };
-
-    axiosSecure.patch("/updateLikes", { filter }).then((res) => {
-      if (res.data.modifiedCount > 0) {
-        refetch();
-      }
-    });
+    return AddLikes(
+      user,
+      data,
+      id,
+      axiosSecure,
+      refetch,
+      userFetch,
+      commentRefetch
+    );
   };
 
   // submit report
   const showInputModal = async (postData) => {
-    if (!user && !user?.email) {
-      return Swal.fire({
-        title: "You're not logged in",
-        icon: "warning",
-      });
-    }
-    const { value: userInput } = await Swal.fire({
-      title: "Enter Your Text",
-      input: "textarea",
-      inputPlaceholder: "Type your report...",
-      html: `
-          <div class="">
-            <label for="countries" class="block text-sm font-medium text-gray-900 dark:text-gray-400">Select an option</label>
-            <select id="reportOption"  class="mt-5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-              <option value="" selected >Select a category option</option>
-              <option value="Suicide or self-injury">Suicide or self-injury</option>
-              <option value="Child abuse">Child abuse</option>
-              <option value="Human trafficking">Human trafficking</option>
-              <option value="Convicted sex offenders">Convicted sex offenders</option>
-              <option value="False news">False news</option>
-              <option value="Intellectual property infringement">Intellectual property infringement</option>
-              <option value="Intellectual property infringement">Content from friends</option>
-              <option value="DContent from groupsE">Content from groups</option>
-              <option value="Public follower content">Public follower content</option>
-              <option value="Unconnected content">Unconnected content</option>
-            </select>
-          </div>
-        `,
-      showCancelButton: true,
-      confirmButtonText: "Submit",
-      cancelButtonText: "Cancel",
-      inputValidator: (value) => {
-        const optionValue = document.getElementById("reportOption")?.value;
+    return SubmitReport(user, users, postData, axiosSecure);
+  };
 
-        if (!value) {
-          return "You need to write something!";
-        }
-        if (optionValue.length === 0) {
-          return "Please select and option";
-        }
-      },
-    });
+  refetch();
+  userFetch();
+  commentRefetch();
 
-    const filterUser = users.find((item) => item.email === user.email);
-    const optionValue = document.getElementById("reportOption")?.value;
+  // adding comments
+  const handleComment = async (e, postId) => {
+    return AddComments(
+      e,
+      postId,
+      users,
+      user,
+      comments,
+      axiosSecure,
+      refetch,
+      setSearchData
+    );
+  };
 
-    const data = {
-      postId: postData.id,
-      userId: filterUser.id,
-      reportDetails: userInput,
-      reportOption: optionValue,
-    };
-
-    axiosSecure.post("/makeReport", { data }).then((res) => {
-      if (res.status === 200) {
-        Swal.fire({
-          title: "Your report has bean submitted",
-          icon: "success",
-        });
-      }
-    });
+  // loading comments
+  const handleLoadComment = async (id) => {
+    return LoadComments(axiosPublic, id, setSearchData);
   };
 
   userFetch();
-  // console.log(mergedData);
-
-  // console.log(mergedData);
-
-  const handleComment = async (e, postId) => {
-    e.preventDefault();
-    const filterUser = await users?.find((item) => item?.email === user?.email);
-
-    const comment = e.target.comment.value;
-
-    const data = {
-      id: comments.length + 1,
-      postId: postId,
-      authorId: filterUser.id,
-      text: comment,
-      createdAt: Date(),
-      image: filterUser?.profileImage,
-    };
-
-    axiosSecure.post("/addComments", { data }).then((res) => {
-      console.log(res.data);
-    });
-  };
-console.log(mergedData);
+  refetch();
+  commentRefetch();
 
   return (
     <div className="mx-auto">
-      {(user?.email?.length && mergedData.length) > 0 ? (
-        (searchData.length === 0 ? mergedData : searchData).map(
+      {mergedData.length > 0 ? (
+        (searchData.length === 0 || searchData.length === 2 ? mergedData : searchData).map(
           (item, index) => (
-            <Card className="py-4 mb-12" key={index}>
+            <Card className="py-4 mb-12 rounded-lg" key={index}>
               <CardHeader className="pb-0 pt-2 px-4 flex-col items-start gap-5">
                 <div className="flex items-center gap-2">
                   <Image
-                    alt="Card background"
+                    alt="Card backg "
                     className="rounded-full w-12 h-12 object-cover"
                     src={item.author?.profileImage}
                   />
@@ -208,10 +142,9 @@ console.log(mergedData);
               </CardHeader>
               <CardBody className="overflow-visible py-2">
                 <Image
-                  loading="lazy"
                   alt="Card background"
                   onClick={() => navigate(`/post/${item._id}`)}
-                  className="object-cover md:w-screen rounded-xl cursor-pointer"
+                  className="object-cover md:w-screen rounded-lg cursor-pointer"
                   src={item?.image}
                 />
                 <CardBody className="flex flex-row flex-wrap gap-5 justify-between">
@@ -219,6 +152,7 @@ console.log(mergedData);
                     <Button
                       size="sm"
                       variant="flat"
+                      className="rounded-lg"
                       onPress={() => handleLikes("upVotes", item.id)}
                     >
                       <FaThumbsUp className="text-blue-400" />
@@ -227,15 +161,17 @@ console.log(mergedData);
                     <Button
                       size="sm"
                       variant="flat"
+                      className="rounded-lg"
                       onPress={() => handleLikes("downVotes", item.id)}
                     >
-                      <FaThumbsDown className="text-red-400" /> {item.downVotes}
+                      <FaThumbsDown className="text-red-400" />{" "}
+                      {item?.downVotes}
                     </Button>
-                    <Button size="sm" variant="flat">
+                    <Button size="sm" variant="flat" className="rounded-lg">
                       <FaComment className="text-green-400" />
-                      {item.commentData.length}
+                      {item?.commentData.length}
                     </Button>
-                    <Button size="sm" variant="flat" className="p-0 ">
+                    <Button size="sm" variant="flat" className="p-0 rounded-lg">
                       <FacebookShareButton
                         url="google.com"
                         className="h-8 w-16"
@@ -246,7 +182,7 @@ console.log(mergedData);
                     </Button>
                   </div>
                   <div>
-                    <Dropdown>
+                    <Dropdown className="rounded-lg">
                       <DropdownTrigger>
                         <Button size="sm" variant="flat">
                           <FaListUl className="text-violet-500 text-xl"></FaListUl>
@@ -288,17 +224,24 @@ console.log(mergedData);
                   <Image
                     alt="Card background"
                     className="object-cover rounded-full w-8 h-8"
-                    src={user?.photoURL}
+                    src={
+                      user?.photoURL ||
+                      user?.image ||
+                      "https://res.cloudinary.com/dmegxaayi/image/upload/v1737414981/d1peu0xv4p0v43sfpfmt.png"
+                    }
                   />
-                  <Textarea
-                    name="comment"
-                    className="max-w-md relative"
-                    minRows={2}
-                    placeholder="Add a comment"
-                  />
-                  <button type="submit">
-                    <FaPaperPlane className="absolute z-50 right-24 top-7 text-2xl cursor-pointer active:scale-90 ease-in-out duration-200"></FaPaperPlane>
-                  </button>
+                  <CardBody className="bg-[#262629] max-w-sm relative rounded-r-lg rounded-bl-lg">
+                    <textarea
+                      required
+                      name="comment"
+                      className="bg-inherit text-blue-300 placeholder:text-blue-300 resize-none max-w-xs border-none focus:border-none active:border-none outline-none"
+                      rows={2}
+                      placeholder="Add a comment"
+                    />
+                    <button type="submit">
+                      <FaPaperPlane className="absolute z-20 right-5 top-7 text-xl cursor-pointer active:scale-90 ease-in-out duration-200"></FaPaperPlane>
+                    </button>
+                  </CardBody>
                 </form>
               </CardBody>
 
@@ -309,16 +252,47 @@ console.log(mergedData);
                     className="object-cover rounded-full w-8 h-8"
                     src={
                       item2?.image ||
-                      users[item2.authorId]?.profileImage ||
-                      item?.author?.profileImage
+                      users[index]?.profileImage ||
+                      "https://res.cloudinary.com/dmegxaayi/image/upload/v1737414981/d1peu0xv4p0v43sfpfmt.png"
                     }
                   />
-                  <div className="text-sm bg-slate-600 text-white p-3 rounded-2xl max-w-md">
-                    <p className="text-black">{users[item2.authorId]?.username}</p>
-                    <p>{item2.text}</p>
+                  <div className="text-sm bg-slate-600 text-white p-3 rounded-r-lg rounded-bl-lg max-w-sm">
+                    <p className="text-blue-300 text-lg">
+                      {item2?.name || users[item2?.authorId]?.username}
+                    </p>
+                    <p className="inline-flex">
+                      {item2?.text}
+                      <Dropdown backdrop="blur">
+                        <DropdownTrigger className="ml-7">
+                          <button className="active:scale-90 ease-in-out duration-100">
+                            <FaEllipsisVertical className="my-auto" />
+                          </button>
+                        </DropdownTrigger>
+                        <DropdownMenu
+                          aria-label="Static Actions"
+                          variant="faded"
+                        >
+                          <DropdownItem key="new">Report Comment</DropdownItem>
+                          <DropdownItem
+                            key="delete"
+                            className="text-danger"
+                            color="danger"
+                          >
+                            Delete Comment
+                          </DropdownItem>
+                        </DropdownMenu>
+                      </Dropdown>
+                    </p>
                   </div>
                 </CardBody>
               ))}
+              <button
+                // onClick={() => handleLoadComment(item.commentData.length)}
+                onClick={() => navigate(`/post/${item._id}`)}
+                className="inline-flex justify-center gap-2 mt-5"
+              >
+                <FaEllipsisH className="my-auto text-xl" /> Load more comments
+              </button>
             </Card>
           )
         )
@@ -331,7 +305,7 @@ console.log(mergedData);
         className="mx-auto w-fit"
         initialPage={1}
         total={10}
-        onChange={(initialPage) => setPageNumber(initialPage)}
+        onChange={(initialPage) => handlePageNumber(initialPage)}
       />
     </div>
   );

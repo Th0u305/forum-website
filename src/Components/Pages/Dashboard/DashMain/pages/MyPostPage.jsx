@@ -53,7 +53,7 @@ const MyPost = () => {
                     {" "}
                     <Image
                       alt="image not available"
-                      className="object-cover rounded-xl cursor-pointer"
+                      className="object-cover rounded-lg cursor-pointer"
                       src={item.image}
                       width={200}
                     />

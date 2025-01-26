@@ -23,7 +23,6 @@ import { AuthContext } from "../../Context/ContextProvider";
 import toast from "react-hot-toast";
 import useAxiosPublic from "../../Hooks/useAxiosPublic";
 import useAxiosSecureData from "../../Hooks/useAxiosSecureData";
-import useAxiosMergeData from "../../Hooks/useAxiosMergeData";
 
 export const SearchIcon = ({
   size = 24,
@@ -66,14 +65,14 @@ export default function NavbarMenu2() {
   const [isNavbar, setIsNavbar] = useState(true);
   const { pathname } = useLocation();
   const axiosPublic = useAxiosPublic();
-  const [users] = useAxiosSecureData();
+  const [users, refetch] = useAxiosSecureData();
 
   const filterUser = users?.users?.find((item) => item?.email === user?.email);
 
   const badgeColors = {
     Bronze: "text-[#cd7f32]", // Bronze color
     Gold: "text-[#ffd700]", // Gold color
-    Platinum: "text-[#e5e4e2]", // Platinum color
+    Platinum: "text-[#ff6363]", // Platinum color
   };
 
   useEffect(() => {
@@ -97,6 +96,7 @@ export default function NavbarMenu2() {
       .get(`/mergedAllData?filter=${data}`)
       .then((res) => {
         setSearchData(res.data);
+        refetch()
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -108,7 +108,7 @@ export default function NavbarMenu2() {
       {isNavbar && (
         <Navbar
           isBlurred={false}
-          className="mt-5 bg-[#19191c] h-20 rounded-2xl"
+          className="mt-5 bg-[#19191c] h-20 rounded-lg"
         >
           <NavbarContent className="md:hidden" justify="start">
             <NavbarMenuToggle />
@@ -125,7 +125,7 @@ export default function NavbarMenu2() {
             </NavbarBrand>
           </NavbarContent>
 
-          <NavbarContent className="hidden md:flex gap-4" justify="center">
+          <NavbarContent className="hidden md:flex gap-4 md:gap-2 lg:gap-4" justify="center">
             <NavbarBrand>
               <img
                 className="w-11"
@@ -160,6 +160,7 @@ export default function NavbarMenu2() {
                   href="/login"
                   variant="flat"
                   size="md"
+                  className="rounded-lg"
                 >
                   Login
                 </Button>
@@ -169,8 +170,9 @@ export default function NavbarMenu2() {
                   id="inputValue"
                   onChange={(e) => handleSearch(e.target.value)}
                   classNames={{
-                    base: "max-w-full sm:max-w-[12rem] h-10",
+                    base: "max-w-full sm:max-w-[10rem] lg:max-w-[12rem] h-10",
                     mainWrapper: "h-full",
+                    borderRadius: "0.5rem", // rounded-lg equivalent
                     input: "text-small",
                     inputWrapper:
                       "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20 dark:focus-within:!bg-default/60",
@@ -211,7 +213,7 @@ export default function NavbarMenu2() {
                           "text-gray-500"
                         } text-2xl mr-4 mb-2`}
                       ></FaMedal>}
-                      Signed in as <h1 className=""></h1>
+                      Signed in as
                     </p>
 
                     <p className="font-semibold">
@@ -265,6 +267,7 @@ export default function NavbarMenu2() {
 
           <NavbarMenu className="pt-28">
             <Input
+            onChange={(e) => handleSearch(e.target.value)}
               classNames={{
                 base: "max-w-full sm:max-w-[10rem] h-10",
                 mainWrapper: "h-full",
@@ -295,6 +298,7 @@ export default function NavbarMenu2() {
                 size="lg"
                 href="/login"
                 variant="flat"
+                className="rounded-lg"
               >
                 Login
               </Button>

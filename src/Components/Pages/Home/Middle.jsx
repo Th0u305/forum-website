@@ -2,26 +2,20 @@ import useAxiosCategory from "../../Hooks/useAxiosCategory";
 import useAxiosTags from "../../Hooks/useAxiosTags";
 import React, { useContext, useEffect, useState } from "react";
 import Select from "react-select";
-import {
-  Card,
-  CardBody,
-  Image,
-  Tab,
-  Tabs,
-  Textarea,
-} from "@heroui/react";
+import { Card, Tab, Tabs } from "@heroui/react";
 import { Outlet, useLocation } from "react-router";
 import useAxiosPublic from "../../Hooks/useAxiosPublic";
 import { AuthContext } from "../../Context/ContextProvider";
-import useAxiosSecureData from "../../Hooks/useAxiosSecureData";
 
 export default function Middle() {
   const [tags] = useAxiosTags();
   const [category] = useAxiosCategory();
   const { pathname } = useLocation();
   const axiosPublic = useAxiosPublic();
-  const { setSearchData, user } = useContext(AuthContext);
-  const [users] = useAxiosSecureData();
+  const { setSearchData } = useContext(AuthContext);
+  const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedOption2, setSelectedOption2] = useState(null);
+  const [selectedOption3, setSelectedOption3] = useState(null);
 
   // const filterUser = users?.users?.find((item) => item?.email === user?.email);
 
@@ -36,7 +30,7 @@ export default function Middle() {
 
   const options3 = [
     { value: "chocolate", label: "Popularity " },
-    { value: "strawberry", label: "Disliked" }
+    { value: "strawberry", label: "Disliked" },
   ];
 
   let tabs = [
@@ -57,9 +51,6 @@ export default function Middle() {
     },
   ];
 
-  const [selectedOption, setSelectedOption] = useState(null);
-  const [selectedOption2, setSelectedOption2] = useState(null);
-  const [selectedOption3, setSelectedOption3] = useState(null);
 
 
   // Handle selection change
@@ -71,19 +62,17 @@ export default function Middle() {
     setSelectedOption2(option);
   };
 
-  
-  const handleChange3 = (option) => {    
+  const handleChange3 = (option) => {
     setSelectedOption3(option);
 
     axiosPublic
-    .post(`/posts/popularity?filter=${option.label}`)
-    .then((res) => {
-      setSearchData(res.data);
-      
-    })
-    .catch((error) => {
-      console.error("Error fetching data:", error);
-    });
+      .post(`/posts/popularity?filter=${option.label}`)
+      .then((res) => {
+        setSearchData(res.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
   };
 
   useEffect(() => {
@@ -101,11 +90,9 @@ export default function Middle() {
       });
   }, [selectedOption, selectedOption2]);
 
-
-
   return (
     <div className="space-y-5">
-      <Card className="grid grid-cols-1 justify-items-center content-center gap-5 py-5 md:grid-cols-4 md:py-5 md:px-2 xl:py-11 lg:p-6 overflow-visible xl:justify-items-start">
+      <Card className="rounded-lg grid grid-cols-1 justify-items-center content-center gap-5 py-5 md:grid-cols-4 md:py-5 md:px-2 xl:py-11 lg:p-6 overflow-visible xl:justify-items-start">
         <div className="w-fit z-30 md:col-span-2 mx-auto">
           <Select
             options={options2} // Pass custom options
@@ -119,7 +106,7 @@ export default function Middle() {
                 backgroundColor: "inherit",
                 color: "inherit",
                 border: "2px solid gray",
-                borderRadius: "0.5rem", // rounded-2xl equivalent
+                borderRadius: "0.5rem", // rounded-lg equivalent
                 boxShadow: "none",
                 transition: "all 0.3s ease", // Smooth transition for focus and hover
                 width: "11.5rem",
@@ -135,7 +122,7 @@ export default function Middle() {
               }),
               menu: (base) => ({
                 ...base,
-                borderRadius: "0.5rem", // rounded-2xl equivalent for dropdown
+                borderRadius: "0.5rem", // rounded-lg equivalent for dropdown
                 border: "1px solid gray",
                 overflow: "hidden", // Prevents border-radius from being overridden
                 transition: "opacity 0.3s ease, transform 0.3s ease", // Smooth open/close effect
@@ -171,7 +158,7 @@ export default function Middle() {
                 backgroundColor: "inherit",
                 color: "inherit",
                 border: "2px solid gray",
-                borderRadius: "0.5rem", // rounded-2xl equivalent
+                borderRadius: "0.5rem", // rounded-lg equivalent
                 boxShadow: "none",
                 transition: "all 0.3s ease", // Smooth transition for focus and hover
                 width: "11.5rem",
@@ -187,7 +174,7 @@ export default function Middle() {
               }),
               menu: (base) => ({
                 ...base,
-                borderRadius: "0.5rem", // rounded-2xl equivalent for dropdown
+                borderRadius: "0.5rem", // rounded-lg equivalent for dropdown
                 border: "1px solid gray",
                 overflow: "hidden", // Prevents border-radius from being overridden
                 transition: "opacity 0.3s ease, transform 0.3s ease", // Smooth open/close effect
@@ -240,7 +227,7 @@ export default function Middle() {
                 backgroundColor: "inherit",
                 color: "inherit",
                 border: "2px solid gray",
-                borderRadius: "0.5rem", // rounded-2xl equivalent
+                borderRadius: "0.5rem", // rounded-lg equivalent
                 boxShadow: "none",
                 transition: "all 0.3s ease", // Smooth transition for focus and hover
                 width: "11.5rem",
@@ -256,7 +243,7 @@ export default function Middle() {
               }),
               menu: (base) => ({
                 ...base,
-                borderRadius: "0.5rem", // rounded-2xl equivalent for dropdown
+                borderRadius: "0.5rem", // rounded-lg equivalent for dropdown
                 border: "1px solid gray",
                 overflow: "hidden", // Prevents border-radius from being overridden
                 transition: "opacity 0.3s ease, transform 0.3s ease", // Smooth open/close effect
@@ -278,9 +265,8 @@ export default function Middle() {
             }}
           />
         </div>
-
       </Card>
-      
+
       {/* <Card>
         <CardBody>
           <CardBody className="flex flex-row gap-5">
@@ -300,7 +286,6 @@ export default function Middle() {
           </CardBody>
         </CardBody>
       </Card> */}
-
 
       <div className="mx-auto">
         <Outlet></Outlet>

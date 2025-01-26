@@ -99,7 +99,7 @@ export default function Membership() {
   };
 
   return (
-    <div className="relative isolate bg-[#dadada] px-6 py-24 sm:py-32 lg:px-8 rounded-2xl mt-5">
+    <div className="relative isolate bg-[#dadada] px-6 py-24 sm:py-32 lg:px-8 rounded-lg mt-5">
       <Helmet>
         <title>TopicTree | Membership</title>
       </Helmet>

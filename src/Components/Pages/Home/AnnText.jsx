@@ -12,7 +12,7 @@ const AnnText = () => {
   }, [ann])
   
   return (
-    <Card>
+    <Card className="rounded-lg">
       <CardHeader className="flex flex-col gap-8">
         <h4 className="font-bold text-yellow-600 text-large mx-auto">Latest Announcements</h4>
         <p className="max-w-md break-words break-all">{announcement?.announcements}</p>

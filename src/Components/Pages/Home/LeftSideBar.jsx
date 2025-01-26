@@ -22,7 +22,7 @@ export default function LeftSideBar() {
   return (
     <Accordion
     // defaultExpandedKeys={["1"]}
-      className="p-2 flex flex-col gap-1 w-full "
+      className="p-2 flex flex-col gap-1 w-ful rounded-lg"
       itemClasses={itemClasses}
       showDivider={false}
       variant="shadow"

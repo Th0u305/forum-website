@@ -15,15 +15,17 @@ import {
   Spinner,
 } from "@heroui/react";
 import {
+  FaEllipsisH,
   FaFlag,
   FaListUl,
   FaMedal,
+  FaPaperPlane,
   FaRegLifeRing,
   FaRegSave,
   FaThumbsUp,
 } from "react-icons/fa";
 import { FaThumbsDown } from "react-icons/fa";
-import { FaComment, FaDeleteLeft } from "react-icons/fa6";
+import { FaComment, FaDeleteLeft, FaEllipsisVertical } from "react-icons/fa6";
 import { FaShare } from "react-icons/fa";
 import { AuthContext } from "../../Context/ContextProvider";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
@@ -33,16 +35,28 @@ import Swal from "sweetalert2";
 import { FacebookShareButton } from "react-share";
 import { Helmet } from "react-helmet-async";
 import useAxiosPublic from "../../Hooks/useAxiosPublic";
+import AddLikes from "../../Functions/AddLikes";
+import SubmitReport from "../../Functions/SubmitReport";
+import useAxiosComments from "../../Hooks/useAxiosComments";
+import AddComments from "../../Functions/AddComments";
+import LoadComments from "../../Functions/LoadComments";
 
 const LatestData = () => {
+  const [users, userFetch] = useAxiosUsers();
   const [mergedData, refetch] = useAxiosMergeData();
-  const [users] = useAxiosUsers();
-  const { user, searchData } = useContext(AuthContext);
+  const [comments, commentRefetch] = useAxiosComments();
+  const { user, searchData , setSearchData} = useContext(AuthContext);
   const [latestData, setLatestData] = useState();
   const axiosSecure = useAxiosSecure();
   const navigate = useNavigate();
   const axiosPublic = useAxiosPublic();
   const randomData = latestData?.slice(-15);
+
+  const badgeColors = {
+    Bronze: "text-[#cd7f32]", // Bronze color
+    Gold: "text-[#ffd700]", // Gold color
+    Platinum: "text-[#ff6363]", // Platinum color
+  };
 
   useEffect(() => {
     axiosPublic
@@ -55,85 +69,41 @@ const LatestData = () => {
       });
   }, [latestData]);
 
+  // update likes
   const handleLikes = (data, id) => {
-    if (!user && !user?.email) {
-      return toast.error("You're not logged in");
-    }
-
-    const filter = {
-      name: data,
-      id: id,
-    };
-
-    axiosSecure.patch("/updateLikes", { filter }).then((res) => {
-      if (res.data?.modifiedCount > 0) {
-        refetch();
-      }
-    });
+    return AddLikes(
+      user,
+      data,
+      id,
+      axiosSecure,
+      refetch,
+      userFetch,
+      commentRefetch
+    );
   };
 
+  // submit report
   const showInputModal = async (postData) => {
-    const { value: userInput } = await Swal.fire({
-      title: "Enter Your Text",
-      input: "textarea",
-      inputPlaceholder: "Type your report...",
-      html: `
-            <div class="">
-              <label for="countries" class="block text-sm font-medium text-gray-900 dark:text-gray-400">Select an option</label>
-              <select id="reportOption"  class="mt-5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                <option value="" selected >Select a category option</option>
-                <option value="Suicide or self-injury">Suicide or self-injury</option>
-                <option value="Child abuse">Child abuse</option>
-                <option value="Human trafficking">Human trafficking</option>
-                <option value="Convicted sex offenders">Convicted sex offenders</option>
-                <option value="False news">False news</option>
-                <option value="Intellectual property infringement">Intellectual property infringement</option>
-                <option value="Intellectual property infringement">Content from friends</option>
-                <option value="DContent from groupsE">Content from groups</option>
-                <option value="Public follower content">Public follower content</option>
-                <option value="Unconnected content">Unconnected content</option>
-              </select>
-            </div>
-          `,
-      showCancelButton: true,
-      confirmButtonText: "Submit",
-      cancelButtonText: "Cancel",
-      inputValidator: (value) => {
-        const optionValue = document.getElementById("reportOption")?.value;
-
-        if (!value) {
-          return "You need to write something!";
-        }
-        if (optionValue?.length === 0) {
-          return "Please select and option";
-        }
-      },
-    });
-
-    const filterUser = users.find((item) => item.email === user.email);
-    const optionValue = document.getElementById("reportOption")?.value;
-
-    const data = {
-      postId: postData.id,
-      userId: filterUser.id,
-      reportDetails: userInput,
-      reportOption: optionValue,
-    };
-
-    axiosSecure.post("/makeReport", { data }).then((res) => {
-      if (res.status === 200) {
-        Swal.fire({
-          title: "Your report has bean submitted",
-          icon: "success",
-        });
-      }
-    });
+    return SubmitReport(user, users, postData, axiosSecure);
   };
 
-  const badgeColors = {
-    Bronze: "text-[#cd7f32]", // Bronze color
-    Gold: "text-[#ffd700]", // Gold color
-    Platinum: "text-[#e5e4e2]", // Platinum color
+
+  refetch();
+  userFetch();
+  commentRefetch();
+
+  // adding comments
+  const handleComment = async (e, postId) => {
+    return AddComments(
+      e,
+      postId,
+      users,
+      user,
+      comments,
+      axiosSecure,
+      refetch,
+      setSearchData
+    );
   };
 
   return (
@@ -144,20 +114,20 @@ const LatestData = () => {
       {latestData?.length > 0 ? (
         (searchData.length > 5 ? searchData : randomData)?.map(
           (item, index) => (
-            <Card className="py-4 mb-12" key={index}>
-              <CardHeader className="pb-0 pt-2 px-4 w-fit flex-col items-start gap-5">
+            <Card className="py-4 mb-12 rounded-lg" key={index}>
+              <CardHeader className="pb-0 pt-2 px-4 flex-col items-start gap-5">
                 <div className="flex items-center gap-2">
                   <Image
-                    alt="Card background"
+                    alt="Card backg "
                     className="rounded-full w-12 h-12 object-cover"
-                    src={item?.author?.profileImage}
+                    src={item.author?.profileImage}
                   />
                   <h1>{item?.author?.username}</h1>
                   <h1>
                     <FaMedal
                       className={`${
                         badgeColors[
-                          item?.author?.badges[0] ||
+                          // item?.author?.badges[0] ||
                             item?.author?.badge ||
                             "Bronze"
                         ] || "text-gray-500"
@@ -171,18 +141,19 @@ const LatestData = () => {
                   <p className="max-w-md">{item.description}</p>
                 </div>
               </CardHeader>
-              <CardBody className="overflow-visible py-2 w-fit">
+              <CardBody className="overflow-visible py-2">
                 <Image
                   alt="Card background"
                   onClick={() => navigate(`/post/${item._id}`)}
-                  className="object-cover md:w-screen rounded-xl cursor-pointer"
+                  className="object-cover md:w-screen rounded-lg cursor-pointer"
                   src={item?.image}
                 />
                 <CardBody className="flex flex-row flex-wrap gap-5 justify-between">
-                  <div className="flex gap-5">
+                  <div className="flex gap-5 flex-wrap">
                     <Button
                       size="sm"
                       variant="flat"
+                      className="rounded-lg"
                       onPress={() => handleLikes("upVotes", item.id)}
                     >
                       <FaThumbsUp className="text-blue-400" />
@@ -191,16 +162,17 @@ const LatestData = () => {
                     <Button
                       size="sm"
                       variant="flat"
+                      className="rounded-lg"
                       onPress={() => handleLikes("downVotes", item.id)}
                     >
-                      <FaThumbsDown className="text-red-400" />
-                      {item.downVotes}
+                      <FaThumbsDown className="text-red-400" />{" "}
+                      {item?.downVotes}
                     </Button>
-                    <Button size="sm" variant="flat">
+                    <Button size="sm" variant="flat" className="rounded-lg">
                       <FaComment className="text-green-400" />
-                      {item.commentData.length}
+                      {item?.commentData.length}
                     </Button>
-                    <Button size="sm" variant="flat" className="p-0 ">
+                    <Button size="sm" variant="flat" className="p-0 rounded-lg">
                       <FacebookShareButton
                         url="google.com"
                         className="h-8 w-16"
@@ -211,7 +183,7 @@ const LatestData = () => {
                     </Button>
                   </div>
                   <div>
-                    <Dropdown>
+                    <Dropdown className="rounded-lg">
                       <DropdownTrigger>
                         <Button size="sm" variant="flat">
                           <FaListUl className="text-violet-500 text-xl"></FaListUl>
@@ -244,18 +216,84 @@ const LatestData = () => {
                   </div>
                 </CardBody>
               </CardBody>
+
+              <CardBody>
+                <form
+                  className="flex flex-row gap-5"
+                  onSubmit={(e) => handleComment(e, item.id)}
+                >
+                  <Image
+                    alt="Card background"
+                    className="object-cover rounded-full w-8 h-8"
+                    src={
+                      user?.photoURL ||
+                      user?.image ||
+                      "https://res.cloudinary.com/dmegxaayi/image/upload/v1737414981/d1peu0xv4p0v43sfpfmt.png"
+                    }
+                  />
+                  <CardBody className="bg-[#262629] max-w-sm relative rounded-r-lg rounded-bl-lg">
+                    <textarea
+                      required
+                      name="comment"
+                      className="bg-inherit text-blue-300 placeholder:text-blue-300 resize-none max-w-xs border-none focus:border-none active:border-none outline-none"
+                      rows={2}
+                      placeholder="Add a comment"
+                    />
+                    <button type="submit">
+                      <FaPaperPlane className="absolute z-20 right-5 top-7 text-xl cursor-pointer active:scale-90 ease-in-out duration-200"></FaPaperPlane>
+                    </button>
+                  </CardBody>
+                </form>
+              </CardBody>
+
               {item?.commentData?.map((item2, index) => (
                 <CardBody key={index} className="flex flex-row gap-5">
                   <Image
                     alt="Card background"
-                    className="object-cover rounded-full w-10 h-10"
-                    src={users[item2.authorId]?.profileImage}
+                    className="object-cover rounded-full w-8 h-8"
+                    src={
+                      item2?.image ||
+                      users[index]?.profileImage ||
+                      "https://res.cloudinary.com/dmegxaayi/image/upload/v1737414981/d1peu0xv4p0v43sfpfmt.png"
+                    }
                   />
-                  <p className="bg-slate-600 text-white p-3 rounded-2xl">
-                    {item2.text}
-                  </p>
+                  <div className="text-sm bg-slate-600 text-white p-3 rounded-r-lg rounded-bl-lg max-w-sm">
+                    <p className="text-blue-300 text-lg">
+                      {item2?.name || users[item2?.authorId]?.username}
+                    </p>
+                    <p className="inline-flex">
+                      {item2?.text}
+                      <Dropdown backdrop="blur">
+                        <DropdownTrigger className="ml-7">
+                          <button className="active:scale-90 ease-in-out duration-100">
+                            <FaEllipsisVertical className="my-auto" />
+                          </button>
+                        </DropdownTrigger>
+                        <DropdownMenu
+                          aria-label="Static Actions"
+                          variant="faded"
+                        >
+                          <DropdownItem key="new">Report Comment</DropdownItem>
+                          <DropdownItem
+                            key="delete"
+                            className="text-danger"
+                            color="danger"
+                          >
+                            Delete Comment
+                          </DropdownItem>
+                        </DropdownMenu>
+                      </Dropdown>
+                    </p>
+                  </div>
                 </CardBody>
               ))}
+              <button
+                // onClick={() => handleLoadComment(item.commentData.length)}
+                onClick={() => navigate(`/post/${item._id}`)}
+                className="inline-flex justify-center gap-2 mt-5"
+              >
+                <FaEllipsisH className="my-auto text-xl" /> Load more comments
+              </button>
             </Card>
           )
         )

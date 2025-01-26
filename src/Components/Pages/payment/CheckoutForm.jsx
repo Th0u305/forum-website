@@ -23,7 +23,6 @@ const CheckoutForm = () => {
   const { pathname } = useLocation();
   const filtered = users?.users?.find((item) => item?.email === user?.email);
 
-
   const {
     register,
     handleSubmit,
@@ -46,24 +45,24 @@ const CheckoutForm = () => {
     });
   }, [pathname]);
 
-  // detect back button 
-  window.addEventListener('popstate', function(event) {
+  // detect back button
+  window.addEventListener(
+    "popstate",
+    function (event) {
+      // The popstate event is fired each time when the current history entry changes.
+      var r = true;
 
-    // The popstate event is fired each time when the current history entry changes.
-    var r = true
-
-    if (r == true) {
-      history.back();
-      location.reload();
-    } else {
-      // Stay on the current page.
+      if (r == true) {
+        history.back();
+        location.reload();
+      } else {
+        // Stay on the current page.
+        history.pushState(null, null, window.location.pathname);
+      }
       history.pushState(null, null, window.location.pathname);
-    }
-    history.pushState(null, null, window.location.pathname);
-
-  }, false);
-
-
+    },
+    false
+  );
 
   // let totalPrice = 0
 
@@ -139,7 +138,7 @@ const CheckoutForm = () => {
               showConfirmButton: false,
               timer: 1500,
             });
-            navigate('/')
+            navigate("/");
           }
         });
       }
@@ -147,9 +146,9 @@ const CheckoutForm = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 rounded-2xl flex flex-col md:flex-row justify-center items-center">
+    <div className="min-h-screen bg-gray-100 rounded-lg flex flex-col md:flex-row justify-center items-center">
       {/* Checkout Form */}
-      <div className="bg-white shadow-lg w-[90%] md:w-1/2 p-6 md:p-12 rounded-2xl">
+      <div className="bg-white shadow-lg w-[90%] md:w-1/2 p-6 md:p-12 rounded-lg">
         <h2 className="text-xl font-semibold text-gray-800 mb-4">
           Payment Details
         </h2>

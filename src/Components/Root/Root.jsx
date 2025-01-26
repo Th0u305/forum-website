@@ -17,9 +17,9 @@ const Root = () => {
     <section className="max-w-7xl mx-auto p-5">
       <ContextProvider>
         <HelmetProvider>
-            <Toaster />
-            <NavbarMenu2></NavbarMenu2>
-            <Outlet></Outlet>
+          <Toaster position="bottom-center" reverseOrder={false} />
+          <NavbarMenu2></NavbarMenu2>
+          <Outlet></Outlet>
         </HelmetProvider>
       </ContextProvider>
     </section>
