@@ -42,6 +42,7 @@ import useAxiosComments from "../../Hooks/useAxiosComments";
 import LoadComments from "../../Functions/LoadComments";
 import useAxiosPublic from "../../Hooks/useAxiosPublic";
 import AddComments from "../../Functions/AddComments";
+import useAdmin from "../../Hooks/useAdmin";
 
 const SinglePost = () => {
   const params = useParams();
@@ -54,6 +55,7 @@ const SinglePost = () => {
   const axiosPublic = useAxiosPublic();
   const [loading, setLoading] = useState(false);
   const [loading2, setLoading2] = useState(true);
+  const [isAdmin] = useAdmin();
 
   const badgeColors = {
     Bronze: "text-[#cd7f32]", // Bronze color
@@ -62,8 +64,8 @@ const SinglePost = () => {
   };
 
   useEffect(() => {
-    axiosPublic.get(`/mergedAllData?allData="allData"`).then((res) => {
-      setSingleData(res.data.filter((item) => item._id === params.id));
+    axiosPublic.get(`/mergedAllData?allData=allData`).then((res) => {
+      setSingleData(res.data.filter((item) => item._id === params.id)); 
     });
   }, []);
 
@@ -86,9 +88,7 @@ const SinglePost = () => {
     return setSearchData(singleData);
   };
 
-  refetch();
-  userFetch();
-  commentRefetch();
+
 
   // adding comments
   const handleComment = async (e, postId) => {
@@ -106,23 +106,29 @@ const SinglePost = () => {
 
   // loading comments
   const handleLoadComment = async (id) => {
-
     await LoadComments(axiosPublic, id, setSearchData);
 
     setLoading(true);
     setLoading2(false);
 
-    setTimeout( async() => {
-      setSingleData(searchData.filter((item) => item._id === params.id));
+    setTimeout(async () => {
+      
+      const filter = await (searchData.filter((item) => item._id === params.id));
+      if (filter.length === 0) {
+           
       setLoading(false);
-      setLoading2(true);
+      setLoading2(true); 
+        return
+      }
+      
+      setSingleData(filter)
+      
+      setLoading(false);
+      setLoading2(true);      
     }, 1500);
-    
   };
 
-  userFetch();
-  refetch();
-  commentRefetch();
+
 
   return (
     <div className="mt-12">
@@ -130,8 +136,8 @@ const SinglePost = () => {
         <title>TopicTree | Post</title>
       </Helmet>
       {singleData?.length > 0 ? (
-        singleData.map((item) => (
-          <Card className="py-4 mb-12 rounded-lg">
+        singleData.map((item, index) => (
+          <Card className="py-4 mb-12 rounded-lg" key={index}>
             <CardHeader className="pb-0 pt-2 px-4 flex-col items-start gap-5">
               <div className="flex items-center gap-2">
                 <Image
@@ -244,7 +250,7 @@ const SinglePost = () => {
                 </div>
                 <div>
                   <p className="inline-flex">
-                    <List  className="text-green-500 mr-3" /> Category:{" "}
+                    <List className="text-green-500 mr-3" /> Category:{" "}
                     {item.category}
                   </p>
                 </div>
@@ -303,13 +309,15 @@ const SinglePost = () => {
                       </DropdownTrigger>
                       <DropdownMenu aria-label="Static Actions" variant="faded">
                         <DropdownItem key="new">Report Comment</DropdownItem>
-                        <DropdownItem
-                          key="delete"
-                          className="text-danger"
-                          color="danger"
-                        >
-                          Delete Comment
-                        </DropdownItem>
+                        {isAdmin && (
+                          <DropdownItem
+                            key="delete"
+                            className="text-danger"
+                            color="danger"
+                          >
+                            Delete Comment
+                          </DropdownItem>
+                        )}
                       </DropdownMenu>
                     </Dropdown>
                   </p>

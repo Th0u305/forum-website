@@ -1,7 +1,7 @@
-import React from "react";
 import Swal from "sweetalert2";
 
-const SubmitReport = async (user, users, postData, axiosSecure) => {
+const SubmitCommentReport = async (user, users, commentData, axiosSecure) => {
+    
   if (!user && !user?.email) {
     return Swal.fire({
       title: "You're not logged in",
@@ -53,20 +53,21 @@ const SubmitReport = async (user, users, postData, axiosSecure) => {
   }
 
   const data = {
-    postId: postData.id,
-    userId: filterUser.id,
+    reportCommentId : commentData.id,
+    postId: commentData.postId,
+    reportUserId: filterUser.id,
     reportDetails: userInput,
     reportOption: optionValue,
   };
 
-  axiosSecure.post("/makeReport", { data }).then((res) => {
-    if (res.status === 200) {
-      Swal.fire({
-        title: "Your report has bean submitted",
-        icon: "success",
-      });
-    }
+  axiosSecure.post("/commentReport", {data}).then((res) => {
+    // if (res.status === 200) {
+    //   Swal.fire({
+    //     title: "Your report has bean submitted",
+    //     icon: "success",
+    //   });
+    // }
   });
 };
 
-export default SubmitReport;
+export default SubmitCommentReport;

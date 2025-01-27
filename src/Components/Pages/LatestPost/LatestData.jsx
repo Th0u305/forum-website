@@ -40,6 +40,7 @@ import SubmitReport from "../../Functions/SubmitReport";
 import useAxiosComments from "../../Hooks/useAxiosComments";
 import AddComments from "../../Functions/AddComments";
 import LoadComments from "../../Functions/LoadComments";
+import useAdmin from "../../Hooks/useAdmin";
 
 const LatestData = () => {
   const [users, userFetch] = useAxiosUsers();
@@ -51,6 +52,7 @@ const LatestData = () => {
   const navigate = useNavigate();
   const axiosPublic = useAxiosPublic();
   const randomData = latestData?.slice(-15);
+  const [isAdmin] = useAdmin()
 
   const badgeColors = {
     Bronze: "text-[#cd7f32]", // Bronze color
@@ -127,8 +129,7 @@ const LatestData = () => {
                     <FaMedal
                       className={`${
                         badgeColors[
-                          // item?.author?.badges[0] ||
-                            item?.author?.badge ||
+                            item?.author?.badges ||
                             "Bronze"
                         ] || "text-gray-500"
                       } text-2xl`}
@@ -274,13 +275,13 @@ const LatestData = () => {
                           variant="faded"
                         >
                           <DropdownItem key="new">Report Comment</DropdownItem>
-                          <DropdownItem
+                          {isAdmin && <DropdownItem
                             key="delete"
                             className="text-danger"
                             color="danger"
                           >
                             Delete Comment
-                          </DropdownItem>
+                          </DropdownItem>}
                         </DropdownMenu>
                       </Dropdown>
                     </p>

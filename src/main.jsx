@@ -60,7 +60,7 @@ createRoot(document.getElementById("root")).render(
                   <Route path="users" element={<AdminRoutes><UsersPage /></AdminRoutes>} />
                   <Route path="addPost" element={<PrivateRoute><AddPost /></PrivateRoute>} />
                   <Route path="myPost" element={<PrivateRoute><MyPost/></PrivateRoute>} />
-                  <Route path="reports" element={<AdminRoutes><Reported /></AdminRoutes>} />
+                  <Route path="reportPosts" element={<AdminRoutes><Reported /></AdminRoutes>} />
                   <Route path="announcement" element={<AdminRoutes><Announcement /></AdminRoutes>} />
                   <Route path="profile" element={<PrivateRoute><SettingsPage/></PrivateRoute>} />
                   <Route path="paymentHistory" element={<PrivateRoute><PaymentHistory/></PrivateRoute>}></Route>

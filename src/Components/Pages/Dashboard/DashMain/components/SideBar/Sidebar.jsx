@@ -11,7 +11,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { NavLink } from "react-router";
 import { CgComment } from "react-icons/cg";
 import { FaCommentDots, FaMoneyBill } from "react-icons/fa";
-import { HiOutlineDocumentReport } from "react-icons/hi";
+import { HiOutlineDocumentRemove, HiOutlineDocumentReport } from "react-icons/hi";
 import useAdmin from "../../../../../Hooks/useAdmin";
 
 const SIDEBAR_ITEMS = [
@@ -30,7 +30,7 @@ const SIDEBAR_ITEMS = [
   {
     name: "All Users",
     icon: Users,
-    color: "#EC4899",
+    color: "#3B82F6",
     href: "/dashboard/users",
   },
   {
@@ -46,10 +46,16 @@ const SIDEBAR_ITEMS = [
     href: "/dashboard/myPost",
   },
   {
-    name: "Report",
+    name: "Reported Posts",
     icon: HiOutlineDocumentReport,
-    color: "#3B82F6",
-    href: "/dashboard/reports",
+    color: "#EC4899",
+    href: "/dashboard/reportPosts",
+  },
+  {
+    name: "Reported Comments",
+    icon: HiOutlineDocumentRemove,
+    color: "#EC4899",
+    href: "/dashboard/reportComments",
   },
   {
     name: "Announcement",
