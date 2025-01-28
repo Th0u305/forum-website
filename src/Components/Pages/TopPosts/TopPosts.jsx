@@ -53,7 +53,7 @@ const Posts = () => {
   const navigate = useNavigate();
   const { user, searchData, setSearchData } = useContext(AuthContext);
   const axiosPublic = useAxiosPublic();
-  const [isAdmin] = useAdmin()
+  const [isAdmin] = useAdmin();
 
   const badgeColors = {
     Bronze: "text-[#cd7f32]", // Bronze color
@@ -129,10 +129,8 @@ const Posts = () => {
                 <h1>
                   <FaMedal
                     className={`${
-                      badgeColors[
-                          item?.author?.badges ||
-                          "Bronze"
-                      ] || "text-gray-500"
+                      badgeColors[item?.author?.badges || "Bronze"] ||
+                      "text-gray-500"
                     } text-2xl`}
                   ></FaMedal>
                 </h1>
@@ -150,68 +148,64 @@ const Posts = () => {
                 className="object-cover md:w-screen rounded-lg cursor-pointer"
                 src={item?.image}
               />
-              <CardBody className="flex flex-row flex-wrap gap-5 justify-between">
-                <div className="flex gap-5 flex-wrap">
-                  <Button
-                    size="sm"
-                    variant="flat"
-                    className="rounded-lg"
-                    onPress={() => handleLikes("upVotes", item.id)}
-                  >
-                    <FaThumbsUp className="text-blue-400" />
-                    {item.upVotes}
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="flat"
-                    className="rounded-lg"
-                    onPress={() => handleLikes("downVotes", item.id)}
-                  >
-                    <FaThumbsDown className="text-red-400" /> {item?.downVotes}
-                  </Button>
-                  <Button size="sm" variant="flat" className="rounded-lg">
-                    <FaComment className="text-green-400" />
-                    {item?.commentData.length}
-                  </Button>
-                  <Button size="sm" variant="flat" className="p-0 rounded-lg">
-                    <FacebookShareButton url="google.com" className="h-8 w-16">
-                      <FaShare className="text-yellow-400 inline-flex mr-2" />
-                      {item.commentData.length + 15}
-                    </FacebookShareButton>
-                  </Button>
-                </div>
-                <div>
-                  <Dropdown className="rounded-lg">
-                    <DropdownTrigger>
-                      <Button size="sm" variant="flat">
-                        <FaListUl className="text-violet-500 text-xl"></FaListUl>
-                      </Button>
-                    </DropdownTrigger>
-                    <DropdownMenu aria-label="Static Actions" variant="faded">
-                      <DropdownItem textValue="ff" key="new">
-                        <FaRegSave className="inline-flex mr-3 text-blue-400" />{" "}
-                        Save post
-                      </DropdownItem>
-                      <DropdownItem textValue="ss" key="copy">
-                        <FaDeleteLeft className="inline-flex mr-3 text-yellow-400" />{" "}
-                        Hide post
-                      </DropdownItem>
-                      <DropdownItem textValue="w" key="edit">
-                        <FaRegLifeRing className="inline-flex mr-3 text-green-400" />{" "}
-                        Block
-                      </DropdownItem>
-                      <DropdownSection showDivider></DropdownSection>
-                      <DropdownItem
-                        onPress={() => showInputModal(item)}
-                        textValue="4t"
-                        className="text-red-400"
-                      >
-                        <FaFlag className="inline-flex mr-3" />
-                        Report Post
-                      </DropdownItem>
-                    </DropdownMenu>
-                  </Dropdown>
-                </div>
+              <CardBody className="grid grid-cols-4 grid-rows-1 p-0 gap-5 mt-5 md:grid-cols-5">
+                <Button
+                  size="sm"
+                  variant="flat"
+                  className="rounded-lg"
+                  onPress={() => handleLikes("upVotes", item.id)}
+                >
+                  <FaThumbsUp className="text-blue-400" />
+                  {item.upVotes}
+                </Button>
+                <Button
+                  size="sm"
+                  variant="flat"
+                  className="rounded-lg"
+                  onPress={() => handleLikes("downVotes", item.id)}
+                >
+                  <FaThumbsDown className="text-red-400" /> {item?.downVotes}
+                </Button>
+                <Button size="sm" variant="flat" className="rounded-lg">
+                  <FaComment className="text-green-400" />
+                  {item?.commentData.length}
+                </Button>
+                <Button size="sm" variant="flat" className="p-0 rounded-lg">
+                  <FacebookShareButton url="google.com" className="h-8 w-16">
+                    <FaShare className="text-yellow-400 inline-flex mr-2" />
+                    {item.commentData.length + 15}
+                  </FacebookShareButton>
+                </Button>
+                <Dropdown className="rounded-lg" backdrop="blur">
+                  <DropdownTrigger>
+                    <Button size="sm" variant="flat">
+                      <FaListUl className="text-violet-500 text-xl"></FaListUl>
+                    </Button>
+                  </DropdownTrigger>
+                  <DropdownMenu aria-label="Static Actions" variant="faded">
+                    <DropdownItem textValue="ff" key="new">
+                      <FaRegSave className="inline-flex mr-3 text-blue-400" />{" "}
+                      Save post
+                    </DropdownItem>
+                    <DropdownItem textValue="ss" key="copy">
+                      <FaDeleteLeft className="inline-flex mr-3 text-yellow-400" />{" "}
+                      Hide post
+                    </DropdownItem>
+                    <DropdownItem textValue="w" key="edit">
+                      <FaRegLifeRing className="inline-flex mr-3 text-green-400" />{" "}
+                      Block
+                    </DropdownItem>
+                    <DropdownSection showDivider></DropdownSection>
+                    <DropdownItem
+                      onPress={() => showInputModal(item)}
+                      textValue="4t"
+                      className="text-red-400"
+                    >
+                      <FaFlag className="inline-flex mr-3" />
+                      Report Post
+                    </DropdownItem>
+                  </DropdownMenu>
+                </Dropdown>
               </CardBody>
             </CardBody>
 

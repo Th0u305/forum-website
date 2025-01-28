@@ -9,7 +9,7 @@ const AddComments = async (e, postId, users, user, comments, axiosSecure, refetc
     const data = {
       id: comments.length + 1,
       postId: postId,
-      authorId: filterUser.id,
+      authorEmail: filterUser.email,
       text: comment,
       createdAt: Date(),
       image: filterUser?.profileImage,
@@ -20,7 +20,7 @@ const AddComments = async (e, postId, users, user, comments, axiosSecure, refetc
       if (res.data.addCommentsId.modifiedCount > 0) {
         toast.success("Successful");
         refetch();
-        setSearchData([]);
+        
         e.target.reset();
       }
     });

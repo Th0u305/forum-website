@@ -16,7 +16,6 @@ const googleProvider = new GoogleAuthProvider();
 import { useRef } from "react";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router";
-import useAxiosMergeData from "../Hooks/useAxiosMergeData";
 
 const ContextProvider = ({ children }) => {
   const [money, setMoney] = useState("");
@@ -25,7 +24,6 @@ const ContextProvider = ({ children }) => {
   const myRef = useRef(null);
   const { pathname } = useLocation();
   const [membershipName, setMembershipName] = useState()
-  const [users] = useAxiosMergeData()
   const [searchData, setSearchData] = useState([])
 
   // register or create account
@@ -40,6 +38,7 @@ const ContextProvider = ({ children }) => {
     setLoading(true);
     return signInWithEmailAndPassword(firebaseAuth, email, password);
   };
+console.log();
 
   // check for current logged user
   useEffect(() => {

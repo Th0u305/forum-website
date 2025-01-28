@@ -8,7 +8,7 @@ import { Helmet } from 'react-helmet-async';
 
 const Home = () => {  
   return (
-    <section className="md:grid md:grid-cols-3 lg:grid lg:grid-cols-8 lg:gap-8 mt-12 space-y-5 md:space-y-0 gap-5">
+    <section className="md:grid md:grid-cols-3 lg:grid lg:grid-cols-8 lg:gap-8 mt-5 space-y-5 md:space-y-0 gap-5">
       <Helmet>
         <title>TopicTree | Home</title>
       </Helmet>

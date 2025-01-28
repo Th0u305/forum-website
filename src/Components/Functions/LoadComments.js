@@ -1,13 +1,16 @@
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
 
-const LoadComments = async (axiosPublic , id , setSearchData) => {
-    
-    await axiosPublic
+const LoadComments = async (axiosPublic, id, setSearchData, setSingleData, params) => {
+  await axiosPublic
     .get(`/mergedAllData?loadComment=${id}`)
-    .then((res) => {
-      setSearchData(res.data);
+    .then(async (res) => {
+      if (res.data) {
+        await setSearchData(res.data);
+        setSingleData(res.data.filter((item) => item._id === params.id));
+      }
+
       if (res?.data[0]?.commentData?.length === id) {
-        toast.error("No more comments left");
+        return toast.error("No more comments left");
       }
     })
     .catch((error) => {
