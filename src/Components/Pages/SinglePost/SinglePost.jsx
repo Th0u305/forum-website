@@ -32,7 +32,7 @@ import useAxiosUsers from "../../Hooks/useAxiosUser";
 import { AuthContext } from "../../Context/ContextProvider";
 import toast from "react-hot-toast";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
-import { Clock, List, Tags } from "lucide-react";
+import { Clock, Delete, List, MessageCircleWarning, Tags } from "lucide-react";
 import { FaDeleteLeft, FaEllipsisVertical } from "react-icons/fa6";
 import { FacebookShareButton } from "react-share";
 import { Helmet } from "react-helmet-async";
@@ -117,10 +117,10 @@ const SinglePost = () => {
       setLoading2(true);
     }, 1000);
     LoadComments(axiosPublic, id, setSearchData, setSingleData, params);
-
   };
 
-  const handleDeleteComment = async (_id, index, post_id, id) => {    
+  // delete comments
+  const handleDeleteComment = async (_id, index, post_id, id) => {
     DeleteComment(user, _id, index, post_id, axiosSecure);
     await LoadComments(axiosPublic, id, setSearchData, setSingleData, params);
   };
@@ -162,7 +162,7 @@ const SinglePost = () => {
                 src={item.image}
                 // width={700}
               />
-              <CardBody className="grid grid-cols-4 grid-rows-1 p-0 mt-5 gap-5 md:grid-cols-5">
+              <CardBody className="grid grid-cols-4 grid-rows-1 p-0 mt-7 gap-5 md:grid-cols-5">
                 <Button
                   size="sm"
                   variant="flat"
@@ -178,7 +178,7 @@ const SinglePost = () => {
                   className="rounded-lg"
                   onPress={() => handleLikes("downVotes", item.id)}
                 >
-                  <FaThumbsDown className="text-red-400" /> {item?.downVotes}
+                  <FaThumbsDown className="text-orange-500" /> {item?.downVotes}
                 </Button>
                 <Button size="sm" variant="flat" className="rounded-lg">
                   <FaComment className="text-green-400" />
@@ -198,35 +198,35 @@ const SinglePost = () => {
                   </DropdownTrigger>
                   <DropdownMenu aria-label="Static Actions" variant="faded">
                     <DropdownItem textValue="ff" key="new">
-                      <FaRegSave className="inline-flex mr-3 text-blue-400" />{" "}
+                      <FaRegSave className="inline-flex mr-3 text-blue-400 text-lg" />{" "}
                       Save post
                     </DropdownItem>
                     <DropdownItem textValue="ss" key="copy">
-                      <FaDeleteLeft className="inline-flex mr-3 text-yellow-400" />{" "}
+                      <FaDeleteLeft className="inline-flex mr-3 text-yellow-400 text-lg" />{" "}
                       Hide post
                     </DropdownItem>
                     <DropdownItem textValue="w" key="edit">
-                      <FaRegLifeRing className="inline-flex mr-3 text-green-400" />{" "}
+                      <FaRegLifeRing className="inline-flex mr-3 text-red-500 text-lg" />{" "}
                       Block
                     </DropdownItem>
                     <DropdownSection showDivider></DropdownSection>
                     <DropdownItem
                       onPress={() => showInputModal(item)}
                       textValue="4t"
-                      className="text-red-400"
+                      className="text-orange-500"
                     >
-                      <FaFlag className="inline-flex mr-3" />
+                      <FaFlag className="inline-flex mr-3 text-lg" />
                       Report Post
                     </DropdownItem>
                   </DropdownMenu>
                 </Dropdown>
               </CardBody>
 
-              <CardBody className="flex gap-5  ">
-                <div className="flex gap-3">
+              <CardBody className="flex gap-5 p-0 ">
+                <div className="flex gap-3 flex-wrap mt-5">
                   <Tags className="text-violet-500"></Tags>Tags:
                   {item.tags.map((item3, index) => (
-                    <div key={index}>
+                    <div key={index} className=" mx-auto">
                       <p> {item3}</p>
                     </div>
                   ))}
@@ -291,7 +291,7 @@ const SinglePost = () => {
                   <p className="text-blue-300 text-lg">
                     {item2?.name || users[item2?.authorId]?.username}
                   </p>
-                  <p className="inline-flex">
+                  <p className="inline-flex break-words break-all text-wrap">
                     {item2?.text}
                     <Dropdown backdrop="blur">
                       <DropdownTrigger className="ml-7">
@@ -300,17 +300,27 @@ const SinglePost = () => {
                         </button>
                       </DropdownTrigger>
                       <DropdownMenu aria-label="Static Actions" variant="faded">
-                        <DropdownItem key="new">Report Comment</DropdownItem>
+                        <DropdownItem textValue="aw" key="new">
+                          <MessageCircleWarning className="text-orange-500 inline-flex mr-2" />{" "}
+                          Report Comment
+                        </DropdownItem>
                         {(item2?.authorEmail === user?.email || isAdmin) && (
                           <DropdownItem
+                            textValue="dd"
                             key="delete"
                             className="text-danger"
                             color="danger"
                             onPress={() =>
-                              handleDeleteComment(item2._id, index, item._id, item.comments.length)
+                              handleDeleteComment(
+                                item2._id,
+                                index,
+                                item._id,
+                                item.comments.length
+                              )
                             }
                           >
-                            Delete Comment
+                            <Delete className="inline-flex mr-2" /> Delete
+                            Comment
                           </DropdownItem>
                         )}
                       </DropdownMenu>

@@ -42,8 +42,10 @@ import AddLikes from "../../Functions/AddLikes";
 import PageNumberData from "../../Functions/PageNumberData";
 import SubmitReport from "../../Functions/SubmitReport";
 import AddComments from "../../Functions/AddComments";
-import LoadComments from "../../Functions/LoadComments";
 import useAdmin from "../../Hooks/useAdmin";
+import { Delete, MessageCircleWarning, Reply } from "lucide-react";
+import SubmitCommentReport from "../../Functions/SubmitCommentReport";
+import DeleteComment from "../../Functions/DeleteComment";
 
 const Posts = () => {
   const [users, userFetch] = useAxiosUsers();
@@ -61,6 +63,7 @@ const Posts = () => {
     Platinum: "text-[#ff6363]", // Platinum color
   };
 
+  // page number
   const handlePageNumber = (id) => {
     return PageNumberData(id, axiosPublic, setSearchData);
   };
@@ -83,6 +86,11 @@ const Posts = () => {
     return SubmitReport(user, users, postData, axiosSecure);
   };
 
+  // report comment
+  const handleCommentReport = (commentData) => {
+    return SubmitCommentReport(user, users, commentData, axiosSecure);
+  };
+
   refetch();
   userFetch();
   commentRefetch();
@@ -101,14 +109,14 @@ const Posts = () => {
     );
   };
 
-  // loading comments
-  const handleLoadComment = async (id) => {
-    return LoadComments(axiosPublic, id, setSearchData);
-  };
-
-  userFetch();
   refetch();
+  userFetch();
   commentRefetch();
+
+  // delete comments
+  const handleDeleteComment = async (_id, index, post_id, id) => {
+    DeleteComment(user, _id, index, post_id, axiosSecure);
+  };
 
   return (
     <div className="mx-auto">
@@ -121,7 +129,7 @@ const Posts = () => {
             <CardHeader className="pb-0 pt-2 px-4 flex-col items-start gap-5">
               <div className="flex items-center gap-2">
                 <Image
-                  alt="Card backg "
+                  alt="Card background "
                   className="rounded-full w-12 h-12 object-cover"
                   src={item.author?.profileImage}
                 />
@@ -148,7 +156,7 @@ const Posts = () => {
                 className="object-cover md:w-screen rounded-lg cursor-pointer"
                 src={item?.image}
               />
-              <CardBody className="grid grid-cols-4 grid-rows-1 p-0 gap-5 mt-5 md:grid-cols-5">
+              <CardBody className="grid grid-cols-4 grid-rows-1 p-0 mt-7 gap-5 md:grid-cols-5">
                 <Button
                   size="sm"
                   variant="flat"
@@ -164,7 +172,7 @@ const Posts = () => {
                   className="rounded-lg"
                   onPress={() => handleLikes("downVotes", item.id)}
                 >
-                  <FaThumbsDown className="text-red-400" /> {item?.downVotes}
+                  <FaThumbsDown className="text-orange-500" /> {item?.downVotes}
                 </Button>
                 <Button size="sm" variant="flat" className="rounded-lg">
                   <FaComment className="text-green-400" />
@@ -184,24 +192,24 @@ const Posts = () => {
                   </DropdownTrigger>
                   <DropdownMenu aria-label="Static Actions" variant="faded">
                     <DropdownItem textValue="ff" key="new">
-                      <FaRegSave className="inline-flex mr-3 text-blue-400" />{" "}
+                      <FaRegSave className="inline-flex mr-3 text-blue-400 text-lg" />{" "}
                       Save post
                     </DropdownItem>
                     <DropdownItem textValue="ss" key="copy">
-                      <FaDeleteLeft className="inline-flex mr-3 text-yellow-400" />{" "}
+                      <FaDeleteLeft className="inline-flex mr-3 text-yellow-400 text-lg" />{" "}
                       Hide post
                     </DropdownItem>
                     <DropdownItem textValue="w" key="edit">
-                      <FaRegLifeRing className="inline-flex mr-3 text-green-400" />{" "}
+                      <FaRegLifeRing className="inline-flex mr-3 text-red-500 text-lg" />{" "}
                       Block
                     </DropdownItem>
                     <DropdownSection showDivider></DropdownSection>
                     <DropdownItem
                       onPress={() => showInputModal(item)}
                       textValue="4t"
-                      className="text-red-400"
+                      className="text-orange-500"
                     >
-                      <FaFlag className="inline-flex mr-3" />
+                      <FaFlag className="inline-flex mr-3 text-lg" />
                       Report Post
                     </DropdownItem>
                   </DropdownMenu>
@@ -255,6 +263,7 @@ const Posts = () => {
                   </p>
                   <p className="inline-flex">
                     {item2?.text}
+
                     <Dropdown backdrop="blur">
                       <DropdownTrigger className="ml-7">
                         <button className="active:scale-90 ease-in-out duration-100">
@@ -262,14 +271,23 @@ const Posts = () => {
                         </button>
                       </DropdownTrigger>
                       <DropdownMenu aria-label="Static Actions" variant="faded">
-                        <DropdownItem key="new">Report Comment</DropdownItem>
-                        {isAdmin && (
+                        <DropdownItem textValue="aw" key="new"><MessageCircleWarning className="text-orange-500 inline-flex mr-2" /> Report Comment</DropdownItem>
+                        {(item2?.authorEmail === user?.email || isAdmin) && (
                           <DropdownItem
+                          textValue="dd"
                             key="delete"
                             className="text-danger"
                             color="danger"
+                            onPress={() =>
+                              handleDeleteComment(
+                                item2._id,
+                                index,
+                                item._id,
+                                item.comments.length
+                              )
+                            }
                           >
-                            Delete Comment
+                           <Delete className="inline-flex mr-2" /> Delete Comment
                           </DropdownItem>
                         )}
                       </DropdownMenu>

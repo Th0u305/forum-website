@@ -43,8 +43,9 @@ import PageNumberData from "../../Functions/PageNumberData";
 import SubmitReport from "../../Functions/SubmitReport";
 import AddComments from "../../Functions/AddComments";
 import useAdmin from "../../Hooks/useAdmin";
-import { Delete, Reply } from "lucide-react";
+import { Delete, MessageCircleWarning, Reply } from "lucide-react";
 import SubmitCommentReport from "../../Functions/SubmitCommentReport";
+import DeleteComment from "../../Functions/DeleteComment";
 
 const Posts = () => {
   const [users, userFetch] = useAxiosUsers();
@@ -108,9 +109,14 @@ const Posts = () => {
     );
   };
 
-  userFetch();
   refetch();
+  userFetch();
   commentRefetch();
+
+  // delete comments
+  const handleDeleteComment = async (_id, index, post_id, id) => {
+    DeleteComment(user, _id, index, post_id, axiosSecure);
+  };
 
   return (
     <div className="mx-auto">
@@ -150,7 +156,7 @@ const Posts = () => {
                 className="object-cover md:w-screen rounded-lg cursor-pointer"
                 src={item?.image}
               />
-              <CardBody className="grid grid-cols-4 grid-rows-1 p-0 mt-5 gap-5 md:grid-cols-5">
+              <CardBody className="grid grid-cols-4 grid-rows-1 p-0 mt-7 gap-5 md:grid-cols-5">
                 <Button
                   size="sm"
                   variant="flat"
@@ -166,7 +172,7 @@ const Posts = () => {
                   className="rounded-lg"
                   onPress={() => handleLikes("downVotes", item.id)}
                 >
-                  <FaThumbsDown className="text-red-400" /> {item?.downVotes}
+                  <FaThumbsDown className="text-orange-500" /> {item?.downVotes}
                 </Button>
                 <Button size="sm" variant="flat" className="rounded-lg">
                   <FaComment className="text-green-400" />
@@ -186,24 +192,24 @@ const Posts = () => {
                   </DropdownTrigger>
                   <DropdownMenu aria-label="Static Actions" variant="faded">
                     <DropdownItem textValue="ff" key="new">
-                      <FaRegSave className="inline-flex mr-3 text-blue-400" />{" "}
+                      <FaRegSave className="inline-flex mr-3 text-blue-400 text-lg" />{" "}
                       Save post
                     </DropdownItem>
                     <DropdownItem textValue="ss" key="copy">
-                      <FaDeleteLeft className="inline-flex mr-3 text-yellow-400" />{" "}
+                      <FaDeleteLeft className="inline-flex mr-3 text-yellow-400 text-lg" />{" "}
                       Hide post
                     </DropdownItem>
                     <DropdownItem textValue="w" key="edit">
-                      <FaRegLifeRing className="inline-flex mr-3 text-green-400" />{" "}
+                      <FaRegLifeRing className="inline-flex mr-3 text-red-500 text-lg" />{" "}
                       Block
                     </DropdownItem>
                     <DropdownSection showDivider></DropdownSection>
                     <DropdownItem
                       onPress={() => showInputModal(item)}
                       textValue="4t"
-                      className="text-red-400"
+                      className="text-orange-500"
                     >
-                      <FaFlag className="inline-flex mr-3" />
+                      <FaFlag className="inline-flex mr-3 text-lg" />
                       Report Post
                     </DropdownItem>
                   </DropdownMenu>
@@ -258,36 +264,32 @@ const Posts = () => {
                   <p className="inline-flex">
                     {item2?.text}
 
-                    <Dropdown className="rounded-lg">
+                    <Dropdown backdrop="blur">
                       <DropdownTrigger className="ml-7">
                         <button className="active:scale-90 ease-in-out duration-100">
                           <FaEllipsisVertical className="my-auto" />
                         </button>
                       </DropdownTrigger>
                       <DropdownMenu aria-label="Static Actions" variant="faded">
-                        <DropdownItem textValue="ff" key="new">
-                          <Reply className="inline-flex mr-3 text-blue-400" />{" "}
-                          Reply
-                        </DropdownItem>
-                        {isAdmin && (
+                        <DropdownItem textValue="aw" key="new"><MessageCircleWarning className="text-orange-500 inline-flex mr-2" /> Report Comment</DropdownItem>
+                        {(item2?.authorEmail === user?.email || isAdmin) && (
                           <DropdownItem
-                            textValue="da"
+                          textValue="dd"
                             key="delete"
                             className="text-danger"
                             color="danger"
+                            onPress={() =>
+                              handleDeleteComment(
+                                item2._id,
+                                index,
+                                item._id,
+                                item.comments.length
+                              )
+                            }
                           >
-                            <Delete className="inline-flex mr-3" /> Delete
-                            Comment
+                           <Delete className="inline-flex mr-2" /> Delete Comment
                           </DropdownItem>
                         )}
-                        <DropdownItem
-                          onPress={() => handleCommentReport(item2)}
-                          textValue="4t"
-                          className="text-red-400"
-                        >
-                          <FaFlag className="inline-flex mr-6" />
-                          Report Comment
-                        </DropdownItem>
                       </DropdownMenu>
                     </Dropdown>
                   </p>
