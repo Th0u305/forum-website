@@ -43,6 +43,8 @@ import AddComments from "../../Functions/AddComments";
 import useAdmin from "../../Hooks/useAdmin";
 import DeleteComment from "../../Functions/DeleteComment";
 import LoadComments from "../../Functions/LoadComments";
+import Swal from "sweetalert2";
+import SubmitCommentReport from "../../Functions/SubmitCommentReport";
 
 const SinglePost = () => {
   const params = useParams();
@@ -88,6 +90,11 @@ const SinglePost = () => {
     return setSearchData(singleData);
   };
 
+  // report comment
+  const handleCommentReport = (commentData) => {
+    return SubmitCommentReport(user, users, commentData, axiosSecure);
+  };
+
   // adding comments
   const handleComment = async (e, postId, id) => {
     AddComments(
@@ -120,9 +127,22 @@ const SinglePost = () => {
   };
 
   // delete comments
+
   const handleDeleteComment = async (_id, index, post_id, id) => {
-    DeleteComment(user, _id, index, post_id, axiosSecure);
-    await LoadComments(axiosPublic, id, setSearchData, setSingleData, params);
+    await Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await DeleteComment(user, _id, index, post_id, axiosSecure);
+        await LoadComments(axiosPublic, id, setSearchData, setSingleData, params);
+      }
+    });
   };
 
   return (
@@ -300,7 +320,7 @@ const SinglePost = () => {
                         </button>
                       </DropdownTrigger>
                       <DropdownMenu aria-label="Static Actions" variant="faded">
-                        <DropdownItem textValue="aw" key="new">
+                        <DropdownItem textValue="aw" key="new" onPress={()=>handleCommentReport(item2)}>
                           <MessageCircleWarning className="text-orange-500 inline-flex mr-2" />{" "}
                           Report Comment
                         </DropdownItem>

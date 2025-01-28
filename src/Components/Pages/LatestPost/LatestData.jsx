@@ -46,6 +46,7 @@ import useAdmin from "../../Hooks/useAdmin";
 import { Delete, MessageCircleWarning, Reply } from "lucide-react";
 import SubmitCommentReport from "../../Functions/SubmitCommentReport";
 import DeleteComment from "../../Functions/DeleteComment";
+import Swal from "sweetalert2";
 
 const Posts = () => {
   const [users, userFetch] = useAxiosUsers();
@@ -115,7 +116,19 @@ const Posts = () => {
 
   // delete comments
   const handleDeleteComment = async (_id, index, post_id, id) => {
-    DeleteComment(user, _id, index, post_id, axiosSecure);
+    await Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await DeleteComment(user, _id, index, post_id, axiosSecure, refetch,userFetch, commentRefetch);
+      }
+    });
   };
 
   return (
@@ -271,10 +284,13 @@ const Posts = () => {
                         </button>
                       </DropdownTrigger>
                       <DropdownMenu aria-label="Static Actions" variant="faded">
-                        <DropdownItem textValue="aw" key="new"><MessageCircleWarning className="text-orange-500 inline-flex mr-2" /> Report Comment</DropdownItem>
+                        <DropdownItem textValue="aw" key="new" onPress={()=>handleCommentReport(item2)}>
+                          <MessageCircleWarning className="text-orange-500 inline-flex mr-2" />{" "}
+                          Report Comment
+                        </DropdownItem>
                         {(item2?.authorEmail === user?.email || isAdmin) && (
                           <DropdownItem
-                          textValue="dd"
+                            textValue="dd"
                             key="delete"
                             className="text-danger"
                             color="danger"
@@ -287,7 +303,8 @@ const Posts = () => {
                               )
                             }
                           >
-                           <Delete className="inline-flex mr-2" /> Delete Comment
+                            <Delete className="inline-flex mr-2" /> Delete
+                            Comment
                           </DropdownItem>
                         )}
                       </DropdownMenu>

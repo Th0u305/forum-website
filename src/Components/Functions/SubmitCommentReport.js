@@ -56,17 +56,18 @@ const SubmitCommentReport = async (user, users, commentData, axiosSecure) => {
     reportCommentId : commentData.id,
     postId: commentData.postId,
     reportUserId: filterUser.id,
+    reportUserEmail : user?.email || filterUser?.email,
     reportDetails: userInput,
     reportOption: optionValue,
   };
 
-  axiosSecure.post("/commentReport", {data}).then((res) => {
-    // if (res.status === 200) {
-    //   Swal.fire({
-    //     title: "Your report has bean submitted",
-    //     icon: "success",
-    //   });
-    // }
+  axiosSecure.post("/commentReport", {data}).then((res) => {        
+    if (res.status === 200) {
+      Swal.fire({
+        title: "Your report has bean submitted",
+        icon: "success",
+      });
+    }
   });
 };
 

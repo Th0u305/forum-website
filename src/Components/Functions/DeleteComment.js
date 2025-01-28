@@ -1,6 +1,7 @@
 import toast from "react-hot-toast";
+import Swal from "sweetalert2";
 
-const DeleteComment = (user, id, index, post_id, axiosSecure) => {
+const DeleteComment = (user, id, index, post_id, axiosSecure,refetch,userFetch, commentRefetch) => {
   const data = {
     post_id: post_id,
     commentIndex: index,
@@ -12,7 +13,14 @@ const DeleteComment = (user, id, index, post_id, axiosSecure) => {
 
   axiosSecure.delete(`/deleteComment/${id}`, { data }).then((res) => {
     if (res.data.result.deletedCount === 1 && res.data.pullResult) {
-      return toast.success("Deleted comment successfully");
+      Swal.fire({
+        title: "Deleted!",
+        text: "Your file has been deleted.",
+        icon: "success",
+      });
+      refetch()
+      userFetch()
+      commentRefetch()
     }
   });
 };
