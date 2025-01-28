@@ -1,27 +1,29 @@
 import { motion } from "framer-motion";
 import Header from "../components/common/Header";
 import { Card, CardHeader, CardBody, Image, Button } from "@heroui/react";
-import ReportStatus from "../components/report/ReportStatus";
-import useAxiosMergeReport from "../../../../Hooks/useAxiosMergedReport";
+import useCommentReport from "../../../../Hooks/useCommentReport";
+import CommentStatus from "../components/report/CommentStatus";
 
-const Reported = () => {
-  const [reportData, refetch] = useAxiosMergeReport();
+const ReportComments = () => {
+  const [reportCommentData, refetch] = useCommentReport()
+//   console.log(reportCommentData);
+  
 
   refetch();
 
   return (
     <div className="flex-1 relative z-10 bg-gray-900">
-      <Header title={"Reported Posts"} />
+      <Header title={"Reported Comments"} />
 
       <main className="max-w-7xl mx-auto py-6 px-4 lg:px-8 space-y-10">
-        <ReportStatus reportData={reportData} refetch={refetch}></ReportStatus>
+        <CommentStatus reportCommentData={reportCommentData} refetch={refetch}></CommentStatus>
         <motion.div
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 h-full gap-5"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
         >
-          {reportData.map((item, index) => (
+          {reportCommentData.map((item, index) => (
             <motion.div
               className=""
               key={index}
@@ -61,4 +63,4 @@ const Reported = () => {
     </div>
   );
 };
-export default Reported;
+export default ReportComments;

@@ -2,16 +2,15 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Search } from "lucide-react";
 
-const ReportStatus = ({ reportData , refetch}) => {
+const CommentStatus = ({ reportCommentData , refetch}) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredUsers, setFilteredUsers] = useState();
-
   
   const handleSearch = (e) => {
     refetch()
     const term = e.target.value.toLowerCase();
     setSearchTerm(term);
-    const filtered = reportData?.filter(
+    const filtered = reportCommentData?.filter(
       (user) =>
         user?.reportOption?.toLowerCase()?.includes(term)
     );
@@ -56,7 +55,7 @@ const ReportStatus = ({ reportData , refetch}) => {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-700">
-            {(filteredUsers || reportData)?.map((user) => (
+            {(filteredUsers || reportCommentData)?.map((user) => (
               <motion.tr
                 key={user?._id}
                 initial={{ opacity: 0 }}
@@ -100,4 +99,4 @@ const ReportStatus = ({ reportData , refetch}) => {
     </motion.div>
   );
 };
-export default ReportStatus;
+export default CommentStatus;

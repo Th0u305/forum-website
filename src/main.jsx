@@ -28,6 +28,7 @@ import SettingsPage from "./Components/Pages/Dashboard/DashMain/pages/ProfilePag
 import DashboardMain from "./Components/Pages/Dashboard/DashboardMain";
 import MakePayment from "./Components/Pages/payment/MakePayment";
 import PaymentHistory from "./Components/Pages/Dashboard/DashMain/pages/PaymentHistory";
+import ReportComments from "./Components/Pages/Dashboard/DashMain/pages/ReportComments";
 
 
 // Create a client
@@ -64,6 +65,7 @@ createRoot(document.getElementById("root")).render(
                   <Route path="announcement" element={<AdminRoutes><Announcement /></AdminRoutes>} />
                   <Route path="profile" element={<PrivateRoute><SettingsPage/></PrivateRoute>} />
                   <Route path="paymentHistory" element={<PrivateRoute><PaymentHistory/></PrivateRoute>}></Route>
+                  <Route path="reportComments" element={<AdminRoutes><ReportComments/></AdminRoutes>}></Route>
               </Route>
             </Route>
           </Routes>
