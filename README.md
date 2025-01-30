@@ -6,15 +6,13 @@ This platform is designed to promote engagement and collaboration among users, w
 
 In addition, this website provide a robust set of user authentication and account management features, ensuring that our users have a seamless and secure experience. Users can sign up using email and password or third-party authentication providers such as Google and GitHub, log in and out, reset their password, and modify their profiles.
 
-Our platform is also designed to be user-friendly and accessible, with a responsive UI that can be used on smartphones, tablets, or computers. Whether you're an experienced user or just getting started, Circus has everything you need to engage with others and explore new ideas.
+Our platform is also designed to be user-friendly and accessible, with a responsive UI that can be used on smartphones, tablets, or computers. Whether you're an experienced user or just getting started, Circus has everything you need to engage with others and explore new ideas.</p>
 
-e</p>
 <br/>
+
 <h1>😊Live Link: https://forum-website-pi.vercel.app/</h1>
 
-<h3>/</h3>
-
-  <br/>
+<br/>
 
 <h2>🧐 Features:</h2>
 
