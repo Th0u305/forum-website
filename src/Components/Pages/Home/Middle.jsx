@@ -2,7 +2,18 @@ import useAxiosCategory from "../../Hooks/useAxiosCategory";
 import useAxiosTags from "../../Hooks/useAxiosTags";
 import React, { useContext, useEffect, useState } from "react";
 import Select from "react-select";
-import { Card, Tab, Tabs } from "@heroui/react";
+import {
+  Accordion,
+  AccordionItem,
+  Button,
+  Card,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+  Tab,
+  Tabs,
+} from "@heroui/react";
 import { Outlet, useLocation } from "react-router";
 import useAxiosPublic from "../../Hooks/useAxiosPublic";
 import { AuthContext } from "../../Context/ContextProvider";
@@ -51,8 +62,6 @@ export default function Middle() {
     },
   ];
 
-
-
   // Handle selection change
   const handleChange = (option) => {
     setSelectedOption(option);
@@ -93,7 +102,7 @@ export default function Middle() {
   return (
     <div className="space-y-5">
       <Card className="rounded-lg grid grid-cols-1 justify-items-center content-center gap-5 py-5 md:grid-cols-4 md:py-5 md:px-2 xl:py-11 lg:p-6 overflow-visible xl:justify-items-start">
-        <div className="w-fit z-30 md:col-span-2 mx-auto">
+        <div className="w-fit z-40 md:col-span-2 mx-auto">
           <Select
             options={options2} // Pass custom options
             value={selectedOption2} // Bind selected value
@@ -145,7 +154,7 @@ export default function Middle() {
           />
         </div>
 
-        <div className="w-44 z-30 md:col-span-2 mx-auto">
+        <div className="z-30 md:col-span-2 mx-auto">
           <Select
             options={options} // Pass custom options
             value={selectedOption} // Bind selected value
@@ -161,7 +170,7 @@ export default function Middle() {
                 borderRadius: "0.5rem", // rounded-lg equivalent
                 boxShadow: "none",
                 transition: "all 0.3s ease", // Smooth transition for focus and hover
-                width: "11.5rem",
+                width: "11.6rem",
                 cursor: "pointer",
               }),
               option: (base, { isFocused, isSelected }) => ({
@@ -197,11 +206,10 @@ export default function Middle() {
           />
         </div>
 
-        <div className="w-[11.5rem] xl:mt-0 border-2 mx-auto border-gray-400 rounded-lg md:col-span-2">
+        <div className="w-[11.5rem] xl:mt-0 border-[2px] mx-auto border-gray-400 rounded-lg md:col-span-2 h-10">
           <Tabs
             items={tabs}
             selectedKey={pathname}
-            // onSelectionChange={setSelected}
             aria-label="Tabs variants"
             variant="underlined"
             className="w-full gap-5"

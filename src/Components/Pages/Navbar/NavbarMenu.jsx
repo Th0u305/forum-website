@@ -108,7 +108,7 @@ export default function NavbarMenu2() {
       {isNavbar && (
         <Navbar
           isBlurred={false}
-          className="bg-[#19191c] h-20 rounded-lg"
+          className="bg-[#19191c] h-20 rounded-lg z-50"
         >
           <NavbarContent className="md:hidden" justify="start">
             <NavbarMenuToggle />
