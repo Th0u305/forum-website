@@ -81,14 +81,13 @@ const Login = () => {
 
   return (
     <div
-      className="p-8"
+      className="md:p-8 mt-12"
       //  ref={myRef}
     >
       <Helmet>
         <title>TopicTree | Login</title>
       </Helmet>
-      <div className="bg-white grid md:grid-cols-2 items-center gap-4 max-md:gap-8 max-w-6xl max-md:max-w-lg w-full p-4 m-4 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)] rounded-md">
-        <div className="md:max-w-md w-full px-4 py-4">
+      <div className="bg-white grid md:grid-cols-2 items-center gap-4 md:gap-8 p-8 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)] rounded-md">
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="mb-12">
               <h3 className="text-gray-800 text-4xl font-extrabold">
@@ -264,7 +263,6 @@ const Login = () => {
               </div>
             </div>
           </form>
-        </div>
 
         <div className="md:h-full rounded-lg lg:p-12 p-8">
           <img

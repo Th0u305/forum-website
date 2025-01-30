@@ -6,7 +6,6 @@ const PostTable = ({ postData }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredProducts, setFilteredProducts] = useState();
 
-
   const handleSearch = (e) => {
     const term = e.target.value.toLowerCase();
     setSearchTerm(term);
@@ -16,8 +15,6 @@ const PostTable = ({ postData }) => {
     setFilteredProducts(filtered);
   };
 
-  
-
   return (
     <motion.div
       className="bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-lg p-6 border border-gray-700 mb-8"
@@ -25,13 +22,13 @@ const PostTable = ({ postData }) => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2 }}
     >
-      <div className="flex flex-col gap-5 md:flex-row md:gap-0 justify-between items-center mb-6">
-        <h2 className="text-xl font-semibold text-gray-100">My Posts Lists</h2>
-        <div className="relative">
+      <div className="">
+        <h2 className="text-xl font-semibold text-gray-100 w-full">My Posts Lists</h2>
+        <div className="relative mb-6 mt-6">
           <input
             type="text"
             placeholder="Search Title..."
-            className="bg-gray-700 text-white placeholder-gray-400 rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className=" bg-gray-700 text-white placeholder-gray-400 rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             onChange={handleSearch}
             value={searchTerm}
           />
@@ -62,7 +59,10 @@ const PostTable = ({ postData }) => {
               >
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100 flex gap-2 items-center">
                   <img
-                    src="https://images.unsplash.com/photo-1627989580309-bfaf3e58af6f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8d2lyZWxlc3MlMjBlYXJidWRzfGVufDB8fDB8fHww"
+                    src={
+                      postData?.image ||
+                      "https://images.unsplash.com/photo-1627989580309-bfaf3e58af6f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8d2lyZWxlc3MlMjBlYXJidWRzfGVufDB8fDB8fHww"
+                    }
                     alt="Product img"
                     className="size-10 rounded-full"
                   />

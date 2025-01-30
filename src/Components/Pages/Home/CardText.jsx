@@ -1,7 +1,10 @@
 import { Card, CardBody, Button } from "@heroui/react";
 import React from "react";
+import { useNavigate } from "react-router";
+
 
 const CardText = () => {
+  const navigate = useNavigate()
   return (
     <Card className="rounded-lg">
       <CardBody className="space-y-5">
@@ -12,7 +15,7 @@ const CardText = () => {
           thank others. We can all work together to make this community great.
           heart
         </h1>
-        <Button color="primary" size="lg" className="rounded-lg" href="/login" variant="flat">
+        <Button color="primary" size="lg" className="rounded-lg" onPress={()=> navigate("/login")} variant="flat">
           Login
         </Button>
       </CardBody>

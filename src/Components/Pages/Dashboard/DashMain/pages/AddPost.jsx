@@ -14,6 +14,8 @@ import { AuthContext } from "../../../../Context/ContextProvider";
 import axios from "axios";
 import { Helmet } from "react-helmet-async";
 import { useNavigate } from "react-router";
+import { Button } from "@heroui/react";
+import { FaThumbsDown, FaThumbsUp } from "react-icons/fa";
 
 const image_hosting_cloud_name = import.meta.env.VITE_IMAGE_CLOUD_NAME;
 
@@ -58,15 +60,14 @@ const AddPost = () => {
   const handleChange2 = (option) => {
     setSelectedOption2(option);
   };
+// console.log(filterData);
 
   const onsubmit = async (e) => {
     await refetch();
 
     if (
       (filterData.posts.length === 5 &&
-        filterData.membershipStatus === "Bronze") ||
-      filterData.membershipStatus === "Free"
-    ) {
+        filterData.membershipStatus === "Bronze") ) {
       Swal.fire({
         title: "Buy membership!",
         text: "You reached your limit as a free user , You can only post 5 post per month",
@@ -138,9 +139,9 @@ const AddPost = () => {
   };
 
   return (
-    <div className="flex-1 overflow-auto relative z-10">
+    <div className="flex-1 overflow-auto relative z-10 h-screen">
       <Header title="Add Post" />
-      <main className="max-w-7xl mx-auto py-6 px-4 lg:px-8">
+      <main className="lg:max-w-4xl mx-auto py-6 px-4 lg:px-8">
         {/* SALES STATS */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -155,8 +156,9 @@ const AddPost = () => {
                     <img
                       src={
                         user?.photoURL ||
-                        user?.profileImage ||
-                        filterData?.profileImage
+                        filterData?.profileImage || 
+                        "https://res.cloudinary.com/dmegxaayi/image/upload/v1737414981/d1peu0xv4p0v43sfpfmt.png"
+
                       }
                       className="rounded-full w-28 h-28 object-cover"
                       alt=""
@@ -241,6 +243,16 @@ const AddPost = () => {
                     className="border-[#e5eaf2] border rounded-lg bg-white outline-none px-4 min-h-[200px] py-3 w-full focus:border-[#3B9DF8] focus:shadow-md text-gray-600"
                   />
                   <p className="text-red-600">{errorMsg2}</p>
+                </div>
+                <div className="flex flex-col gap-5 mb-5">
+                <Button size="sm" variant="solid">
+                      <FaThumbsUp className="text-blue-400" />
+                      0
+                    </Button>
+                    <Button size="sm" variant="solid">
+                      <FaThumbsDown className="text-red-400" />
+                      0
+                    </Button>
                 </div>
 
                 <div className="space-y-8 font-[sans-serif] mb-5">

@@ -225,12 +225,12 @@ export default function NavbarMenu2() {
                     key="profile1"
                     href="/dashboard/profile"
                   >
-                    My Settings
+                    My Profile
                   </DropdownItem>
                   <DropdownItem
                     textValue="ff"
                     key="overview"
-                    href="/dashboard/overview"
+                    href="/dashboard/profile"
                   >
                     Dashboard
                   </DropdownItem>

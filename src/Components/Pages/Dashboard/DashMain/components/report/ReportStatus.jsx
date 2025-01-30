@@ -26,9 +26,9 @@ const ReportStatus = ({ reportData , refetch}) => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2 }}
     >
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+      <div className="">
         <h2 className="text-xl font-semibold text-gray-100">Users</h2>
-        <div className="relative">
+        <div className="relative mt-6 mb-6">
           <input
             type="text"
             placeholder="Search Category..."

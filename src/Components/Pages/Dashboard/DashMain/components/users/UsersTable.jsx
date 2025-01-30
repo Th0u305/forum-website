@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Search } from "lucide-react";
+import { Edit, Search, Trash2 } from "lucide-react";
 import useAxiosSecureData from "../../../../../Hooks/useAxiosSecureData";
 import {
   Dropdown,
@@ -30,7 +30,7 @@ const UsersTable = () => {
   const [filteredUsers, setFilteredUsers] = useState();
   const axiosSecure = useAxiosSecure();
   const { deleteUserData, user } = useContext(AuthContext);
-  const [users,refetch] = useAxiosAdminData()  
+  const [users, refetch] = useAxiosAdminData();
 
   const {
     register,
@@ -50,7 +50,7 @@ const UsersTable = () => {
         user?.role?.toLowerCase()?.includes(term) ||
         user?.membershipStatus?.toLowerCase()?.includes(term)
     );
-    refetch()
+    refetch();
     setFilteredUsers(filtered);
   };
 
@@ -86,7 +86,12 @@ const UsersTable = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         axiosSecure
-          .patch(`/${import.meta.env.VITE_URL__15}`, { membership, role, email, id })
+          .patch(`/${import.meta.env.VITE_URL__15}`, {
+            membership,
+            role,
+            email,
+            id,
+          })
           .then(async (res) => {
             if (res.data.modifiedCount > 0) {
               Swal.fire({
@@ -101,7 +106,6 @@ const UsersTable = () => {
   };
 
   const handleDelete = async (id) => {
-
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -112,16 +116,18 @@ const UsersTable = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        axiosSecure.delete(`/${import.meta.env.VITE_URL__15}/${id}`).then((res) => {
-          if (res.status === 200) {
-            Swal.fire({
-              title: "Deleted!",
-              text: "User has been deleted",
-              icon: "success",
-            });
-            refetch();
-          }
-        });
+        axiosSecure
+          .delete(`/${import.meta.env.VITE_URL__15}/${id}`)
+          .then((res) => {
+            if (res.status === 200) {
+              Swal.fire({
+                title: "Deleted!",
+                text: "User has been deleted",
+                icon: "success",
+              });
+              refetch();
+            }
+          });
       }
     });
 
@@ -204,9 +210,9 @@ const UsersTable = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2 }}
     >
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+      <div className="">
         <h2 className="text-xl font-semibold text-gray-100">Users</h2>
-        <div className="relative">
+        <div className="relative mb-6 mt-6">
           <input
             type="text"
             placeholder="Search users..."
@@ -293,7 +299,9 @@ const UsersTable = () => {
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300 flex gap-2">
                   <Dropdown backdrop="blur" className="w-72 h-44">
                     <DropdownTrigger>
-                      <p className="cursor-pointer">Edit</p>
+                      <button className="text-indigo-400 hover:text-indigo-300 mr-2">
+                        <Edit size={18} />
+                      </button>
                     </DropdownTrigger>
                     <form onSubmit={handleSubmit(onsubmit)}>
                       <input
@@ -366,7 +374,7 @@ const UsersTable = () => {
                     className="text-red-400 hover:text-red-300"
                     onClick={() => handleDelete(user._id)}
                   >
-                    Delete
+                    <Trash2 size={18} />
                   </button>
                 </td>
               </motion.tr>

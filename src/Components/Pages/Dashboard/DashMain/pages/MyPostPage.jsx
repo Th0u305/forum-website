@@ -16,11 +16,11 @@ const MyPost = () => {
   useEffect(() => {
     axiosSecure
       .get(`/${import.meta.env.VITE_URL__31}/${user.email}`)
-      .then((res) => setPostData(res.data));
+      .then((res) => setPostData(res.data));      
   }, []);
 
   return (
-    <div className="flex-1 relative z-10 overflow-auto">
+    <div className="flex-1 relative z-10 overflow-auto h-screen">
       <Header title={"My Posts"} />
 
       <main className="max-w-7xl mx-auto py-6 px-4 lg:px-8">
@@ -28,7 +28,7 @@ const MyPost = () => {
           <PostTable postData={postData}></PostTable>
         </div>
         <motion.div
-          className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 h-1/2 gap-5"
+          className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 h-1/2 gap-5"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
@@ -61,7 +61,7 @@ const MyPost = () => {
                   <CardBody className="flex flex-row gap-5 justify-center items-center">
                     <Button size="sm" variant="flat">
                       <FaThumbsUp className="text-blue-400" />
-                      {item?.upVotes}
+                      {item?.upVotes || 0}
                     </Button>
                     <Button size="sm" variant="flat">
                       <FaThumbsDown className="text-red-400" />

@@ -12,7 +12,7 @@ const ReportComments = () => {
   refetch();
 
   return (
-    <div className="flex-1 relative z-10 bg-gray-900">
+    <div className="flex-1 relative z-10 bg-gray-900 h-screen">
       <Header title={"Reported Comments"} />
 
       <main className="max-w-7xl mx-auto py-6 px-4 lg:px-8 space-y-10">

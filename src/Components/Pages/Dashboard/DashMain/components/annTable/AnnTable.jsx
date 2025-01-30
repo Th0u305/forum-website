@@ -29,9 +29,9 @@ const AnnTable = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2 }}
     >
-      <div className="flex flex-col gap-5 md:flex-row md:gap-0 justify-between items-center mb-6">
+      <div className="">
         <h2 className="text-xl font-semibold text-gray-100">Announcement Lists</h2>
-        <div className="relative">
+        <div className="relative mt-6 mb-6">
           <input
             type="text"
             placeholder="Search Title..."

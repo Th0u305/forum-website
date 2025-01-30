@@ -131,11 +131,11 @@ const Register = () => {
   };
 
   return (
-    <div className="mt-12">
+    <div className="mt-12 md:p-8">
       <Helmet>
         <title>TopicTree | Register</title>
       </Helmet>
-      <div className="bg-white grid md:grid-cols-2 gap-16 w-full sm:p-8 p-6 shadow-md rounded-md overflow-hidden">
+      <div className="bg-white grid md:grid-cols-2 gap-16 w-full p-8 shadow-md rounded-md overflow-hidden">
         <div className="max-md:order-1 space-y-6">
           <div className="md:mb-16 mb-8">
             <h3 className="text-gray-800 text-4xl font-bold">Login With</h3>

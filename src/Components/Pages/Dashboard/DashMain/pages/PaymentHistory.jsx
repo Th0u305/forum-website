@@ -24,7 +24,7 @@ const PaymentHistory = () => {
   };
 
   return (
-    <div className=" relative z-10  bg-gray-900">
+    <div className=" relative z-10  bg-gray-900 h-screen">
       <Header title={"Payment History"} />
 
       <main className="max-w-7xl mx-auto py-6 px-4 lg:px-8 h-screen space-y-10 flex w-full justify-center items-center">
@@ -34,9 +34,9 @@ const PaymentHistory = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-            <h2 className="text-xl font-semibold text-gray-100">History</h2>
-            <div className="relative">
+          <div className="">
+            <h2 className="text-xl font-semibold text-gray-100">Payments History</h2>
+            <div className="relative mb-6 mt-6">
               <input
                 type="text"
                 placeholder="Search Category..."
