@@ -107,7 +107,7 @@ const SinglePost = () => {
       refetch,
       setSearchData
     );
-    LoadComments(axiosPublic, id, setSearchData, setSingleData, params);
+    LoadComments(axiosPublic, id+1, setSearchData, setSingleData, params);
   };
 
   refetch();
@@ -178,8 +178,8 @@ const SinglePost = () => {
             <CardBody className="overflow-visible py-2">
               <Image
                 alt="Card background"
-                className="object-cover rounded-lg"
-                src={item.image}
+                className="object-cover md:w-screen rounded-lg cursor-pointer"
+                src={item?.image}
                 // width={700}
               />
               <CardBody className="grid grid-cols-4 grid-rows-1 p-0 mt-7 gap-5 md:grid-cols-5">
