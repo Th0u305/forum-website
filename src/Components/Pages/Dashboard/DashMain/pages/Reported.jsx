@@ -10,7 +10,7 @@ const Reported = () => {
   refetch();
 
   return (
-    <div className="flex-1 relative z-10 bg-gray-900 h-screen">
+    <div className="flex-1 relative z-10 bg-gray-900 h-screen overflow-auto">
       <Header title={"Reported Posts"} />
 
       <main className="max-w-7xl mx-auto py-6 px-4 lg:px-8 space-y-10">

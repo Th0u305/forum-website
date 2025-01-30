@@ -24,12 +24,11 @@ const PaymentHistory = () => {
   };
 
   return (
-    <div className=" relative z-10  bg-gray-900 h-screen">
+    <div className="relative z-10 bg-gray-900 h-screen overflow-auto">
       <Header title={"Payment History"} />
 
-      <main className="max-w-7xl mx-auto py-6 px-4 lg:px-8 h-screen space-y-10 flex w-full justify-center items-center">
         <motion.div
-          className="bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-lg p-6 border border-gray-700 w-full"
+          className="bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-lg p-6 border border-gray-700 max-w-7xl mx-auto mt-6 mb-6"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
@@ -129,7 +128,6 @@ const PaymentHistory = () => {
             </table>
           </div>
         </motion.div>
-      </main>
     </div>
   );
 };
