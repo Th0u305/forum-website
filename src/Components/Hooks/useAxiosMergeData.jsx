@@ -6,7 +6,7 @@ const useAxiosMergeData = () => {
     const { data : mergedData = [],refetch} = useQuery({
         queryKey : ["mergedAllData"],
         queryFn : async ()=>{
-            const res = await axiosPublic.get("/mergedAllData")
+            const res = await axiosPublic.get(`/${import.meta.env.VITE_URL__8}`)
             return res.data;
         }
     })

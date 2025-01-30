@@ -16,7 +16,7 @@ const AddComments = async (e, postId, users, user, comments, axiosSecure, refetc
       name: filterUser?.username || user?.displayName,
     };
 
-    axiosSecure.post("/addComments", { data }).then((res) => {
+    axiosSecure.post(`/${import.meta.env.VITE_URL__30}`, { data }).then((res) => {
       if (res.data.addCommentsId.modifiedCount > 0) {
         toast.success("Successful");
         refetch();

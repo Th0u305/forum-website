@@ -2,7 +2,7 @@ import toast from "react-hot-toast";
 
 const LoadComments = async (axiosPublic, id, setSearchData, setSingleData, params) => {
   await axiosPublic
-    .get(`/mergedAllData?loadComment=${id}`)
+    .get(`/${import.meta.env.VITE_URL__8}?loadComment=${id}`)
     .then(async (res) => {
       if (res.data) {
         await setSearchData(res.data);

@@ -6,7 +6,7 @@ const useAxiosTags =()=>{
     const {refetch, data : tags = []} = useQuery({
         queryKey : ["tags"],
         queryFn :  async ()=>{
-            const res = await axiosPublic.get('/tags')
+            const res = await axiosPublic.get(`/${import.meta.env.VITE_URL__4}`)
             return res.data;
         }
     })

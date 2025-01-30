@@ -6,7 +6,7 @@ const useAxiosPaymentHist =()=>{
     const {data : history = [], refetch} = useQuery({
         queryKey : ["history"],
         queryFn :  async ()=>{
-            const res = await axiosSecure.get('/paymentHistories')
+            const res = await axiosSecure.get(`/${import.meta.env.VITE_URL__29}`)
             return res.data;
         }
     })

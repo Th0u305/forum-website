@@ -6,7 +6,7 @@ const useAxiosUsers =()=>{
     const {refetch : userFetch , data : users = []} = useQuery({
         queryKey : ["users"],
         queryFn :  async ()=>{
-            const res = await axiosPublic.get('/users')
+            const res = await axiosPublic.get(`/${import.meta.env.VITE_URL__6}`)
             return res.data;
         }
     })

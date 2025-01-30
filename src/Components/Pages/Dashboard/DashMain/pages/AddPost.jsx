@@ -79,62 +79,62 @@ const AddPost = () => {
       });
       return;
     }
-    // if (e.postTitle.length < 5) {
-    //   return setErrorMsg("Please write more than 5 words");
-    // } else {
-    //   setErrorMsg("");
-    // }
+    if (e.postTitle.length < 5) {
+      return setErrorMsg("Please write more than 5 words");
+    } else {
+      setErrorMsg("");
+    }
 
-    // if (e.postDetails.length < 10) {
-    //   return setErrorMsg2("Please write more than 10 words");
-    // } else {
-    //   setErrorMsg2("");
-    // }
-    // await refetch();
+    if (e.postDetails.length < 10) {
+      return setErrorMsg2("Please write more than 10 words");
+    } else {
+      setErrorMsg2("");
+    }
+    await refetch();
 
-    // const result = await selectedOption?.map(({ label }) => label);
+    const result = await selectedOption?.map(({ label }) => label);
 
-    // Swal.fire({
-    //   position: "center",
-    //   icon: "warning",
-    //   title: "Creating your post",
-    //   showConfirmButton: false,
-    //   timer: 3000,
-    // });
+    Swal.fire({
+      position: "center",
+      icon: "warning",
+      title: "Creating your post",
+      showConfirmButton: false,
+      timer: 3000,
+    });
 
-    // const formData = new FormData();
-    // formData.append("file", e.photo[0]);
-    // formData.append("upload_preset", "formProject");
+    const formData = new FormData();
+    formData.append("file", e.photo[0]);
+    formData.append("upload_preset", "formProject");
 
-    // const result2 = await axios.post(
-    //   `https://api.cloudinary.com/v1_1/${image_hosting_cloud_name}/image/upload`,
-    //   formData
-    // );
+    const result2 = await axios.post(
+      `https://api.cloudinary.com/v1_1/${image_hosting_cloud_name}/image/upload`,
+      formData
+    );
 
-    // const data = {
-    //   id: users?.postTotal + 1,
-    //   authorId: filterData?.id,
-    //   title: e?.postTitle,
-    //   description: e?.postDetails,
-    //   tags: result,
-    //   upVotes: null,
-    //   downVotes: null,
-    //   comments: [],
-    //   category: selectedOption2?.label,
-    //   createdAt: Date(),
-    //   image: result2.data.url,
-    // };
+    const data = {
+      id: users?.postTotal + 1,
+      authorId: filterData?.id,
+      title: e?.postTitle,
+      description: e?.postDetails,
+      tags: result,
+      upVotes: null,
+      downVotes: null,
+      comments: [],
+      category: selectedOption2?.label,
+      createdAt: Date(),
+      image: result2.data.url,
+    };
 
-    // axiosSecure.post("/addPosts", { data }).then((res) => {
-    //   if (res.status === 200) {
-    //     Swal.fire({
-    //       title: "Post Added",
-    //       icon: "success",
-    //       draggable: false,
-    //     });
-    //     reset();
-    //   }
-    // });
+    axiosSecure.post(`/${import.meta.env.VITE_URL__17}`, { data }).then((res) => {
+      if (res.status === 200) {
+        Swal.fire({
+          title: "Post Added",
+          icon: "success",
+          draggable: false,
+        });
+        reset();
+      }
+    });
   };
 
   return (

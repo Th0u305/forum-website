@@ -86,7 +86,7 @@ const UsersTable = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         axiosSecure
-          .patch("/adminPriv", { membership, role, email, id })
+          .patch(`/${import.meta.env.VITE_URL__15}`, { membership, role, email, id })
           .then(async (res) => {
             if (res.data.modifiedCount > 0) {
               Swal.fire({
@@ -112,7 +112,7 @@ const UsersTable = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        axiosSecure.delete(`/adminPriv/${id}`).then((res) => {
+        axiosSecure.delete(`/${import.meta.env.VITE_URL__15}/${id}`).then((res) => {
           if (res.status === 200) {
             Swal.fire({
               title: "Deleted!",

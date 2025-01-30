@@ -93,7 +93,7 @@ export default function NavbarMenu2() {
 
   const handleSearch = (data) => {
     axiosPublic
-      .get(`/mergedAllData?filter=${data}`)
+      .get(`/${import.meta.env.VITE_URL__8}/?filter=${data}`)
       .then((res) => {
         setSearchData(res.data);
         refetch()
@@ -209,7 +209,7 @@ export default function NavbarMenu2() {
                     <p className="font-semibold inline-flex">
                      {user &&  <FaMedal
                         className={`${
-                          badgeColors[filterUser?.badge[0] || "Platinum"] ||
+                          badgeColors[filterUser?.badge || "Bronze"] ||
                           "text-gray-500"
                         } text-2xl mr-4 mb-2`}
                       ></FaMedal>}

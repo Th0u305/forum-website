@@ -6,7 +6,7 @@ const useAxiosMergeReport = () => {
     const { data : reportData = [],refetch} = useQuery({
         queryKey : ["mergedReportData"],
         queryFn : async ()=>{
-            const res = await axiosSecure.get("/reportsData")
+            const res = await axiosSecure.get(`/${import.meta.env.VITE_URL__24}`)
             return res.data;
         }
     })

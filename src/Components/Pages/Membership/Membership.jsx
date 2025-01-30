@@ -5,6 +5,8 @@ import { Button } from "@heroui/react";
 import { useNavigate } from "react-router";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import { Helmet } from "react-helmet-async";
+import useAxiosSecureData from "../../Hooks/useAxiosSecureData";
+import Swal from "sweetalert2";
 
 const tiers = [
   {
@@ -81,15 +83,26 @@ function classNames(...classes) {
 export default function Membership() {
   const navigate = useNavigate();
   const axiosSecure = useAxiosSecure();
-  const { setMoney, setMembershipName } = useContext(AuthContext);
+  const [users] = useAxiosSecureData();
+  const { setMoney, setMembershipName, user } = useContext(AuthContext);
+  const filtered = users?.users?.find((item) => item?.email === user?.email);
 
   const handlePayment = async (id, name) => {
+    
+    if (filtered?.membershipStatus !== "Free" || filtered?.badge[0] !== "Bronze") {
+      return  Swal.fire({
+        icon: "error",
+        title: "You're already a member",
+      });
+    }
+
     if (name === "Bronze") {
       return navigate("#");
     }
-    const result = await axiosSecure.get("/getRandUUid");
 
-    axiosSecure.post(`/paymentsUuidRand/${result.data}`).then((res) => {
+    const result = await axiosSecure.get(`/${import.meta.env.VITE_URL__25}`);
+
+    axiosSecure.post(`/${import.meta.env.VITE_URL__32}/${result.data}`).then((res) => {
       if (res.data) {
         setMoney(parseInt(id));
         setMembershipName(name);

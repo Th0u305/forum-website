@@ -46,7 +46,7 @@ const Register = () => {
         photo: result.user.photoURL,
       };
 
-      axiosPublic.post("/addUser", userInfo);
+      axiosPublic.post(`/${import.meta.env.VITE_URL__10}`, userInfo);
 
       toast.success("Successfully Logged in");
 

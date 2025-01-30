@@ -57,7 +57,7 @@ const Announcement = () => {
       image: result.data.url,
     };
 
-    axiosSecure.post("/announcement", { data }).then((res) => {
+    axiosSecure.post(`/${import.meta.env.VITE_URL__18}`, { data }).then((res) => {
       if (res.status === 200) {
         Swal.fire({
           title: "Announcement Added",

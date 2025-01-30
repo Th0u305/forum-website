@@ -66,7 +66,7 @@ export default function Middle() {
     setSelectedOption3(option);
 
     axiosPublic
-      .post(`/posts/popularity?filter=${option.label}`)
+      .post(`${import.meta.env.VITE_URL__9}?filter=${option.label}`)
       .then((res) => {
         setSearchData(res.data);
       })
@@ -78,7 +78,7 @@ export default function Middle() {
   useEffect(() => {
     axiosPublic
       .get(
-        `/mergedAllData?filter=${
+        `/${import.meta.env.VITE_URL__8}?filter=${
           selectedOption?.label || selectedOption2?.label
         }`
       )

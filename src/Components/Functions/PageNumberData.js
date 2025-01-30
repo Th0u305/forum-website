@@ -1,7 +1,7 @@
 
 const PageNumberData = (id, axiosPublic, setSearchData) => {
     axiosPublic
-      .get(`/mergedAllData?page=${id}`)
+      .get(`/${import.meta.env.VITE_URL__8}?page=${id}`)
       .then((res) => {
         setSearchData(res.data);
       })

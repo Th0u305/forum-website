@@ -6,7 +6,7 @@ const useAxiosComments =()=>{
     const {refetch : commentRefetch, data : comments = []} = useQuery({
         queryKey : ["comments"],
         queryFn :  async ()=>{
-            const res = await axiosPublic.get('/comments')
+            const res = await axiosPublic.get(`/${import.meta.env.VITE_URL__7}`)
             return res.data;
         }
     })

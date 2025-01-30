@@ -15,7 +15,7 @@ const MyPost = () => {
 
   useEffect(() => {
     axiosSecure
-      .get(`/myPost/${user.email}`)
+      .get(`/${import.meta.env.VITE_URL__31}/${user.email}`)
       .then((res) => setPostData(res.data));
   }, []);
 

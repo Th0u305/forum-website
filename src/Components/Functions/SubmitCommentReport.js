@@ -61,7 +61,7 @@ const SubmitCommentReport = async (user, users, commentData, axiosSecure) => {
     reportOption: optionValue,
   };
 
-  axiosSecure.post("/commentReport", {data}).then((res) => {        
+  axiosSecure.post(`/${import.meta.env.VITE_URL__22}`, {data}).then((res) => {        
     if (res.status === 200) {
       Swal.fire({
         title: "Your report has bean submitted",

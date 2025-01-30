@@ -7,7 +7,7 @@ const useAxiosAnn = () => {
     const {data : ann = [], refetch} = useQuery({
         queryKey : ["getAnn"],
         queryFn :  async ()=>{
-            const res = await axiosPublic.get('/getAnn')
+            const res = await axiosPublic.get(`/${import.meta.env.VITE_URL__19}`)
             return res.data;
         }
     })

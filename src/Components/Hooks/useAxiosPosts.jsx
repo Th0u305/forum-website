@@ -7,7 +7,7 @@ const useAxiosPosts =()=>{
     const {refetch, data : posts = []} = useQuery({
         queryKey : ["posts"],
         queryFn :  async ()=>{
-            const res = await axiosPublic.get('/posts')
+            const res = await axiosPublic.get(`/${import.meta.env.VITE_URL__5}`)
             return res.data;
         }
     })

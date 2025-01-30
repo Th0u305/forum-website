@@ -12,7 +12,7 @@ const AddLikes = (user, data, id, axiosSecure, refetch, userFetch, commentRefetc
     id: id,
   };
 
-  axiosSecure.patch("/updateLikes", { filter }).then((res) => {
+  axiosSecure.patch(`/${import.meta.env.VITE_URL__20}`, { filter }).then((res) => {
     if (res.data.modifiedCount > 0) {
       refetch();
       userFetch();

@@ -66,7 +66,7 @@ const SinglePost = () => {
   };
 
   useEffect(() => {
-    axiosPublic.get(`/mergedAllData?allData=allData`).then((res) => {
+    axiosPublic.get(`/${import.meta.env.VITE_URL__8}?allData=allData`).then((res) => {
       setSingleData(res.data.filter((item) => item._id === params.id));
     });
   }, []);

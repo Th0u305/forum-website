@@ -8,7 +8,7 @@ const useAxiosAdminData = () => {
     const {data : users = [] , refetch} = useQuery({
         queryKey : ["users"],
         queryFn : async () =>{
-            const res = await axiosSecure.get("/getDataAdmin") 
+            const res = await axiosSecure.get(`/${import.meta.env.VITE_URL__14}`) 
             return res.data
         }
     })

@@ -46,11 +46,11 @@ console.log();
         if (currentUser?.email) {
           setLoading(false);
           setUser(currentUser);
-          const { data } = await axios.post( `${import.meta.env.VITE_API_URL}/jwt`,{ email: currentUser?.email },{ withCredentials: true });
+          const { data } = await axios.post( `${import.meta.env.VITE_API_URL}/${import.meta.env.VITE_URL__1}`,{ email: currentUser?.email },{ withCredentials: true });
         } else {
           setLoading(false);
           setUser(currentUser);
-          const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/logout`,{ withCredentials: true }
+          const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/${import.meta.env.VITE_URL__2}`,{ withCredentials: true }
           );
         }
       }

@@ -11,7 +11,7 @@ const DeleteComment = (user, id, index, post_id, axiosSecure,refetch,userFetch, 
     toast.error("You're not logged in");
   }
 
-  axiosSecure.delete(`/deleteComment/${id}`, { data }).then((res) => {
+  axiosSecure.delete(`/${import.meta.env.VITE_URL__23}/${id}`, { data }).then((res) => {
     if (res.data.result.deletedCount === 1 && res.data.pullResult) {
       Swal.fire({
         title: "Deleted!",

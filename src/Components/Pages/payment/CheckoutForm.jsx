@@ -33,7 +33,7 @@ const CheckoutForm = () => {
   useEffect(() => {
     const result = pathname.split("/")[2];
 
-    axiosSecure.post(`/paymentsUuidRand/${result}`).then((res) => {
+    axiosSecure.post(`/${import.meta.env.VITE_URL__32}/${result}`).then((res) => {
       if (!res.data) {
         toast.error("Operation Not Allowed");
         navigate("/");
@@ -69,7 +69,7 @@ const CheckoutForm = () => {
   useEffect(() => {
     if (money > 0) {
       axiosSecure
-        .post("/create-payment-intent", { price: money })
+        .post(`/${import.meta.env.VITE_URL__27}`, { price: money })
         .then((res) => {
           setClientSecret(res.data.clientSecret);
         });
@@ -129,8 +129,10 @@ const CheckoutForm = () => {
           userAddress: e.address,
         };
 
-        axiosSecure.post("/paymentsData", payment).then((res) => {
-          if (res.data?.insertedId) {
+        axiosSecure.post(`/paymentsData/${filtered._id}`, payment).then((res) => {
+          console.log(res.data.result.insertedId);
+          
+          if (res.data.result.insertedId.length > 0) {
             Swal.fire({
               position: "center",
               icon: "success",
@@ -139,6 +141,7 @@ const CheckoutForm = () => {
               timer: 1500,
             });
             navigate("/");
+            reset()
           }
         });
       }
