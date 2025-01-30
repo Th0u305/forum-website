@@ -3,6 +3,10 @@ import toast from 'react-hot-toast';
 const AddComments = async (e, postId, users, user, comments, axiosSecure, refetch, setSearchData) => {
     e.preventDefault();
 
+    if (!user && !user?.email) {
+      return toast.error("You're not logged in")
+    }
+
     const filterUser = await users?.find((item) => item?.email === user?.email);
     const comment = e.target.comment.value;
 
