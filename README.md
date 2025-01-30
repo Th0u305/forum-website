@@ -1,8 +1,16 @@
 <h1 align="center" id="title">TopicTree</h1>
 <br/>
-<p id="description">  "Simple forum website"</p>
+<p id="description"> Introducing TopicTree, a simple discussion platform that enables users to engage with each other in a variety of ways. Our platform is similar to popular sites like Reddit and Quora, but with a range of unique features that set us apart.
+
+This platform is designed to promote engagement and collaboration among users, with a wide range of community management features that enable users to create, subscribe to, and interact with communities on a variety of topics. We also provide a range of features to make it easy for users to create and view posts, including options for images, voting, and sharing.
+
+In addition, this website provide a robust set of user authentication and account management features, ensuring that our users have a seamless and secure experience. Users can sign up using email and password or third-party authentication providers such as Google and GitHub, log in and out, reset their password, and modify their profiles.
+
+Our platform is also designed to be user-friendly and accessible, with a responsive UI that can be used on smartphones, tablets, or computers. Whether you're an experienced user or just getting started, Circus has everything you need to engage with others and explore new ideas.
+
+e</p>
 <br/>
-<h1>😊Live Link:</h1>
+<h1>😊Live Link: https://forum-website-pi.vercel.app/</h1>
 
 <h3>/</h3>
 
