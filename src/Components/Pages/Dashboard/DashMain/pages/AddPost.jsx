@@ -141,7 +141,7 @@ const AddPost = () => {
   return (
     <div className="flex-1 overflow-auto relative z-10 h-screen">
       <Header title="Add Post" />
-      <main className="lg:max-w-4xl mx-auto py-6 px-4 lg:px-8">
+      <main className="lg:max-w-4xl mx-auto py-6 px-4 lg:px-8 mt-16">
         {/* SALES STATS */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

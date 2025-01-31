@@ -23,7 +23,7 @@ const MyPost = () => {
     <div className="flex-1 relative z-10 overflow-auto h-screen">
       <Header title={"My Posts"} />
 
-      <main className="max-w-7xl mx-auto py-6 px-4 lg:px-8">
+      <main className="max-w-7xl mx-auto py-6 px-4 lg:px-8 mt-16">
         <div>
           <PostTable postData={postData}></PostTable>
         </div>

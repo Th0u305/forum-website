@@ -12,9 +12,7 @@ function DashboardRoot() {
   }, [pathname]);
   return (
     <div className="bg-gray-900 text-gray-100 overflow-hidden">
-      <div className="ml-10 xl:ml-0">
         <Outlet></Outlet>
-      </div>
     </div>
   );
 }

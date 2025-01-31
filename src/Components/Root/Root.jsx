@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { HelmetProvider } from "react-helmet-async";
 import "./spinner.css";
 import ContextProvider from "../Context/ContextProvider";
+import useAxiosMergeData from "../Hooks/useAxiosMergeData";
 
 const Root = () => {
   const { pathname } = useLocation();
@@ -16,14 +17,15 @@ const Root = () => {
   }, [pathname]);
 
   const [loading, setLoading] = useState(false);
+  const [mergedData] = useAxiosMergeData()
 
   setTimeout(() => {
     setLoading(true);
-  }, 2000);
+  }, 1000);
 
   return (
     <section className="max-w-7xl mx-auto p-5">
-      {loading ? (
+      {mergedData.length > 0 && loading ? (
         <ContextProvider>
           <HelmetProvider>
             <Toaster position="bottom-center" reverseOrder={false} />

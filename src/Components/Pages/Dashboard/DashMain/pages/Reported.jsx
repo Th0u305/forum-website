@@ -13,7 +13,7 @@ const Reported = () => {
     <div className="flex-1 relative z-10 bg-gray-900 h-screen overflow-auto">
       <Header title={"Reported Posts"} />
 
-      <main className="max-w-7xl mx-auto py-6 px-4 lg:px-8 space-y-10">
+      <main className="max-w-7xl mx-auto py-6 px-4 lg:px-8 space-y-10 mt-16">
         <ReportStatus reportData={reportData} refetch={refetch}></ReportStatus>
         <motion.div
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 h-full gap-5"

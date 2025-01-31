@@ -108,7 +108,7 @@ export default function NavbarMenu2() {
       {isNavbar && (
         <Navbar
           isBlurred={false}
-          className="bg-[#19191c] h-20 rounded-lg z-50"
+          className="bg-[#19191c] h-20 rounded-lg z-50 border border-gray-600"
         >
           <NavbarContent className="md:hidden" justify="start">
             <NavbarMenuToggle />
@@ -265,7 +265,7 @@ export default function NavbarMenu2() {
             </NavbarContent>
           </NavbarContent>
 
-          <NavbarMenu className="pt-28">
+          <NavbarMenu className="mt-12 z-50">
             <Input
             onChange={(e) => handleSearch(e.target.value)}
               classNames={{
