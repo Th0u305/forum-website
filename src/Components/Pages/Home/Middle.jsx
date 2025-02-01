@@ -1,313 +1,171 @@
-import useAxiosCategory from "../../Hooks/useAxiosCategory";
-import useAxiosTags from "../../Hooks/useAxiosTags";
-import React, { useContext, useEffect, useState } from "react";
-import Select from "react-select";
+import React, { useContext } from "react";
+import "animate.css";
 import {
-  Accordion,
-  AccordionItem,
   Button,
   Card,
+  CardBody,
   Dropdown,
   DropdownItem,
   DropdownMenu,
+  DropdownSection,
   DropdownTrigger,
-  Tab,
-  Tabs,
+  Image,
 } from "@heroui/react";
-import { Outlet, useLocation } from "react-router";
-import useAxiosPublic from "../../Hooks/useAxiosPublic";
+import { Outlet } from "react-router";
 import { AuthContext } from "../../Context/ContextProvider";
 import FiltersCard from "./FiltersCard";
-import AnnText from "./AnnText";
+import FiltersCards2 from "./FiltersCards2";
+import {
+  FaEnvelopeOpen,
+  FaFlag,
+  FaImage,
+  FaListUl,
+  FaPaperPlane,
+  FaPoll,
+  FaQuestion,
+  FaRegCalendarMinus,
+  FaRegLifeRing,
+  FaRegSave,
+  FaSmileWink,
+  FaVideo,
+} from "react-icons/fa";
+import { Ellipsis, HelpCircle } from "lucide-react";
+import Swal from "sweetalert2";
+import { FaDeleteLeft } from "react-icons/fa6";
 
 export default function Middle() {
-  const [tags] = useAxiosTags();
-  const [category] = useAxiosCategory();
-  const { pathname } = useLocation();
-  const axiosPublic = useAxiosPublic();
-  const { setSearchData } = useContext(AuthContext);
-  const [selectedOption, setSelectedOption] = useState(null);
-  const [selectedOption2, setSelectedOption2] = useState(null);
-  const [selectedOption3, setSelectedOption3] = useState(null);
+  const { user } = useContext(AuthContext);
 
-  // const filterUser = users?.users?.find((item) => item?.email === user?.email);
+  const showPopUp = () => {
+    Swal.fire({
+      title: "Upload your file",
+      input: "textarea",
+      inputPlaceholder: "Share your thoughts ...",
 
-  const options = tags.map((item) => ({
-    value: item._id,
-    label: item.tags,
-  }));
-  const options2 = category.map((item) => ({
-    value: item._id,
-    label: item.category,
-  }));
-
-  const options3 = [
-    { value: "chocolate", label: "Popularity " },
-    { value: "strawberry", label: "Disliked" },
-  ];
-
-  let tabs = [
-    {
-      id: "Latest",
-      label: "Latest",
-      href: "latest",
-    },
-    {
-      id: "Top",
-      label: "",
-      href: "#",
-    },
-    {
-      id: "Top1",
-      label: "Top",
-      href: "top",
-    },
-  ];
-
-  // Handle selection change
-  const handleChange = (option) => {
-    setSelectedOption(option);
+      showClass: {
+        popup: `
+          animate__animated
+          animate__fadeInUp
+          animate__faster
+        `,
+      },
+      hideClass: {
+        popup: `
+          animate__animated
+          animate__fadeOutDown
+          animate__faster
+        `,
+      },
+      html: `
+          <div>
+            <div
+              class="relative h-48 rounded-lg border-2 border-blue-500 bg-gray-50 flex justify-center items-center"
+            >
+              <div class="absolute flex flex-col items-center">
+                <img
+                  alt="File Icon"
+                  class="mb-3"
+                  src="https://img.icons8.com/dusk/64/000000/file.png"
+                />
+                <span class="block text-gray-500 font-semibold"
+                  >Drag &amp; drop your files here</span
+                >
+                <span class="block text-gray-400 font-normal mt-1"
+                  >or click to upload</span
+                >
+              </div>
+          
+              <input
+                name=""
+                class="h-full w-full opacity-0 cursor-pointer"
+                type="file"
+              />
+            </div>
+          </div>
+        `,
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Submit",
+    });
   };
-
-  const handleChange2 = (option) => {
-    setSelectedOption2(option);
-  };
-
-  const handleChange3 = (option) => {
-    setSelectedOption3(option);
-
-    axiosPublic
-      .post(`${import.meta.env.VITE_URL__9}?filter=${option.label}`)
-      .then((res) => {
-        setSearchData(res.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  };
-
-  useEffect(() => {
-    axiosPublic
-      .get(
-        `/${import.meta.env.VITE_URL__8}?filter=${
-          selectedOption?.label || selectedOption2?.label
-        }`
-      )
-      .then((res) => {
-        setSearchData(res.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  }, [selectedOption, selectedOption2]);
-
   return (
     <div className="space-y-5">
       <Card className="hidden sm:grid sm:grid-cols-2 rounded-lg justify-items-center content-center gap-5 md:grid-cols-4 overflow-visible p-4">
         <FiltersCard></FiltersCard>
       </Card>
       <div className="space-y-5 sm:hidden">
-        <Accordion variant="shadow">
-          <AccordionItem key="1" aria-label="Filters" title="Filters">
-            <div className="z-50 rounded-lg grid grid-cols-1 content-start gap-5 md:grid-cols-4 overflow-visible xl:justify-items-start">
-              <div className="w-fit z-40 md:col-span-2 mx-auto">
-                <Select
-                  options={options2} // Pass custom options
-                  value={selectedOption2} // Bind selected value
-                  onChange={handleChange2} // Handle change
-                  placeholder="Search Category"
-                  isSearchable // Enable search functionality
-                  menuPosition="fixed"
-                  styles={{
-                    control: (base) => ({
-                      ...base,
-                      backgroundColor: "inherit",
-                      color: "inherit",
-                      border: "2px solid gray",
-                      borderRadius: "0.5rem", // rounded-lg equivalent
-                      boxShadow: "none",
-                      transition: "all 0.3s ease", // Smooth transition for focus and hover
-                      width: "11.5rem",
-                      cursor: "pointer",
-                    }),
-                    option: (base, { isFocused, isSelected }) => ({
-                      ...base,
-                      backgroundColor: isFocused ? "inherit" : "white",
-                      color: isFocused ? "#007bff" : "black",
-                      textAlign: "left",
-                      transition: "all 0.3s ease", // Smooth hover effect
-                      cursor: "pointer",
-                    }),
-                    menu: (base) => ({
-                      ...base,
-                      borderRadius: "0.5rem", // rounded-lg equivalent for dropdown
-                      border: "1px solid gray",
-                      overflow: "hidden", // Prevents border-radius from being overridden
-                      transition: "opacity 0.3s ease, transform 0.3s ease", // Smooth open/close effect
-                      opacity: 1,
-                      transform: "scaleY(1)",
-                      height: "12rem",
-                    }),
-                    menuList: (base) => ({
-                      ...base,
-                      padding: 0, // Optional: clean padding inside menu
-                    }),
-                    singleValue: (base) => ({
-                      ...base,
-                      color: "inherit",
-                    }),
-                    input: (base) => ({
-                      ...base,
-                      color: "revert", // Set search input text color to white
-                    }),
-                  }}
-                />
-              </div>
-
-              <div className="z-30 md:col-span-2 mx-auto">
-                <Select
-                  options={options} // Pass custom options
-                  value={selectedOption} // Bind selected value
-                  onChange={handleChange} // Handle change
-                  placeholder="Search Tags"
-                  isSearchable // Enable search functionality
-                  styles={{
-                    control: (base) => ({
-                      ...base,
-                      backgroundColor: "inherit",
-                      color: "inherit",
-                      border: "2px solid gray",
-                      borderRadius: "0.5rem", // rounded-lg equivalent
-                      boxShadow: "none",
-                      transition: "all 0.3s ease", // Smooth transition for focus and hover
-                      width: "11.6rem",
-                      cursor: "pointer",
-                    }),
-                    option: (base, { isFocused, isSelected }) => ({
-                      ...base,
-                      backgroundColor: isFocused ? "inherit" : "white",
-                      color: isFocused ? "#007bff" : "black",
-                      textAlign: "left",
-                      transition: "all 0.3s ease", // Smooth hover effect
-                      cursor: "pointer",
-                    }),
-                    menu: (base) => ({
-                      ...base,
-                      borderRadius: "0.5rem", // rounded-lg equivalent for dropdown
-                      border: "1px solid gray",
-                      overflow: "hidden", // Prevents border-radius from being overridden
-                      transition: "opacity 0.3s ease, transform 0.3s ease", // Smooth open/close effect
-                      opacity: 1,
-                      transform: "scaleY(1)",
-                      height: "8rem",
-                    }),
-                    menuList: (base) => ({
-                      ...base,
-                      padding: 0, // Optional: clean padding inside menu
-                    }),
-                    singleValue: (base) => ({
-                      ...base,
-                      color: "inherit",
-                    }),
-                    input: (base) => ({
-                      ...base,
-                      color: "revert", // Set search input text color to white
-                    }),
-                  }}
-                />
-              </div>
-
-              <div className="md:col-span-2 z-20 mx-auto">
-                <Select
-                  options={options3} // Pass custom options
-                  value={selectedOption3} // Bind selected value
-                  onChange={handleChange3} // Handle change
-                  styles={{
-                    control: (base) => ({
-                      ...base,
-                      backgroundColor: "inherit",
-                      color: "inherit",
-                      border: "2px solid gray",
-                      borderRadius: "0.5rem", // rounded-lg equivalent
-                      boxShadow: "none",
-                      transition: "all 0.3s ease", // Smooth transition for focus and hover
-                      width: "11.5rem",
-                      cursor: "pointer",
-                    }),
-                    option: (base, { isFocused, isSelected }) => ({
-                      ...base,
-                      backgroundColor: isFocused ? "inherit" : "white",
-                      color: isFocused ? "#007bff" : "black",
-                      textAlign: "left",
-                      transition: "all 0.3s ease", // Smooth hover effect
-                      cursor: "pointer",
-                    }),
-                    menu: (base) => ({
-                      ...base,
-                      borderRadius: "0.5rem", // rounded-lg equivalent for dropdown
-                      border: "1px solid gray",
-                      overflow: "hidden", // Prevents border-radius from being overridden
-                      transition: "opacity 0.3s ease, transform 0.3s ease", // Smooth open/close effect
-                      opacity: 1,
-                      transform: "scaleY(1)",
-                    }),
-                    menuList: (base) => ({
-                      ...base,
-                      padding: 0, // Optional: clean padding inside menu
-                    }),
-                    singleValue: (base) => ({
-                      ...base,
-                      color: "inherit",
-                    }),
-                    input: (base) => ({
-                      ...base,
-                      color: "revert", // Set search input text color to white
-                    }),
-                  }}
-                />
-              </div>
-
-              <div className="w-[11.5rem] xl:mt-0 border-[2px] mx-auto border-gray-400 rounded-lg md:col-span-2 h-10">
-                <Tabs
-                  items={tabs}
-                  selectedKey={pathname}
-                  aria-label="Tabs variants"
-                  variant="underlined"
-                  className="w-full gap-5"
-                >
-                  {(item) => (
-                    <Tab
-                      key={item.id}
-                      title={item.label}
-                      href={`/${item.href}`}
-                    ></Tab>
-                  )}
-                </Tabs>
-              </div>
-            </div>
-          </AccordionItem>
-        </Accordion>
+        <FiltersCards2 />
       </div>
 
-      {/* <Card>
-        <CardBody>
-          <CardBody className="flex flex-row gap-5">
-            <Image
-              alt="Card background"
-              className="rounded-full w-12 h-12 object-cover"
-              src={user?.photoURL}
+      <Card>
+        <form
+          className="flex flex-row gap-2 px-5 mt-4"
+          onSubmit={(e) => e.preventDefault()}
+        >
+          <Image
+            alt="Card background"
+            className="rounded-full w-8 h-8 object-cover"
+            src={
+              user?.photoURL ||
+              user?.image ||
+              "https://res.cloudinary.com/dmegxaayi/image/upload/v1737414981/d1peu0xv4p0v43sfpfmt.png"
+            }
+          />
+          <CardBody className="bg-[#262629] w-1 relative rounded-r-lg rounded-bl-lg">
+            <textarea
+              required
+              name="comment"
+              className="bg-inherit text-blue-300 placeholder:text-blue-300 resize-none w-[85%] border-none focus:border-none active:border-none outline-none"
+              rows={1}
+              placeholder="Share your thoughts . . . ."
             />
-            <Textarea
-              isClearable
-              className="max-w-xs border-none"
-              placeholder="Share your thoughts..."
-            />
+            <button type="submit">
+              <FaPaperPlane className="absolute z-20 right-5 top-4 text-xl cursor-pointer active:scale-90 ease-in-out duration-200"></FaPaperPlane>
+            </button>
           </CardBody>
-          <CardBody>
-            
-          </CardBody>
+        </form>
+        <CardBody className="w-[78%] sm:w-[75%] md:w-[80%] xl:w-[85%] flex flex-row flex-wrap gap-2 mx-auto">
+          <Button className="min-w-0 h-7 rounded-lg px-3" onPress={showPopUp}>
+            <FaImage className="text-green-400 text-lg" />
+            Photo
+          </Button>
+          <Button className="min-w-0 h-7 rounded-lg px-3" onPress={showPopUp}>
+            <FaVideo className="text-blue-400 text-lg" />
+            Video
+          </Button>
+          <Button className="min-w-0 h-7 rounded-lg px-3" onPress={showPopUp}>
+            <FaRegCalendarMinus className="text-violet-400 text-lg" />
+            Event
+          </Button>
+          <Button className="min-w-0 h-7 rounded-lg px-3" onPress={showPopUp}>
+            <FaSmileWink className="text-lg text-yellow-400" />
+            Feeling/Activity
+          </Button>
+
+          <Dropdown className="rounded-lg" backdrop="blur">
+            <DropdownTrigger>
+              <Button className="min-w-0 h-7 rounded-lg px-1">
+                <Ellipsis />
+              </Button>
+            </DropdownTrigger>
+            <DropdownMenu aria-label="Static Actions" variant="faded">
+              <DropdownItem textValue="ff" key="new">
+                <FaPoll className="inline-flex mr-3 text-blue-400 text-lg" />{" "}
+                Create a poll
+              </DropdownItem>
+              <DropdownItem textValue="ss" key="copy">
+                <FaQuestion className="inline-flex mr-3 text-yellow-400 text-lg" />{" "}
+                Ask a question
+              </DropdownItem>
+              <DropdownItem textValue="w" key="edit">
+                <HelpCircle className="inline-flex mr-3 text-red-500 text-lg" />{" "}
+                Help
+              </DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
         </CardBody>
-      </Card> */}
+      </Card>
 
       <div className="mx-auto">
         <Outlet></Outlet>

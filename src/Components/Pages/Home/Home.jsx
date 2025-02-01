@@ -1,10 +1,8 @@
-import { Card, CardBody } from "@heroui/react";
 import LeftSideBar from "./LeftSideBar";
 import Middle from "./Middle";
 import CardText from "./CardText";
 import AnnText from "./AnnText";
 import { Helmet } from "react-helmet-async";
-import FiltersCard from "./FiltersCard";
 
 const Home = () => {
   return (

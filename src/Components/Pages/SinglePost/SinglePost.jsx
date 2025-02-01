@@ -201,14 +201,14 @@ const SinglePost = () => {
               <Image
                 alt="Card background"
                 onClick={() => navigate(`/post/${item._id}`)}
-                className="object-cover md:w-screen rounded-lg cursor-pointer"
+                className="object-cover w-screen rounded-lg cursor-pointer"
                 src={item?.image}
               />
-              <CardBody className="flex flex-row justify-between items-center mt-4">
+              <CardBody className="flex flex-row justify-between items-center mt-4 sm:gap-3">
                 <Button
                   size="sm"
                   variant="flat"
-                  className="rounded-lg min-w-12 md:min-w-16 xl:min-w-24"
+                  className="rounded-lg min-w-14 sm:w-20 xl:w-28"
                   onPress={() => handleLikes("upVotes", item.id)}
                 >
                   <FaThumbsUp className="text-blue-400" />
@@ -217,7 +217,7 @@ const SinglePost = () => {
                 <Button
                   size="sm"
                   variant="flat"
-                  className="rounded-lg min-w-12 md:min-w-16 xl:min-w-24"
+                  className="rounded-lg min-w-14 sm:w-20 xl:w-28"
                   onPress={() => handleLikes("downVotes", item.id)}
                 >
                   <FaThumbsDown className="text-orange-500" /> {item?.downVotes}
@@ -225,7 +225,7 @@ const SinglePost = () => {
                 <Button
                   size="sm"
                   variant="flat"
-                  className="rounded-lg min-w-12 md:min-w-16 xl:min-w-24"
+                  className="rounded-lg min-w-14 sm:w-20 xl:w-28"
                 >
                   <FaComment className="text-green-400" />
                   {item.comments.length}
@@ -233,7 +233,7 @@ const SinglePost = () => {
                 <Button
                   size="sm"
                   variant="flat"
-                  className="rounded-lg min-w-12 md:min-w-16 xl:min-w-24"
+                  className="rounded-lg min-w-14 sm:w-20 xl:w-28"
                 >
                   <FacebookShareButton url="google.com">
                     <FaShare className="text-yellow-400 inline-flex mr-2" />
@@ -245,7 +245,7 @@ const SinglePost = () => {
                     <Button
                       size="sm"
                       variant="flat"
-                      className="rounded-lg min-w-12 md:min-w-16 xl:min-w-24"
+                      className="rounded-lg min-w-14 sm:w-20 xl:w-28"
                     >
                       <FaListUl className="text-violet-500 text-xl"></FaListUl>
                     </Button>
@@ -291,11 +291,11 @@ const SinglePost = () => {
                     "https://res.cloudinary.com/dmegxaayi/image/upload/v1737414981/d1peu0xv4p0v43sfpfmt.png"
                   }
                 />
-                <CardBody className="bg-[#262629] max-w-lg relative rounded-r-lg rounded-bl-lg">
+                <CardBody className="bg-[#262629] relative w-12 rounded-r-lg rounded-bl-lg">
                   <textarea
                     required
                     name="comment"
-                    className="bg-inherit text-blue-300 placeholder:text-blue-300 resize-none max-w-xs border-none focus:border-none active:border-none outline-none"
+                    className="bg-inherit text-blue-300 placeholder:text-blue-300 resize-none w-[85%] focus:border-none active:border-none outline-none"
                     rows={2}
                     placeholder="Add a comment"
                   />
@@ -317,7 +317,7 @@ const SinglePost = () => {
                     "https://res.cloudinary.com/dmegxaayi/image/upload/v1737414981/d1peu0xv4p0v43sfpfmt.png"
                   }
                 />
-                <div className="text-sm bg-slate-600 text-white p-3 rounded-r-lg rounded-bl-lg w-fit">
+                <div className="text-sm bg-slate-600 text-white p-2 rounded-r-lg rounded-bl-lg w-fit">
                   <p className="text-blue-300 text-lg">
                     {item2?.name || users[item2?.authorId]?.username}
                   </p>
@@ -364,15 +364,13 @@ const SinglePost = () => {
                 </div>
               </CardBody>
             ))}
-            {loading && <Spinner color="warning" label="Loading..." />}
-            {loading2 && (
-              <button
-                onClick={() => handleLoadComment(item.commentData.length)}
-                className="inline-flex justify-center gap-2 mt-5"
-              >
-                <FaEllipsisH className="my-auto text-xl" /> Load more comments
-              </button>
-            )}
+            <button
+              // onClick={() => handleLoadComment(item.commentData.length)}
+              onClick={() => navigate(`/post/${item._id}`)}
+              className="inline-flex justify-center gap-2 mt-5"
+            >
+              <FaEllipsisH className="my-auto text-xl" /> Load more comments
+            </button>
           </Card>
         ))
       ) : (
