@@ -17,6 +17,8 @@ import {
 import { Outlet, useLocation } from "react-router";
 import useAxiosPublic from "../../Hooks/useAxiosPublic";
 import { AuthContext } from "../../Context/ContextProvider";
+import FiltersCard from "./FiltersCard";
+import AnnText from "./AnnText";
 
 export default function Middle() {
   const [tags] = useAxiosTags();
@@ -101,179 +103,191 @@ export default function Middle() {
 
   return (
     <div className="space-y-5">
-      <Card className="rounded-lg grid grid-cols-1 justify-items-center content-center gap-5 py-5 md:grid-cols-4 md:py-5 md:px-2 xl:py-11 lg:p-6 overflow-visible xl:justify-items-start">
-        <div className="w-fit z-40 md:col-span-2 mx-auto">
-          <Select
-            options={options2} // Pass custom options
-            value={selectedOption2} // Bind selected value
-            onChange={handleChange2} // Handle change
-            placeholder="Search Category"
-            isSearchable // Enable search functionality
-            styles={{
-              control: (base) => ({
-                ...base,
-                backgroundColor: "inherit",
-                color: "inherit",
-                border: "2px solid gray",
-                borderRadius: "0.5rem", // rounded-lg equivalent
-                boxShadow: "none",
-                transition: "all 0.3s ease", // Smooth transition for focus and hover
-                width: "11.5rem",
-                cursor: "pointer",
-              }),
-              option: (base, { isFocused, isSelected }) => ({
-                ...base,
-                backgroundColor: isFocused ? "inherit" : "white",
-                color: isFocused ? "#007bff" : "black",
-                textAlign: "left",
-                transition: "all 0.3s ease", // Smooth hover effect
-                cursor: "pointer",
-              }),
-              menu: (base) => ({
-                ...base,
-                borderRadius: "0.5rem", // rounded-lg equivalent for dropdown
-                border: "1px solid gray",
-                overflow: "hidden", // Prevents border-radius from being overridden
-                transition: "opacity 0.3s ease, transform 0.3s ease", // Smooth open/close effect
-                opacity: 1,
-                transform: "scaleY(1)",
-              }),
-              menuList: (base) => ({
-                ...base,
-                padding: 0, // Optional: clean padding inside menu
-              }),
-              singleValue: (base) => ({
-                ...base,
-                color: "inherit",
-              }),
-              input: (base) => ({
-                ...base,
-                color: "revert", // Set search input text color to white
-              }),
-            }}
-          />
-        </div>
-
-        <div className="z-30 md:col-span-2 mx-auto">
-          <Select
-            options={options} // Pass custom options
-            value={selectedOption} // Bind selected value
-            onChange={handleChange} // Handle change
-            placeholder="Search Tags"
-            isSearchable // Enable search functionality
-            styles={{
-              control: (base) => ({
-                ...base,
-                backgroundColor: "inherit",
-                color: "inherit",
-                border: "2px solid gray",
-                borderRadius: "0.5rem", // rounded-lg equivalent
-                boxShadow: "none",
-                transition: "all 0.3s ease", // Smooth transition for focus and hover
-                width: "11.6rem",
-                cursor: "pointer",
-              }),
-              option: (base, { isFocused, isSelected }) => ({
-                ...base,
-                backgroundColor: isFocused ? "inherit" : "white",
-                color: isFocused ? "#007bff" : "black",
-                textAlign: "left",
-                transition: "all 0.3s ease", // Smooth hover effect
-                cursor: "pointer",
-              }),
-              menu: (base) => ({
-                ...base,
-                borderRadius: "0.5rem", // rounded-lg equivalent for dropdown
-                border: "1px solid gray",
-                overflow: "hidden", // Prevents border-radius from being overridden
-                transition: "opacity 0.3s ease, transform 0.3s ease", // Smooth open/close effect
-                opacity: 1,
-                transform: "scaleY(1)",
-              }),
-              menuList: (base) => ({
-                ...base,
-                padding: 0, // Optional: clean padding inside menu
-              }),
-              singleValue: (base) => ({
-                ...base,
-                color: "inherit",
-              }),
-              input: (base) => ({
-                ...base,
-                color: "revert", // Set search input text color to white
-              }),
-            }}
-          />
-        </div>
-
-        <div className="w-[11.5rem] xl:mt-0 border-[2px] mx-auto border-gray-400 rounded-lg md:col-span-2 h-10">
-          <Tabs
-            items={tabs}
-            selectedKey={pathname}
-            aria-label="Tabs variants"
-            variant="underlined"
-            className="w-full gap-5"
-          >
-            {(item) => (
-              <Tab
-                key={item.id}
-                title={item.label}
-                href={`/${item.href}`}
-              ></Tab>
-            )}
-          </Tabs>
-        </div>
-
-        <div className="md:col-span-2 z-20 mx-auto">
-          <Select
-            options={options3} // Pass custom options
-            value={selectedOption3} // Bind selected value
-            onChange={handleChange3} // Handle change
-            styles={{
-              control: (base) => ({
-                ...base,
-                backgroundColor: "inherit",
-                color: "inherit",
-                border: "2px solid gray",
-                borderRadius: "0.5rem", // rounded-lg equivalent
-                boxShadow: "none",
-                transition: "all 0.3s ease", // Smooth transition for focus and hover
-                width: "11.5rem",
-                cursor: "pointer",
-              }),
-              option: (base, { isFocused, isSelected }) => ({
-                ...base,
-                backgroundColor: isFocused ? "inherit" : "white",
-                color: isFocused ? "#007bff" : "black",
-                textAlign: "left",
-                transition: "all 0.3s ease", // Smooth hover effect
-                cursor: "pointer",
-              }),
-              menu: (base) => ({
-                ...base,
-                borderRadius: "0.5rem", // rounded-lg equivalent for dropdown
-                border: "1px solid gray",
-                overflow: "hidden", // Prevents border-radius from being overridden
-                transition: "opacity 0.3s ease, transform 0.3s ease", // Smooth open/close effect
-                opacity: 1,
-                transform: "scaleY(1)",
-              }),
-              menuList: (base) => ({
-                ...base,
-                padding: 0, // Optional: clean padding inside menu
-              }),
-              singleValue: (base) => ({
-                ...base,
-                color: "inherit",
-              }),
-              input: (base) => ({
-                ...base,
-                color: "revert", // Set search input text color to white
-              }),
-            }}
-          />
-        </div>
+      <Card className="hidden sm:grid sm:grid-cols-2 rounded-lg justify-items-center content-center gap-5 md:grid-cols-4 overflow-visible p-4">
+        <FiltersCard></FiltersCard>
       </Card>
+      <div className="space-y-5 sm:hidden">
+        <Accordion variant="shadow">
+          <AccordionItem key="1" aria-label="Filters" title="Filters">
+            <div className="z-50 rounded-lg grid grid-cols-1 content-start gap-5 md:grid-cols-4 overflow-visible xl:justify-items-start">
+              <div className="w-fit z-40 md:col-span-2 mx-auto">
+                <Select
+                  options={options2} // Pass custom options
+                  value={selectedOption2} // Bind selected value
+                  onChange={handleChange2} // Handle change
+                  placeholder="Search Category"
+                  isSearchable // Enable search functionality
+                  menuPosition="fixed"
+                  styles={{
+                    control: (base) => ({
+                      ...base,
+                      backgroundColor: "inherit",
+                      color: "inherit",
+                      border: "2px solid gray",
+                      borderRadius: "0.5rem", // rounded-lg equivalent
+                      boxShadow: "none",
+                      transition: "all 0.3s ease", // Smooth transition for focus and hover
+                      width: "11.5rem",
+                      cursor: "pointer",
+                    }),
+                    option: (base, { isFocused, isSelected }) => ({
+                      ...base,
+                      backgroundColor: isFocused ? "inherit" : "white",
+                      color: isFocused ? "#007bff" : "black",
+                      textAlign: "left",
+                      transition: "all 0.3s ease", // Smooth hover effect
+                      cursor: "pointer",
+                    }),
+                    menu: (base) => ({
+                      ...base,
+                      borderRadius: "0.5rem", // rounded-lg equivalent for dropdown
+                      border: "1px solid gray",
+                      overflow: "hidden", // Prevents border-radius from being overridden
+                      transition: "opacity 0.3s ease, transform 0.3s ease", // Smooth open/close effect
+                      opacity: 1,
+                      transform: "scaleY(1)",
+                      height: "12rem",
+                    }),
+                    menuList: (base) => ({
+                      ...base,
+                      padding: 0, // Optional: clean padding inside menu
+                    }),
+                    singleValue: (base) => ({
+                      ...base,
+                      color: "inherit",
+                    }),
+                    input: (base) => ({
+                      ...base,
+                      color: "revert", // Set search input text color to white
+                    }),
+                  }}
+                />
+              </div>
+
+              <div className="z-30 md:col-span-2 mx-auto">
+                <Select
+                  options={options} // Pass custom options
+                  value={selectedOption} // Bind selected value
+                  onChange={handleChange} // Handle change
+                  placeholder="Search Tags"
+                  isSearchable // Enable search functionality
+                  styles={{
+                    control: (base) => ({
+                      ...base,
+                      backgroundColor: "inherit",
+                      color: "inherit",
+                      border: "2px solid gray",
+                      borderRadius: "0.5rem", // rounded-lg equivalent
+                      boxShadow: "none",
+                      transition: "all 0.3s ease", // Smooth transition for focus and hover
+                      width: "11.6rem",
+                      cursor: "pointer",
+                    }),
+                    option: (base, { isFocused, isSelected }) => ({
+                      ...base,
+                      backgroundColor: isFocused ? "inherit" : "white",
+                      color: isFocused ? "#007bff" : "black",
+                      textAlign: "left",
+                      transition: "all 0.3s ease", // Smooth hover effect
+                      cursor: "pointer",
+                    }),
+                    menu: (base) => ({
+                      ...base,
+                      borderRadius: "0.5rem", // rounded-lg equivalent for dropdown
+                      border: "1px solid gray",
+                      overflow: "hidden", // Prevents border-radius from being overridden
+                      transition: "opacity 0.3s ease, transform 0.3s ease", // Smooth open/close effect
+                      opacity: 1,
+                      transform: "scaleY(1)",
+                      height: "8rem",
+                    }),
+                    menuList: (base) => ({
+                      ...base,
+                      padding: 0, // Optional: clean padding inside menu
+                    }),
+                    singleValue: (base) => ({
+                      ...base,
+                      color: "inherit",
+                    }),
+                    input: (base) => ({
+                      ...base,
+                      color: "revert", // Set search input text color to white
+                    }),
+                  }}
+                />
+              </div>
+
+              <div className="md:col-span-2 z-20 mx-auto">
+                <Select
+                  options={options3} // Pass custom options
+                  value={selectedOption3} // Bind selected value
+                  onChange={handleChange3} // Handle change
+                  styles={{
+                    control: (base) => ({
+                      ...base,
+                      backgroundColor: "inherit",
+                      color: "inherit",
+                      border: "2px solid gray",
+                      borderRadius: "0.5rem", // rounded-lg equivalent
+                      boxShadow: "none",
+                      transition: "all 0.3s ease", // Smooth transition for focus and hover
+                      width: "11.5rem",
+                      cursor: "pointer",
+                    }),
+                    option: (base, { isFocused, isSelected }) => ({
+                      ...base,
+                      backgroundColor: isFocused ? "inherit" : "white",
+                      color: isFocused ? "#007bff" : "black",
+                      textAlign: "left",
+                      transition: "all 0.3s ease", // Smooth hover effect
+                      cursor: "pointer",
+                    }),
+                    menu: (base) => ({
+                      ...base,
+                      borderRadius: "0.5rem", // rounded-lg equivalent for dropdown
+                      border: "1px solid gray",
+                      overflow: "hidden", // Prevents border-radius from being overridden
+                      transition: "opacity 0.3s ease, transform 0.3s ease", // Smooth open/close effect
+                      opacity: 1,
+                      transform: "scaleY(1)",
+                    }),
+                    menuList: (base) => ({
+                      ...base,
+                      padding: 0, // Optional: clean padding inside menu
+                    }),
+                    singleValue: (base) => ({
+                      ...base,
+                      color: "inherit",
+                    }),
+                    input: (base) => ({
+                      ...base,
+                      color: "revert", // Set search input text color to white
+                    }),
+                  }}
+                />
+              </div>
+
+              <div className="w-[11.5rem] xl:mt-0 border-[2px] mx-auto border-gray-400 rounded-lg md:col-span-2 h-10">
+                <Tabs
+                  items={tabs}
+                  selectedKey={pathname}
+                  aria-label="Tabs variants"
+                  variant="underlined"
+                  className="w-full gap-5"
+                >
+                  {(item) => (
+                    <Tab
+                      key={item.id}
+                      title={item.label}
+                      href={`/${item.href}`}
+                    ></Tab>
+                  )}
+                </Tabs>
+              </div>
+            </div>
+          </AccordionItem>
+        </Accordion>
+      </div>
 
       {/* <Card>
         <CardBody>

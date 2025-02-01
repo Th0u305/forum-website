@@ -12,6 +12,9 @@ import {
   DropdownSection,
   DropdownTrigger,
   Image,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
   Spinner,
 } from "@heroui/react";
 import {
@@ -66,9 +69,11 @@ const SinglePost = () => {
   };
 
   useEffect(() => {
-    axiosPublic.get(`/${import.meta.env.VITE_URL__8}?allData=allData`).then((res) => {
-      setSingleData(res.data.filter((item) => item._id === params.id));
-    });
+    axiosPublic
+      .get(`/${import.meta.env.VITE_URL__8}?allData=allData`)
+      .then((res) => {
+        setSingleData(res.data.filter((item) => item._id === params.id));
+      });
   }, []);
 
   // update likes
@@ -107,7 +112,7 @@ const SinglePost = () => {
       refetch,
       setSearchData
     );
-    LoadComments(axiosPublic, id+1, setSearchData, setSingleData, params);
+    LoadComments(axiosPublic, id + 1, setSearchData, setSingleData, params);
   };
 
   refetch();
@@ -140,34 +145,51 @@ const SinglePost = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         await DeleteComment(user, _id, index, post_id, axiosSecure);
-        await LoadComments(axiosPublic, id, setSearchData, setSingleData, params);
+        await LoadComments(
+          axiosPublic,
+          id,
+          setSearchData,
+          setSingleData,
+          params
+        );
       }
     });
   };
 
   return (
-    <div className="mt-12">
-      <Helmet>
-        <title>TopicTree | Post</title>
-      </Helmet>
-      {singleData?.length > 0 ? (
+    <div className="mx-auto -z-10">
+      {singleData.length > 0 ? (
         singleData.map((item, index) => (
           <Card className="py-4 mb-12 rounded-lg" key={index}>
             <CardHeader className="pb-0 pt-2 px-4 flex-col items-start gap-5">
               <div className="flex items-center gap-2">
                 <Image
-                  alt="Card background"
+                  alt="Card background "
                   className="rounded-full w-12 h-12 object-cover"
-                  src={item.author.profileImage}
+                  src={item.author?.profileImage}
                 />
-                <h1>{item.author.username}</h1>
-                <h1>
-                  <FaMedal
-                    className={`${
-                      badgeColors[item?.author?.badges] || "text-gray-500"
-                    } text-2xl`}
-                  ></FaMedal>
-                </h1>
+                <h1>{item?.author?.username}</h1>
+
+                <div className="flex flex-wrap gap-4">
+                  <Popover key="default" color="default" placement="top">
+                    <PopoverTrigger>
+                      <Button
+                        className="capitalize min-w-0 px-0 bg-inherit"
+                        color="default"
+                      >
+                        <FaMedal
+                          className={`${
+                            badgeColors[item?.author?.badges || "Bronze"] ||
+                            "text-gray-500"
+                          } text-2xl`}
+                        ></FaMedal>
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="border border-slate-400">
+                      {item?.author?.badges}
+                    </PopoverContent>
+                  </Popover>
+                </div>
               </div>
 
               <div className="text-start">
@@ -178,15 +200,15 @@ const SinglePost = () => {
             <CardBody className="overflow-visible py-2">
               <Image
                 alt="Card background"
+                onClick={() => navigate(`/post/${item._id}`)}
                 className="object-cover md:w-screen rounded-lg cursor-pointer"
                 src={item?.image}
-                // width={700}
               />
-              <CardBody className="grid grid-cols-4 grid-rows-1 p-0 mt-7 gap-5 md:grid-cols-5">
+              <CardBody className="flex flex-row justify-between items-center mt-4">
                 <Button
                   size="sm"
                   variant="flat"
-                  className="rounded-lg"
+                  className="rounded-lg min-w-12 md:min-w-16 xl:min-w-24"
                   onPress={() => handleLikes("upVotes", item.id)}
                 >
                   <FaThumbsUp className="text-blue-400" />
@@ -195,24 +217,36 @@ const SinglePost = () => {
                 <Button
                   size="sm"
                   variant="flat"
-                  className="rounded-lg"
+                  className="rounded-lg min-w-12 md:min-w-16 xl:min-w-24"
                   onPress={() => handleLikes("downVotes", item.id)}
                 >
                   <FaThumbsDown className="text-orange-500" /> {item?.downVotes}
                 </Button>
-                <Button size="sm" variant="flat" className="rounded-lg">
+                <Button
+                  size="sm"
+                  variant="flat"
+                  className="rounded-lg min-w-12 md:min-w-16 xl:min-w-24"
+                >
                   <FaComment className="text-green-400" />
-                  {item?.commentData.length}
+                  {item.comments.length}
                 </Button>
-                <Button size="sm" variant="flat" className="p-0 rounded-lg">
-                  <FacebookShareButton url="google.com" className="h-8 w-16">
+                <Button
+                  size="sm"
+                  variant="flat"
+                  className="rounded-lg min-w-12 md:min-w-16 xl:min-w-24"
+                >
+                  <FacebookShareButton url="google.com">
                     <FaShare className="text-yellow-400 inline-flex mr-2" />
                     {item.commentData.length + 15}
                   </FacebookShareButton>
                 </Button>
                 <Dropdown className="rounded-lg" backdrop="blur">
                   <DropdownTrigger>
-                    <Button size="sm" variant="flat">
+                    <Button
+                      size="sm"
+                      variant="flat"
+                      className="rounded-lg min-w-12 md:min-w-16 xl:min-w-24"
+                    >
                       <FaListUl className="text-violet-500 text-xl"></FaListUl>
                     </Button>
                   </DropdownTrigger>
@@ -241,37 +275,12 @@ const SinglePost = () => {
                   </DropdownMenu>
                 </Dropdown>
               </CardBody>
-
-              <CardBody className="flex gap-5 p-0 ">
-                <div className="flex gap-3 flex-wrap mt-5">
-                  <Tags className="text-violet-500"></Tags>Tags:
-                  {item.tags.map((item3, index) => (
-                    <div key={index} className=" mx-auto">
-                      <p> {item3}</p>
-                    </div>
-                  ))}
-                </div>
-
-                <div>
-                  <p className="inline-flex">
-                    <Clock className="text-blue-500 mr-3" /> Posted Data:{" "}
-                    {item.createdAt}
-                  </p>
-                </div>
-                <div>
-                  <p className="inline-flex">
-                    <List className="text-green-500 mr-3" /> Category:{" "}
-                    {item.category}
-                  </p>
-                </div>
-              </CardBody>
             </CardBody>
+
             <CardBody>
               <form
                 className="flex flex-row gap-5"
-                onSubmit={(e) =>
-                  handleComment(e, item.id, item.comments.length)
-                }
+                onSubmit={(e) => handleComment(e, item.id)}
               >
                 <Image
                   alt="Card background"
@@ -282,7 +291,7 @@ const SinglePost = () => {
                     "https://res.cloudinary.com/dmegxaayi/image/upload/v1737414981/d1peu0xv4p0v43sfpfmt.png"
                   }
                 />
-                <CardBody className="bg-[#262629] max-w-sm relative rounded-r-lg rounded-bl-lg">
+                <CardBody className="bg-[#262629] max-w-lg relative rounded-r-lg rounded-bl-lg">
                   <textarea
                     required
                     name="comment"
@@ -296,6 +305,7 @@ const SinglePost = () => {
                 </CardBody>
               </form>
             </CardBody>
+
             {item?.commentData?.map((item2, index) => (
               <CardBody key={index} className="flex flex-row gap-5">
                 <Image
@@ -307,12 +317,13 @@ const SinglePost = () => {
                     "https://res.cloudinary.com/dmegxaayi/image/upload/v1737414981/d1peu0xv4p0v43sfpfmt.png"
                   }
                 />
-                <div className="text-sm bg-slate-600 text-white p-3 rounded-r-lg rounded-bl-lg max-w-sm">
+                <div className="text-sm bg-slate-600 text-white p-3 rounded-r-lg rounded-bl-lg w-fit">
                   <p className="text-blue-300 text-lg">
                     {item2?.name || users[item2?.authorId]?.username}
                   </p>
-                  <p className="inline-flex break-words break-all text-wrap">
+                  <p className="inline-flex">
                     {item2?.text}
+
                     <Dropdown backdrop="blur">
                       <DropdownTrigger className="ml-7">
                         <button className="active:scale-90 ease-in-out duration-100">
@@ -320,7 +331,11 @@ const SinglePost = () => {
                         </button>
                       </DropdownTrigger>
                       <DropdownMenu aria-label="Static Actions" variant="faded">
-                        <DropdownItem textValue="aw" key="new" onPress={()=>handleCommentReport(item2)}>
+                        <DropdownItem
+                          textValue="aw"
+                          key="new"
+                          onPress={() => handleCommentReport(item2)}
+                        >
                           <MessageCircleWarning className="text-orange-500 inline-flex mr-2" />{" "}
                           Report Comment
                         </DropdownItem>

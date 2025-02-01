@@ -96,7 +96,7 @@ export default function NavbarMenu2() {
       .get(`/${import.meta.env.VITE_URL__8}/?filter=${data}`)
       .then((res) => {
         setSearchData(res.data);
-        refetch()
+        refetch();
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -107,8 +107,8 @@ export default function NavbarMenu2() {
     <>
       {isNavbar && (
         <Navbar
-          isBlurred={false}
-          className="bg-[#19191c] h-20 rounded-lg z-50 border border-gray-600"
+          isBlurred={true}
+          className="bg-[#19191c] h-20 rounded-lg z-50 border border-slate-500"
         >
           <NavbarContent className="md:hidden" justify="start">
             <NavbarMenuToggle />
@@ -125,7 +125,10 @@ export default function NavbarMenu2() {
             </NavbarBrand>
           </NavbarContent>
 
-          <NavbarContent className="hidden md:flex gap-4 md:gap-2 lg:gap-4" justify="center">
+          <NavbarContent
+            className="hidden md:flex gap-4 md:gap-2 lg:gap-4"
+            justify="center"
+          >
             <NavbarBrand>
               <img
                 className="w-11"
@@ -207,12 +210,14 @@ export default function NavbarMenu2() {
                     className="h-14 gap-2"
                   >
                     <p className="font-semibold inline-flex">
-                     {user &&  <FaMedal
-                        className={`${
-                          badgeColors[filterUser?.badge || "Bronze"] ||
-                          "text-gray-500"
-                        } text-2xl mr-4 mb-2`}
-                      ></FaMedal>}
+                      {user && (
+                        <FaMedal
+                          className={`${
+                            badgeColors[filterUser?.badge || "Bronze"] ||
+                            "text-gray-500"
+                          } text-2xl mr-4 mb-2`}
+                        ></FaMedal>
+                      )}
                       Signed in as
                     </p>
 
@@ -265,9 +270,9 @@ export default function NavbarMenu2() {
             </NavbarContent>
           </NavbarContent>
 
-          <NavbarMenu className="mt-12 z-50">
+          <NavbarMenu className="pt-20 z-40">
             <Input
-            onChange={(e) => handleSearch(e.target.value)}
+              onChange={(e) => handleSearch(e.target.value)}
               classNames={{
                 base: "max-w-full sm:max-w-[10rem] h-10",
                 mainWrapper: "h-full",

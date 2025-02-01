@@ -10,6 +10,9 @@ import {
   DropdownTrigger,
   Image,
   Pagination,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
   Spinner,
 } from "@heroui/react";
 import useAxiosUsers from "../../Hooks/useAxiosUser";
@@ -126,13 +129,22 @@ const Posts = () => {
       confirmButtonText: "Yes, delete it!",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        await DeleteComment(user, _id, index, post_id, axiosSecure, refetch,userFetch, commentRefetch);
+        await DeleteComment(
+          user,
+          _id,
+          index,
+          post_id,
+          axiosSecure,
+          refetch,
+          userFetch,
+          commentRefetch
+        );
       }
     });
   };
 
   return (
-    <div className="mx-auto">
+    <div className="mx-auto -z-10">
       {mergedData.length > 0 ? (
         (searchData.length === 0 || searchData.length === 2
           ? mergedData
@@ -147,14 +159,24 @@ const Posts = () => {
                   src={item.author?.profileImage}
                 />
                 <h1>{item?.author?.username}</h1>
-                <h1>
-                  <FaMedal
-                    className={`${
-                      badgeColors[item?.author?.badges || "Bronze"] ||
-                      "text-gray-500"
-                    } text-2xl`}
-                  ></FaMedal>
-                </h1>
+
+                <div className="flex flex-wrap gap-4">
+                  <Popover key="default" color="default" placement="top">
+                    <PopoverTrigger>
+                      <Button className="capitalize min-w-0 px-0 bg-inherit" color="default">
+                        <FaMedal
+                          className={`${
+                            badgeColors[item?.author?.badges || "Bronze"] ||
+                            "text-gray-500"
+                          } text-2xl`}
+                        ></FaMedal>
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="border border-slate-400">
+                      {item?.author?.badges}
+                    </PopoverContent>
+                  </Popover>
+                </div>
               </div>
 
               <div className="text-start">
@@ -169,11 +191,11 @@ const Posts = () => {
                 className="object-cover md:w-screen rounded-lg cursor-pointer"
                 src={item?.image}
               />
-              <CardBody className="grid grid-cols-4 grid-rows-1 p-0 mt-7 gap-5 md:grid-cols-5">
+              <CardBody className="flex flex-row justify-between items-center mt-4">
                 <Button
                   size="sm"
                   variant="flat"
-                  className="rounded-lg"
+                  className="rounded-lg min-w-12 md:min-w-16 xl:min-w-24"
                   onPress={() => handleLikes("upVotes", item.id)}
                 >
                   <FaThumbsUp className="text-blue-400" />
@@ -182,24 +204,36 @@ const Posts = () => {
                 <Button
                   size="sm"
                   variant="flat"
-                  className="rounded-lg"
+                  className="rounded-lg min-w-12 md:min-w-16 xl:min-w-24"
                   onPress={() => handleLikes("downVotes", item.id)}
                 >
                   <FaThumbsDown className="text-orange-500" /> {item?.downVotes}
                 </Button>
-                <Button size="sm" variant="flat" className="rounded-lg">
+                <Button
+                  size="sm"
+                  variant="flat"
+                  className="rounded-lg min-w-12 md:min-w-16 xl:min-w-24"
+                >
                   <FaComment className="text-green-400" />
-                  {item?.commentData.length}
+                  {item.comments.length}
                 </Button>
-                <Button size="sm" variant="flat" className="p-0 rounded-lg">
-                  <FacebookShareButton url="google.com" className="h-8 w-16">
+                <Button
+                  size="sm"
+                  variant="flat"
+                  className="rounded-lg min-w-12 md:min-w-16 xl:min-w-24"
+                >
+                  <FacebookShareButton url="google.com">
                     <FaShare className="text-yellow-400 inline-flex mr-2" />
                     {item.commentData.length + 15}
                   </FacebookShareButton>
                 </Button>
                 <Dropdown className="rounded-lg" backdrop="blur">
                   <DropdownTrigger>
-                    <Button size="sm" variant="flat">
+                    <Button
+                      size="sm"
+                      variant="flat"
+                      className="rounded-lg min-w-12 md:min-w-16 xl:min-w-24"
+                    >
                       <FaListUl className="text-violet-500 text-xl"></FaListUl>
                     </Button>
                   </DropdownTrigger>
@@ -244,7 +278,7 @@ const Posts = () => {
                     "https://res.cloudinary.com/dmegxaayi/image/upload/v1737414981/d1peu0xv4p0v43sfpfmt.png"
                   }
                 />
-                <CardBody className="bg-[#262629] max-w-sm relative rounded-r-lg rounded-bl-lg">
+                <CardBody className="bg-[#262629] max-w-lg relative rounded-r-lg rounded-bl-lg">
                   <textarea
                     required
                     name="comment"
@@ -270,7 +304,7 @@ const Posts = () => {
                     "https://res.cloudinary.com/dmegxaayi/image/upload/v1737414981/d1peu0xv4p0v43sfpfmt.png"
                   }
                 />
-                <div className="text-sm bg-slate-600 text-white p-3 rounded-r-lg rounded-bl-lg max-w-sm">
+                <div className="text-sm bg-slate-600 text-white p-3 rounded-r-lg rounded-bl-lg w-fit">
                   <p className="text-blue-300 text-lg">
                     {item2?.name || users[item2?.authorId]?.username}
                   </p>
@@ -284,7 +318,11 @@ const Posts = () => {
                         </button>
                       </DropdownTrigger>
                       <DropdownMenu aria-label="Static Actions" variant="faded">
-                        <DropdownItem textValue="aw" key="new" onPress={()=>handleCommentReport(item2)}>
+                        <DropdownItem
+                          textValue="aw"
+                          key="new"
+                          onPress={() => handleCommentReport(item2)}
+                        >
                           <MessageCircleWarning className="text-orange-500 inline-flex mr-2" />{" "}
                           Report Comment
                         </DropdownItem>
