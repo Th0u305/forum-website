@@ -21,7 +21,7 @@ const Root = () => {
 
   setTimeout(() => {
     setLoading(true);
-  }, 1000);
+  }, 500);
 
   return (
     <section className="max-w-7xl mx-auto p-5">
